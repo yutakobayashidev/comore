@@ -4,6 +4,7 @@
   "type": "module",
   "packageManager": "pnpm@10.13.1",
   "scripts": {
+    "setup": "corepack enable pnpm",
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
