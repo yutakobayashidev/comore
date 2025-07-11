@@ -2,29 +2,36 @@
   "name": "comore",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.13.1",
   "scripts": {
+    "setup": "corepack enable pnpm",
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "lint": "npx oxlint && npx eslint && knip",
+    "fmt": "prettier -w . --experimental-cli"
   },
   "dependencies": {
-    "@react-router/node": "^7.5.3",
-    "@react-router/serve": "^7.5.3",
-    "isbot": "^5.1.27",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router": "^7.5.3"
+    "@react-router/node": "7.5.3",
+    "@react-router/serve": "7.5.3",
+    "isbot": "5.1.27",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-router": "7.5.3"
   },
   "devDependencies": {
-    "@react-router/dev": "^7.5.3",
-    "@tailwindcss/vite": "^4.1.4",
-    "@types/node": "^20",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "tailwindcss": "^4.1.4",
-    "typescript": "^5.8.3",
-    "vite": "^6.3.3",
-    "vite-tsconfig-paths": "^5.1.4"
+    "@react-router/dev": "7.5.3",
+    "@tailwindcss/vite": "4.1.4",
+    "@types/node": "20",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "eslint-plugin-oxlint": "1.6.0",
+    "knip": "5.61.3",
+    "prettier": "3.6.2",
+    "tailwindcss": "4.1.4",
+    "typescript": "5.8.3",
+    "vite": "6.3.3",
+    "vite-tsconfig-paths": "5.1.4"
   }
 }
