@@ -7,7 +7,6 @@ export default process.env.LOCAL_DB_PATH
     ? ({
         schema: "./database/schema.ts",
         dbCredentials: {
-            // biome-ignore lint/style/noNonNullAssertion: <explanation>
             url: process.env.LOCAL_DB_PATH!,
         },
         dialect: "sqlite"
