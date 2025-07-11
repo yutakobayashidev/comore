@@ -9,6 +9,9 @@
     "preview": "pnpm build && vite preview",
     "deploy": "pnpm build && wrangler deploy",
     "dev": "react-router dev",
+    "test": "NODE_ENV=test vitest run",
+    "test:watch": "NODE_ENV=test vitest watch",
+    "test:coverage": "NODE_ENV=test vitest run --coverage",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "wrangler d1 migrations apply --local DB",
     "db:migrate-production": "drizzle-kit migrate",
@@ -17,7 +20,7 @@
     "start": "react-router-serve ./build/server/index.js",
     "cf-typegen": "wrangler types",
     "typecheck": "react-router typegen && tsc",
-    "lint": "npx oxlint && npx eslint && knip",
+    "lint": "oxlint && eslint && knip",
     "fmt": "prettier -w . --experimental-cli",
     "postinstall": "npm run cf-typegen"
   },
@@ -34,6 +37,7 @@
     "isbot": "5.1.27",
     "lucide-react": "0.525.0",
     "next-themes": "0.4.6",
+    "radix-ui": "latest",
     "react": "19.1.0",
     "react-day-picker": "9.8.0",
     "react-dom": "19.1.0",
@@ -44,8 +48,7 @@
     "sonner": "2.0.6",
     "tailwind-merge": "3.3.1",
     "vaul": "1.1.2",
-    "zod": "4.0.5",
-    "radix-ui": "latest"
+    "zod": "4.0.5"
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.9.4",
@@ -53,14 +56,19 @@
     "@react-router/dev": "7.5.3",
     "@secretlint/secretlint-rule-preset-recommend": "10.2.0",
     "@tailwindcss/vite": "4.1.4",
+    "@testing-library/dom": "10.4.0",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.3.0",
     "@types/node": "20",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
+    "@vitest/coverage-v8": "3.2.4",
     "dotenv": "17.2.0",
     "drizzle-kit": "0.31.4",
     "drizzle-orm": "0.44.2",
     "eslint": "9.31.0",
     "eslint-plugin-oxlint": "1.6.0",
+    "jsdom": "26.1.0",
     "knip": "5.61.3",
     "lefthook": "1.12.2",
     "oxlint": "1.6.0",
@@ -71,6 +79,7 @@
     "typescript": "5.8.3",
     "vite": "6.3.3",
     "vite-tsconfig-paths": "5.1.4",
+    "vitest": "3.2.4",
     "wrangler": "4.24.3"
   }
 }
