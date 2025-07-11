@@ -1,0 +1,13 @@
+pre-commit:
+  parallel: true
+  commands:
+    prettier:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: |
+        npx prettier --write --experimental-cli {staged_files}
+      stage_fixed: true
+    secretlint:
+      glob: '*'
+      run: |
+        npx secretlint --maskSecrets {staged_files}
+      stage_fixed: true
