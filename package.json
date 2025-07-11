@@ -6,11 +6,20 @@
   "scripts": {
     "setup": "corepack enable pnpm",
     "build": "react-router build",
+    "preview": "pnpm build && vite preview",
+    "deploy": "pnpm build && wrangler deploy",
     "dev": "react-router dev",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "wrangler d1 migrations apply --local DB",
+    "db:migrate-production": "drizzle-kit migrate",
+    "db:studio": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
+    "db:studio:prod": "drizzle-kit studio",
     "start": "react-router-serve ./build/server/index.js",
+    "cf-typegen": "wrangler types",
     "typecheck": "react-router typegen && tsc",
     "lint": "npx oxlint && npx eslint && knip",
-    "fmt": "prettier -w . --experimental-cli"
+    "fmt": "prettier -w . --experimental-cli",
+    "postinstall": "npm run cf-typegen"
   },
   "dependencies": {
     "@react-router/node": "7.5.3",
@@ -21,17 +30,23 @@
     "react-router": "7.5.3"
   },
   "devDependencies": {
+    "@cloudflare/vite-plugin": "1.9.4",
+    "@libsql/client": "0.15.9",
     "@react-router/dev": "7.5.3",
     "@tailwindcss/vite": "4.1.4",
     "@types/node": "20",
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
+    "dotenv": "17.2.0",
+    "drizzle-kit": "0.31.4",
+    "drizzle-orm": "0.44.2",
     "eslint-plugin-oxlint": "1.6.0",
     "knip": "5.61.3",
     "prettier": "3.6.2",
     "tailwindcss": "4.1.4",
     "typescript": "5.8.3",
     "vite": "6.3.3",
-    "vite-tsconfig-paths": "5.1.4"
+    "vite-tsconfig-paths": "5.1.4",
+    "wrangler": "4.24.3"
   }
 }
