@@ -7,7 +7,7 @@ on:
     paths:
       - .github/workflows/ci.yml
       - package.json
-      - src/**
+      - app/**
       # start: e2e #
       - e2e/**
       # end: e2e #
