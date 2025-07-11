@@ -4,7 +4,7 @@ const config: KnipConfig = {
   ignoreUnresolved: [
     '\\+types/.+',
   ],
-  ignore: ["eslint.config.js"],
+  ignore: ["eslint.config.js", "worker-configuration.d.ts", "workers/app.ts"],
   ignoreDependencies: [
     "tailwindcss",
     "eslint-plugin-oxlint",
