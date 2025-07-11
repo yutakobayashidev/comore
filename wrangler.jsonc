@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "react-router-app",
+  "compatibility_date": "2025-04-04",
+  "main": "./workers/app.ts",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "comore",
+      "database_id": "1cfa312a-e613-43e0-af1a-29236fb340ba",
+      "migrations_dir": "drizzle"
+    }
+  ]
+}
