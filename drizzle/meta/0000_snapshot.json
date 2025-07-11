@@ -60,9 +60,7 @@
       "indexes": {
         "feeds_url_unique": {
           "name": "feeds_url_unique",
-          "columns": [
-            "url"
-          ],
+          "columns": ["url"],
           "isUnique": true
         }
       },
