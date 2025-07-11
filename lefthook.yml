@@ -1,6 +1,16 @@
 pre-commit:
   parallel: true
   commands:
+    oxlint: 
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: |
+        npx oxlint {staged_files}
+      stage_fixed: true
+    eslint: 
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      run: |
+        npx eslint {staged_files}
+      stage_fixed: true
     prettier:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: |
