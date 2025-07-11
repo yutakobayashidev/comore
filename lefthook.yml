@@ -12,7 +12,7 @@ pre-commit:
         npx eslint {staged_files}
       stage_fixed: true
     prettier:
-      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,md,yml}"
       run: |
         npx prettier --write --experimental-cli {staged_files}
       stage_fixed: true
