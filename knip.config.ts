@@ -1,7 +1,10 @@
 import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
-  ignore: ["eslint.config.js", "./+types/root"],
+  ignoreUnresolved: [
+    '\\+types/.+',
+  ],
+  ignore: ["eslint.config.js"],
   ignoreDependencies: [
     "tailwindcss",
     "eslint-plugin-oxlint",
