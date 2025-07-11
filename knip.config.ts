@@ -8,7 +8,6 @@ const config: KnipConfig = {
   ignoreDependencies: [
     "tailwindcss",
     "eslint-plugin-oxlint",
-    "isbot",
     "@react-router/node",
   ],
   ignoreBinaries: ["oxlint", "eslint"],
