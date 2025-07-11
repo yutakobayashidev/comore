@@ -33,6 +33,8 @@ const config: KnipConfig = {
     "zod",
     "radix-ui",
     "tw-animate-css",
+    "@testing-library/dom",
+    "@testing-library/react",
   ],
 };
 

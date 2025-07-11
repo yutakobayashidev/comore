@@ -30,6 +30,12 @@ This is a React Router v7 application with server-side rendering (SSR) deployed 
 - `pnpm lint` - Run all linters (OxLint, ESLint, and Knip)
 - `pnpm fmt` - Format code with Prettier
 
+### Testing
+
+- `pnpm test` - Run all tests with Vitest
+- `pnpm test:watch` - Run tests in watch mode during development
+- `pnpm test:coverage` - Run tests with coverage reporting
+
 ## Architecture Overview
 
 ### Stack
@@ -49,6 +55,7 @@ This is a React Router v7 application with server-side rendering (SSR) deployed 
   - `lib/` - Utility functions and configurations
 - `database/` - Drizzle schema definitions
 - `drizzle/` - Database migrations
+- `tests/` - Test setup and configuration files
 - `workers/` - Cloudflare Workers specific code
 - `terraform/` - Infrastructure as Code configuration
 
@@ -72,6 +79,7 @@ Schema is defined in `database/schema.ts`. Always generate migrations after sche
 
 - `react-router.config.ts` - SSR configuration and app entry points
 - `vite.config.ts` - Build configuration with Cloudflare integration
+- `vitest.config.ts` - Vitest testing framework configuration
 - `wrangler.jsonc` - Cloudflare Workers deployment configuration
 - `drizzle.config.ts` - Database ORM configuration
 - `lefthook.yml` - Git hooks configuration
@@ -99,6 +107,36 @@ The project uses shadcn/ui components with:
 
 6. **Forms**: Use react-hook-form with zod schemas for validation. Examples can be found in existing route modules.
 
+7. **Testing**: Write tests for components and utilities using Vitest and React Testing Library. Place test files alongside source files with `.test.{ts,tsx}` extension.
+
 ## Testing
 
-Currently, no testing framework is configured. When adding tests, consider Vitest for compatibility with Vite.
+The project uses Vitest as the testing framework with React Testing Library for component testing.
+
+### Configuration
+
+- **Framework**: Vitest with jsdom environment for DOM testing
+- **Testing Library**: @testing-library/react for component testing
+- **Matchers**: @testing-library/jest-dom for enhanced assertions
+- **Coverage**: V8 coverage provider for code coverage reports
+
+### Test Structure
+
+- Test files should be placed alongside source files with `.test.{ts,tsx}` extension
+- Global test setup is configured in `tests/vitest.global.setup.ts` (sets UTC timezone)
+- Test utilities and jest-dom matchers are imported via `tests/vitest.setup.ts`
+- Mock settings are configured to reset between tests for isolation
+
+### Best Practices
+
+1. **File Naming**: Use `.test.{ts,tsx}` suffix for test files
+2. **Test Location**: Place tests alongside the code they test (e.g., `component.tsx` → `component.test.tsx`)
+3. **Component Testing**: Use React Testing Library for testing React components
+4. **Isolation**: Tests are configured to reset mocks and clear state between runs
+5. **Environment**: Tests run in jsdom environment to simulate browser APIs
+
+### Running Tests
+
+- `pnpm test` - Run all tests once
+- `pnpm test:watch` - Run tests in watch mode (re-runs on file changes)
+- `pnpm test:coverage` - Generate and display code coverage report

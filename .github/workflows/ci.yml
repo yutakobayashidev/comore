@@ -7,7 +7,7 @@ on:
     paths:
       - .github/workflows/ci.yml
       - package.json
-      - src/**
+      - app/**
       # start: e2e #
       - e2e/**
       # end: e2e #
@@ -42,3 +42,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-node
       - run: pnpm build
+
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-node
+      - run: pnpm test
