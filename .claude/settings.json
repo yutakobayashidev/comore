@@ -1,6 +1,5 @@
 {
   "model": "opus",
-  "theme": "dark",
   "cleanupPeriodDays": 30,
   "permissions": {
     "allow": [
@@ -364,6 +363,5 @@
     "BASH_DEFAULT_TIMEOUT_MS": "300000",
     "BASH_MAX_TIMEOUT_MS": "1200000",
     "MAX_THINKING_TOKENS": "200000"
-  },
-  "preferredNotifChannel": "terminal_bell"
+  }
 }
