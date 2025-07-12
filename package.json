@@ -26,6 +26,9 @@
   },
   "dependencies": {
     "@hookform/resolvers": "5.1.1",
+    "@oslojs/crypto": "1.0.1",
+    "@oslojs/encoding": "1.1.0",
+    "@pilcrowjs/object-parser": "0.0.4",
     "@react-router/node": "7.5.3",
     "@react-router/serve": "7.5.3",
     "class-variance-authority": "0.7.1",
@@ -63,6 +66,7 @@
     "@types/react": "19.1.2",
     "@types/react-dom": "19.1.2",
     "@vitest/coverage-v8": "3.2.4",
+    "arctic": "3.7.0",
     "dotenv": "17.2.0",
     "drizzle-kit": "0.31.4",
     "drizzle-orm": "0.44.2",

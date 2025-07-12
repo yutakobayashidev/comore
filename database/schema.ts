@@ -1,12 +1,26 @@
-import { integer, text, sqliteTable } from "drizzle-orm/sqlite-core";
+import { integer, text, sqliteTable, index } from "drizzle-orm/sqlite-core";
 
 // ユーザー
-export const users = sqliteTable("users", {
+export const users = sqliteTable(
+  "users",
+  {
+    id: integer("id").primaryKey(),
+    githubId: integer("github_id").notNull().unique(),
+    email: text("email").notNull().unique(),
+    username: text("username").notNull(),
+  },
+  (table) => ({
+    githubIdIndex: index("github_id_index").on(table.githubId),
+  }),
+);
+
+// セッション
+export const sessions = sqliteTable("session", {
   id: text("id").primaryKey(),
-  name: text("name"),
-  bio: text("bio"),
-  avatarUrl: text("avatar_url"),
-  createdAt: integer("created_at", { mode: "timestamp" }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id),
+  expiresAt: integer("expires_at").notNull(),
 });
 
 // RSSフィード
@@ -19,3 +33,6 @@ export const feeds = sqliteTable("feeds", {
   homepageUrl: text("homepage_url"),
   createdAt: integer("created_at", { mode: "timestamp" }),
 });
+
+const schema = { users, sessions, feeds };
+export default schema;
