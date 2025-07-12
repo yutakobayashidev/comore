@@ -35,5 +35,27 @@ export const feeds = sqliteTable("feeds", {
   createdAt: integer("created_at", { mode: "timestamp" }),
 });
 
-const schema = { users, sessions, feeds };
+// ユーザーのフィード
+export const userFeeds = sqliteTable(
+  "user_feeds",
+  {
+    id: integer("id").primaryKey(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+    feedId: text("feed_id")
+      .notNull()
+      .references(() => feeds.id),
+    createdAt: integer("created_at", { mode: "timestamp" })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (table) => ({
+    userIdIndex: index("user_id_index").on(table.userId),
+    feedIdIndex: index("feed_id_index").on(table.feedId),
+    uniqueUserFeed: index("unique_user_feed").on(table.userId, table.feedId),
+  }),
+);
+
+const schema = { users, sessions, feeds, userFeeds };
 export default schema;
