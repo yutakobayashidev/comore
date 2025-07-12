@@ -12,9 +12,16 @@ export function meta() {
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const { user } = await getCurrentSession(context.db)(request);
 
+  if (user) {
+    return {
+      user,
+      isAuthenticated: true as const,
+    };
+  }
+
   return {
-    user,
-    isAuthenticated: !!user,
+    user: null,
+    isAuthenticated: false as const,
   };
 }
 
@@ -33,9 +40,9 @@ export default function Home() {
         {isAuthenticated ? (
           <div>
             <h3>ログイン中</h3>
-            <p>ユーザー名: {user?.username}</p>
-            <p>メール: {user?.email}</p>
-            <p>GitHub ID: {user?.githubId}</p>
+            <p>ユーザー名: {user.username}</p>
+            <p>メール: {user.email}</p>
+            <p>GitHub ID: {user.githubId}</p>
           </div>
         ) : (
           <div>
