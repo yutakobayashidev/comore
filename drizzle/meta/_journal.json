@@ -8,6 +8,13 @@
       "when": 1752264406932,
       "tag": "0000_deep_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1752285882905,
+      "tag": "0001_fixed_corsair",
+      "breakpoints": true
     }
   ]
 }

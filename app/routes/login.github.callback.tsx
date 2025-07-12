@@ -1,17 +1,18 @@
 import { type LoaderFunctionArgs, data } from "react-router";
-import { createGitHubOAuth } from "~/lib/oauth";
+import { createGitHubOAuth } from "~/lib/auth/oauth";
 import {
   generateSessionToken,
   createSession,
   setSessionTokenCookie,
-} from "~/lib/session";
-import { getUserFromGitHubId, createUser } from "~/lib/user";
+} from "~/lib/auth/session";
+import { getUserFromGitHubId, createUser } from "~/lib/auth/user";
+import { getSearchParams } from "~/utils/urls";
+import { parseCookies } from "~/utils/cookies";
 import type { OAuth2Tokens } from "arctic";
+import { ObjectParser } from "@pilcrowjs/object-parser";
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
-  const url = new URL(request.url);
-  const code = url.searchParams.get("code");
-  const state = url.searchParams.get("state");
+  const { code, state } = getSearchParams(request.url);
 
   const cookieHeader = request.headers.get("Cookie");
   const cookies = parseCookies(cookieHeader || "");
@@ -31,24 +32,39 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   try {
     tokens = await github.validateAuthorizationCode(code);
   } catch (e) {
+    console.error("OAuth validation error:", e);
     throw data(null, { status: 400 });
   }
 
+  const githubAccessToken = tokens.accessToken();
+
   const githubUserResponse = await fetch("https://api.github.com/user", {
     headers: {
-      Authorization: `Bearer ${tokens.accessToken}`,
+      Authorization: `Bearer ${githubAccessToken}`,
+      "User-Agent": "comore-app",
     },
   });
 
-  const githubUser = await githubUserResponse.json();
-  const githubUserId = githubUser.id;
-  const githubUsername = githubUser.login;
+  if (!githubUserResponse.ok) {
+    const errorText = await githubUserResponse.text();
+    console.error("GitHub API error:", errorText);
+    throw data(null, { status: 400 });
+  }
 
-  const existingUser = await getUserFromGitHubId(githubUserId);
+  const userResult: unknown = await githubUserResponse.json();
+  const userParser = new ObjectParser(userResult);
+
+  const githubId = userParser.getNumber("id");
+  const username = userParser.getString("login");
+
+  const existingUser = await getUserFromGitHubId(context.db)(githubId);
 
   if (existingUser !== null) {
     const sessionToken = generateSessionToken();
-    const session = await createSession(sessionToken, existingUser.id);
+    const session = await createSession(context.db)(
+      sessionToken,
+      existingUser.id,
+    );
 
     const headers = new Headers({
       Location: "/",
@@ -56,7 +72,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
     headers.append(
       "Set-Cookie",
-      await setSessionTokenCookie(sessionToken, session.expiresAt),
+      setSessionTokenCookie(sessionToken, session.expiresAt),
     );
 
     return new Response(null, {
@@ -65,10 +81,14 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     });
   }
 
-  const user = await createUser(githubUserId, githubUsername);
+  const user = await createUser(context.db)({
+    githubId,
+    username,
+    email: "test@test.com",
+  });
 
   const sessionToken = generateSessionToken();
-  const session = await createSession(sessionToken, user.id);
+  const session = await createSession(context.db)(sessionToken, user.id);
 
   const headers = new Headers({
     Location: "/",
@@ -76,22 +96,11 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   headers.append(
     "Set-Cookie",
-    await setSessionTokenCookie(sessionToken, session.expiresAt),
+    setSessionTokenCookie(sessionToken, session.expiresAt),
   );
 
   return new Response(null, {
     status: 302,
     headers,
   });
-}
-
-function parseCookies(cookieHeader: string): Record<string, string> {
-  const cookies: Record<string, string> = {};
-  cookieHeader.split(";").forEach((cookie) => {
-    const [name, value] = cookie.trim().split("=");
-    if (name && value) {
-      cookies[name] = decodeURIComponent(value);
-    }
-  });
-  return cookies;
 }
