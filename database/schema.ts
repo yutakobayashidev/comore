@@ -7,10 +7,11 @@ export const users = sqliteTable(
     id: integer("id").primaryKey(),
     githubId: integer("github_id").notNull().unique(),
     email: text("email").notNull().unique(),
-    username: text("username").notNull(),
+    handle: text("handle").notNull().unique(),
   },
   (table) => ({
     githubIdIndex: index("github_id_index").on(table.githubId),
+    handleIndex: index("handle_index").on(table.handle),
   }),
 );
 

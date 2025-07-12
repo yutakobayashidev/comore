@@ -57,7 +57,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const userParser = new ObjectParser(userResult);
 
   const githubId = userParser.getNumber("id");
-  const username = userParser.getString("login");
+  const handle = userParser.getString("login");
 
   const existingUser = await getUserFromGitHubId(context.db)(githubId);
 
@@ -85,7 +85,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 
   const user = await createUser(context.db)({
     githubId,
-    username,
+    handle,
     email: "test@test.com", // TODO: fetch email
   });
 

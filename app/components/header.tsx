@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 
 type HeaderProps = {
   user: {
-    username: string;
+    handle: string;
     email: string;
     githubId: number;
   } | null;
@@ -36,7 +36,7 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
                 >
                   <Avatar className="h-9 w-9">
                     <AvatarFallback>
-                      {user.username.charAt(0).toUpperCase()}
+                      {user.handle.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -45,7 +45,7 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
                     <p className="text-sm font-medium leading-none">
-                      {user.username}
+                      @{user.handle}
                     </p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {user.email}

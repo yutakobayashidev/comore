@@ -6,7 +6,10 @@ import {
 } from "@react-router/dev/routes";
 
 export default [
-  layout("routes/layout.tsx", [index("routes/home.tsx")]),
+  layout("routes/layout.tsx", [
+    index("routes/home.tsx"),
+    route(":handle", "routes/profile.$handle.tsx"),
+  ]),
   route("login/github", "routes/login.github.tsx"),
   route("login/github/callback", "routes/login.github.callback.tsx"),
 ] satisfies RouteConfig;
