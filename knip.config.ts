@@ -2,6 +2,9 @@ import type { KnipConfig } from "knip";
 
 const config: KnipConfig = {
   ignoreUnresolved: ["\\+types/.+"],
+  paths: {
+    "~/*": ["./app/*"],
+  },
   ignore: [
     "eslint.config.js",
     "worker-configuration.d.ts",
@@ -9,14 +12,22 @@ const config: KnipConfig = {
     "app/components/ui/**",
     "app/hooks/use-mobile.ts",
     "app/lib/utils.ts",
+    "app/lib/auth/session/index.ts",
   ],
+  "react-router": {
+    config: [
+      "react-router.config.{js,ts}",
+      "vite.config.{js,mjs,ts,cjs,mts,cts}",
+    ],
+  },
+  vitest: {
+    entry: ["src/**/*.test.ts", "src/**/*.test.tsx", "tests/**/*.ts"],
+  },
   ignoreDependencies: [
     "tailwindcss",
     "@react-router/node",
     "@secretlint/secretlint-rule-preset-recommend",
     "@hookform/resolvers",
-    "class-variance-authority",
-    "clsx",
     "cmdk",
     "date-fns",
     "embla-carousel-react",
@@ -28,10 +39,8 @@ const config: KnipConfig = {
     "react-resizable-panels",
     "recharts",
     "sonner",
-    "tailwind-merge",
     "vaul",
     "zod",
-    "radix-ui",
     "tw-animate-css",
     "@testing-library/dom",
     "@testing-library/react",
