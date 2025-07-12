@@ -84,7 +84,7 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
   const user = await createUser(context.db)({
     githubId,
     username,
-    email: "test@test.com",
+    email: "test@test.com", // TODO: fetch email
   });
 
   const sessionToken = generateSessionToken();

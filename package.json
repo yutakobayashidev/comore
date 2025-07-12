@@ -8,7 +8,7 @@
     "build": "react-router build",
     "preview": "pnpm build && vite preview",
     "deploy": "pnpm build && wrangler deploy",
-    "dev": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) react-router dev",
+    "dev": "react-router dev",
     "test": "NODE_ENV=test vitest run",
     "test:watch": "NODE_ENV=test vitest watch",
     "test:coverage": "NODE_ENV=test vitest run --coverage",
