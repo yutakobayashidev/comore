@@ -32,7 +32,6 @@ const config: KnipConfig = {
     "date-fns",
     "embla-carousel-react",
     "input-otp",
-    "lucide-react",
     "next-themes",
     "react-day-picker",
     "react-hook-form",
