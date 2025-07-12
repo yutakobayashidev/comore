@@ -25,7 +25,7 @@ export const validateSessionToken =
         userId: users.id,
         userGithubId: users.githubId,
         userEmail: users.email,
-        userUsername: users.username,
+        userHandle: users.handle,
       })
       .from(sessions)
       .innerJoin(users, eq(sessions.userId, users.id))
@@ -46,7 +46,7 @@ export const validateSessionToken =
       id: row.userId,
       githubId: row.userGithubId,
       email: row.userEmail,
-      username: row.userUsername,
+      handle: row.userHandle,
     };
 
     if (Date.now() >= session.expiresAt.getTime()) {
