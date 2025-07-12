@@ -26,9 +26,6 @@ export async function loader({ params, context }: LoaderFunctionArgs) {
 }
 
 export function meta({ data }: { data: { user: { handle: string } } }) {
-  if (!data?.user) {
-    return [{ title: "User not found" }];
-  }
   return [
     { title: `@${data.user.handle} - Comore` },
     {
