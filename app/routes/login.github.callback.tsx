@@ -26,7 +26,9 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
     throw data(null, { status: 400 });
   }
 
-  const github = createGitHubOAuth(context.cloudflare.env);
+  const url = new URL(request.url);
+  const redirectURI = `${url.origin}/login/github/callback`;
+  const github = createGitHubOAuth(context.cloudflare.env, redirectURI);
 
   let tokens: OAuth2Tokens;
   try {

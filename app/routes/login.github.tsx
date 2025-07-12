@@ -2,17 +2,19 @@ import { generateState } from "arctic";
 import { createGitHubOAuth } from "~/lib/auth/oauth";
 import type { LoaderFunctionArgs } from "react-router";
 
-export async function loader({ context }: LoaderFunctionArgs) {
-  const github = createGitHubOAuth(context.cloudflare.env);
+export async function loader({ context, request }: LoaderFunctionArgs) {
+  const url = new URL(request.url);
+  const redirectURI = `${url.origin}/login/github/callback`;
+  const github = createGitHubOAuth(context.cloudflare.env, redirectURI);
   const state = generateState();
-  const url = github.createAuthorizationURL(state, ["user:email"]);
+  const authUrl = github.createAuthorizationURL(state, ["user:email"]);
 
   const response = new Response(null, {
     status: 302,
     headers: {
-      Location: url.toString(),
+      Location: authUrl.toString(),
       "Set-Cookie": `github_oauth_state=${state}; Path=/; Max-Age=600; HttpOnly; SameSite=Lax${
-        process.env.NODE_ENV === "production" ? "; Secure" : ""
+        context.cloudflare.env.NODE_ENV === "production" ? "; Secure" : ""
       }`,
     },
   });

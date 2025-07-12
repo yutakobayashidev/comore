@@ -13,6 +13,7 @@ describe("~/routes/login.github", () => {
         env: {
           GITHUB_CLIENT_ID: "test-client-id",
           GITHUB_CLIENT_SECRET: "test-client-secret",
+          NODE_ENV: "development",
         },
       },
     },
@@ -41,29 +42,39 @@ describe("~/routes/login.github", () => {
     });
 
     it("includes Secure flag in production environment", async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "production";
-
-      const mockArgs = createMockArgs();
+      const mockArgs = createMockArgs({
+        context: {
+          cloudflare: {
+            env: {
+              GITHUB_CLIENT_ID: "test-client-id",
+              GITHUB_CLIENT_SECRET: "test-client-secret",
+              NODE_ENV: "production",
+            },
+          },
+        },
+      });
       const response = await loader(mockArgs);
 
       const setCookie = response.headers.get("Set-Cookie");
       expect(setCookie).toContain("; Secure");
-
-      process.env.NODE_ENV = originalEnv;
     });
 
     it("does not include Secure flag in development environment", async () => {
-      const originalEnv = process.env.NODE_ENV;
-      process.env.NODE_ENV = "development";
-
-      const mockArgs = createMockArgs();
+      const mockArgs = createMockArgs({
+        context: {
+          cloudflare: {
+            env: {
+              GITHUB_CLIENT_ID: "test-client-id",
+              GITHUB_CLIENT_SECRET: "test-client-secret",
+              NODE_ENV: "development",
+            },
+          },
+        },
+      });
       const response = await loader(mockArgs);
 
       const setCookie = response.headers.get("Set-Cookie");
       expect(setCookie).not.toContain("; Secure");
-
-      process.env.NODE_ENV = originalEnv;
     });
 
     it("generates unique state values for each request", async () => {
@@ -91,6 +102,7 @@ describe("~/routes/login.github", () => {
             env: {
               GITHUB_CLIENT_ID: "different-client-id",
               GITHUB_CLIENT_SECRET: "different-client-secret",
+              NODE_ENV: "development",
             },
           },
         },
