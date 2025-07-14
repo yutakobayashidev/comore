@@ -1,7 +1,8 @@
-import { data, type LoaderFunctionArgs } from "react-router";
+import { data } from "react-router";
 import { createStripeClient } from "~/lib/stripe";
+import type { Route } from "./+types/api.payment.webhook";
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   const env = context.cloudflare.env;
   const stripe = createStripeClient({
     STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY,

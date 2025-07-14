@@ -1,8 +1,8 @@
 import { generateState } from "arctic";
 import { createGitHubOAuth } from "~/lib/auth/oauth";
-import type { LoaderFunctionArgs } from "react-router";
+import type { Route } from "./+types/login.github";
 
-export async function loader({ context, request }: LoaderFunctionArgs) {
+export async function loader({ context, request }: Route.LoaderArgs) {
   const url = new URL(request.url);
   const redirectURI = `${url.origin}/login/github/callback`;
   const github = createGitHubOAuth(context.cloudflare.env, redirectURI);
