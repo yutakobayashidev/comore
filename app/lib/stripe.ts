@@ -1,9 +1,9 @@
 import Stripe from "stripe";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
-import schema from "~/../../database/schema";
+import schema from "~/database/schema";
 import { uuidv7 } from "uuidv7";
 import { eq } from "drizzle-orm";
-import { users, subscriptions } from "~/../../database/schema";
+import { users, subscriptions } from "~/database/schema";
 
 export function createStripeClient(env: { STRIPE_SECRET_KEY: string }) {
   return new Stripe(env.STRIPE_SECRET_KEY, {

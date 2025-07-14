@@ -1,7 +1,7 @@
 import { data } from "react-router";
 import { createStripeClient, handleSubscriptionUpsert } from "~/lib/stripe";
 import { eq } from "drizzle-orm";
-import { users, subscriptions } from "~/../../database/schema";
+import { users, subscriptions } from "~/database/schema";
 import type Stripe from "stripe";
 import type { Route } from "./+types/api.payment.webhook";
 
