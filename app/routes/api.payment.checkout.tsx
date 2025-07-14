@@ -1,0 +1,33 @@
+import { data, type ActionFunctionArgs } from "react-router";
+import { createStripeClient } from "~/lib/stripe";
+
+export async function action({ request, context }: ActionFunctionArgs) {
+  const env = context.cloudflare.env;
+  const stripe = createStripeClient({
+    STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY,
+  });
+
+  const domain = new URL(request.url).origin;
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      ui_mode: "custom",
+      line_items: [
+        {
+          price: env.STRIPE_PRICE_ID,
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      return_url: `${domain}/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
+    });
+
+    return data({ clientSecret: session.client_secret });
+  } catch (error) {
+    console.error("Failed to create checkout session:", error);
+    return data(
+      { error: "Failed to create checkout session" },
+      { status: 500 },
+    );
+  }
+}
