@@ -17,9 +17,9 @@ export async function loader({ request, context }: Route.LoaderArgs) {
 
   const cookieHeader = request.headers.get("Cookie");
   const cookies = parseCookies(cookieHeader || "");
-  const storedState = cookies.github_oauth_state || null;
+  const storedState = cookies["github_oauth_state"] || null;
 
-  if (code === null || state === null || storedState === null) {
+  if (!code || !state || storedState === null) {
     throw data(null, { status: 400 });
   }
 

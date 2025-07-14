@@ -37,6 +37,9 @@ export const validateSessionToken =
     }
 
     const row = result[0];
+    if (!row) {
+      return { session: null, user: null };
+    }
     const session: Session = {
       id: row.sessionId,
       userId: row.sessionUserId,
@@ -122,7 +125,7 @@ export const getCurrentSession =
     }
 
     const cookies = parseCookies(cookieHeader);
-    const token = cookies.session || null;
+    const token = cookies["session"] || null;
 
     if (token === null) {
       return { session: null, user: null };
