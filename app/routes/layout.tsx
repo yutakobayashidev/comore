@@ -1,5 +1,5 @@
 import { Outlet, useLoaderData, redirect } from "react-router";
-import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
+import type { Route } from "./+types/layout";
 import {
   getCurrentSession,
   invalidateSession,
@@ -7,7 +7,7 @@ import {
 } from "~/lib/auth/session";
 import { Header } from "~/components/header";
 
-export async function action({ request, context }: ActionFunctionArgs) {
+export async function action({ request, context }: Route.ActionArgs) {
   const formData = await request.formData();
   const intent = formData.get("intent");
 
@@ -28,7 +28,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
   return null;
 }
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
 
   if (user) {

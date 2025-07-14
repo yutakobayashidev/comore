@@ -1,4 +1,5 @@
-import { type LoaderFunctionArgs, data } from "react-router";
+import { data } from "react-router";
+import type { Route } from "./+types/login.github.callback";
 import { createGitHubOAuth } from "~/lib/auth/oauth";
 import {
   generateSessionToken,
@@ -11,7 +12,7 @@ import { parseCookies } from "~/utils/cookies";
 import type { OAuth2Tokens } from "arctic";
 import { ObjectParser } from "@pilcrowjs/object-parser";
 
-export async function loader({ request, context }: LoaderFunctionArgs) {
+export async function loader({ request, context }: Route.LoaderArgs) {
   const { code, state } = getSearchParams(request.url);
 
   const cookieHeader = request.headers.get("Cookie");
