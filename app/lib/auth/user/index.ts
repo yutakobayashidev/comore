@@ -17,10 +17,11 @@ export const createUser =
   (db: DrizzleD1Database<typeof schema>) =>
   async (params: CreateUserParams): Promise<User> => {
     const result = await db.insert(users).values(params).returning();
+    const user = result[0];
 
-    if (!result[0]) {
+    if (!user) {
       throw new Error("Failed to create user");
     }
 
-    return result[0];
+    return user;
   };

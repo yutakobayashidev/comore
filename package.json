@@ -22,7 +22,7 @@
     "db:studio:prod": "drizzle-kit studio",
     "start": "react-router-serve ./build/server/index.js",
     "cf-typegen": "wrangler types",
-    "typecheck": "react-router typegen && tsc",
+    "typecheck": "react-router typegen && tsc --build",
     "lint": "oxlint && eslint && knip",
     "fmt": "prettier -w . --experimental-cli",
     "postinstall": "npm run cf-typegen"

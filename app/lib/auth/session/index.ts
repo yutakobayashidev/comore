@@ -43,6 +43,7 @@ export const validateSessionToken =
       userId: row.sessionUserId,
       expiresAt: new Date(row.sessionExpiresAt * 1000),
     };
+
     const user: User = {
       id: row.userId,
       githubId: row.userGithubId,
