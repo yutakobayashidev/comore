@@ -23,6 +23,7 @@ const config: KnipConfig = {
   vitest: {
     entry: ["src/**/*.test.ts", "src/**/*.test.tsx", "tests/**/*.ts"],
   },
+  ignoreBinaries: ["stripe"],
   ignoreDependencies: [
     "tailwindcss",
     "@react-router/node",

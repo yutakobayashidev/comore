@@ -1,5 +1,4 @@
 import { integer, text, sqliteTable, index } from "drizzle-orm/sqlite-core";
-import { sql } from "drizzle-orm";
 
 // ユーザー
 export const users = sqliteTable(
@@ -9,10 +8,12 @@ export const users = sqliteTable(
     githubId: integer("github_id").notNull().unique(),
     email: text("email").notNull().unique(),
     handle: text("handle").notNull().unique(),
+    stripeId: text("stripe_id").unique(),
   },
   (table) => ({
     githubIdIndex: index("github_id_index").on(table.githubId),
     handleIndex: index("handle_index").on(table.handle),
+    stripeIdIndex: index("stripe_id_index").on(table.stripeId),
   }),
 );
 
