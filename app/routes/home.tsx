@@ -36,20 +36,23 @@ export default function Home() {
           <Link to={`/${user.handle}`}>
             <Button size="lg">View Your Profile</Button>
           </Link>
-          
+
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <Card>
               <CardHeader>
                 <CardTitle>Quick Start</CardTitle>
-                <CardDescription>Get started with your first project</CardDescription>
+                <CardDescription>
+                  Get started with your first project
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <p className="text-sm text-muted-foreground">
-                  Begin your journey with our comprehensive guides and tutorials.
+                  Begin your journey with our comprehensive guides and
+                  tutorials.
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Documentation</CardTitle>
@@ -61,7 +64,7 @@ export default function Home() {
                 </p>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardHeader>
                 <CardTitle>Community</CardTitle>
