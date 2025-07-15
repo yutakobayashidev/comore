@@ -57,28 +57,25 @@ export async function loader({ context, request }: Route.LoaderArgs) {
         const customer = event.data.object as Stripe.Customer;
 
         try {
-          await context.db.transaction(async (tx) => {
-            const user = await tx.query.users.findFirst({
-              where: eq(users.stripeId, customer.id),
-            });
+          // Find user by stripeId first
+          const user = await context.db.query.users.findFirst({
+            where: eq(users.stripeId, customer.id),
+          });
 
-            if (user) {
-              // Delete all subscriptions for this user
-              await tx
+          if (user) {
+            // Use batch to delete subscriptions and update user
+            await context.db.batch([
+              context.db
                 .delete(subscriptions)
-                .where(eq(subscriptions.userId, user.id));
-
-              // Update user to remove stripeId
-              await tx
+                .where(eq(subscriptions.userId, user.id)),
+              context.db
                 .update(users)
                 .set({ stripeId: null })
-                .where(eq(users.id, user.id));
-            } else {
-              console.warn(
-                `No user found for customer deletion: ${customer.id}`,
-              );
-            }
-          });
+                .where(eq(users.id, user.id)),
+            ]);
+          } else {
+            console.warn(`No user found for customer deletion: ${customer.id}`);
+          }
         } catch (error) {
           console.error("Error deleting customer:", error);
           return data({ error: "Error deleting customer" }, { status: 500 });

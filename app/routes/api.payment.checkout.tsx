@@ -2,7 +2,7 @@ import { createStripeClient } from "~/lib/stripe";
 import type { Route } from "./+types/api.payment.checkout";
 import { data } from "react-router";
 
-export async function loader({ context, request }: Route.LoaderArgs) {
+export async function action({ context, request }: Route.ActionArgs) {
   const env = context.cloudflare.env;
   const stripe = createStripeClient({
     STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY,
@@ -12,7 +12,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 
   try {
     const session = await stripe.checkout.sessions.create({
-      ui_mode: "custom",
+      ui_mode: "embedded",
       line_items: [
         {
           price: env.STRIPE_PRICE_ID,

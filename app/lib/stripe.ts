@@ -16,30 +16,36 @@ export async function handleSubscriptionUpsert(
   db: DrizzleD1Database<typeof schema>,
   subscription: Stripe.Subscription,
 ) {
-  return await db.transaction(async (tx) => {
-    // Find user by stripeId
-    const user = await tx.query.users.findFirst({
-      where: eq(users.stripeId, `${subscription.customer}`),
-    });
+  // Find user by stripeId
+  const user = await db.query.users.findFirst({
+    where: eq(users.stripeId, `${subscription.customer}`),
+  });
 
-    if (!user) {
-      console.warn(`No user found for subscription ${subscription.id}`);
-      return;
-    }
+  if (!user) {
+    console.warn(`No user found for subscription ${subscription.id}`);
+    return;
+  }
 
-    // Support only one subscription for now
-    const item = subscription.items.data[0];
-    const currentPeriodEnd = new Date(item.current_period_end * 1000);
-    const { id, status, cancel_at_period_end } = subscription;
+  // Support only one subscription for now
+  const item = subscription.items.data[0];
+  if (!item) {
+    console.warn(
+      `No subscription items found for subscription ${subscription.id}`,
+    );
+    return;
+  }
+  const currentPeriodEnd = new Date(item.current_period_end * 1000);
+  const { id, status, cancel_at_period_end } = subscription;
 
-    // Check if subscription exists
-    const existingSubscription = await tx.query.subscriptions.findFirst({
-      where: eq(subscriptions.subscriptionId, id),
-    });
+  // Check if subscription exists
+  const existingSubscription = await db.query.subscriptions.findFirst({
+    where: eq(subscriptions.subscriptionId, id),
+  });
 
-    if (existingSubscription) {
-      // Update existing subscription
-      const result = await tx
+  if (existingSubscription) {
+    // Update existing subscription
+    const batchResult = await db.batch([
+      db
         .update(subscriptions)
         .set({
           status,
@@ -48,11 +54,13 @@ export async function handleSubscriptionUpsert(
           updatedAt: new Date(),
         })
         .where(eq(subscriptions.subscriptionId, id))
-        .returning();
-      return result[0];
-    } else {
-      // Create new subscription
-      const result = await tx
+        .returning(),
+    ]);
+    return batchResult[0]?.[0];
+  } else {
+    // Create new subscription
+    const batchResult = await db.batch([
+      db
         .insert(subscriptions)
         .values({
           id: uuidv7(),
@@ -64,8 +72,8 @@ export async function handleSubscriptionUpsert(
           createdAt: new Date(),
           updatedAt: new Date(),
         })
-        .returning();
-      return result[0];
-    }
-  });
+        .returning(),
+    ]);
+    return batchResult[0]?.[0];
+  }
 }

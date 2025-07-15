@@ -45,9 +45,9 @@ export const subscriptions = sqliteTable(
     subscriptionId: text("subscription_id").notNull().unique(),
     status: text("status").notNull(),
     currentPeriodEnd: integer("current_period_end", { mode: "timestamp" }),
-    cancelAtPeriodEnd: integer("cancel_at_period_end", { mode: "boolean" })
-      .notNull()
-      .default(false),
+    cancelAtPeriodEnd: integer("cancel_at_period_end", {
+      mode: "boolean",
+    }).notNull(),
     createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
     updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
     userId: integer("user_id")

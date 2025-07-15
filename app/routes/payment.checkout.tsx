@@ -1,89 +1,94 @@
-import { useState, useEffect, useMemo } from "react";
-import { CheckoutProvider } from "@stripe/react-stripe-js";
-import { useLoaderData, useFetcher } from "react-router";
+import { useMemo } from "react";
+import { redirect, useLoaderData } from "react-router";
 import { getStripe } from "~/lib/stripe-client";
-import { CheckoutForm } from "~/components/payment/checkout-form";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+  EmbeddedCheckoutProvider,
+  EmbeddedCheckout,
+} from "@stripe/react-stripe-js";
+import { createStripeClient } from "~/lib/stripe";
+import type { Route } from "./+types/payment.checkout";
+import { getCurrentSession } from "~/lib/auth/session";
+import { users } from "~/database/schema";
+import { eq } from "drizzle-orm";
 
-// In production, this should come from environment variables
-const STRIPE_PUBLISHABLE_KEY =
-  "pk_test_51RkfNsQD7mChZM2RwZGMWVgPN4bqPTr5UOgdhkwIQ2BatR3oYOBZqRcMn17UGvFC06WjMacACuxjDqYKDvVBTLHT00HtxZxyt4";
+export async function loader({ context, request }: Route.ActionArgs) {
+  const env = context.cloudflare.env;
+  const stripe = createStripeClient({
+    STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY,
+  });
 
-export async function loader() {
-  // You could pass the publishable key from server-side environment
+  const { user } = await getCurrentSession(context.db)(request);
+
+  if (!user) {
+    return redirect("/login/github");
+  }
+
+  const domain = new URL(request.url).origin;
+
+  const customer = await stripe.customers.create({
+    email: user.email,
+    name: user.handle,
+  });
+
+  const { data: openSessionList } = await stripe.checkout.sessions.list({
+    customer: customer.id,
+    status: "open",
+  });
+
+  await Promise.all(
+    openSessionList.map((openSessionItem) =>
+      stripe.checkout.sessions.expire(openSessionItem.id),
+    ),
+  );
+
+  const checkoutSession = await stripe.checkout.sessions.create({
+    mode: "subscription",
+    line_items: [
+      {
+        price: env.STRIPE_PRICE_ID,
+        quantity: 1,
+      },
+    ],
+    automatic_tax: {
+      enabled: true,
+    },
+    customer: customer.id,
+    allow_promotion_codes: true,
+    customer_update: {
+      address: "auto",
+    },
+    ui_mode: "embedded",
+    return_url: `${domain}/payment/complete?session_id={CHECKOUT_SESSION_ID}`,
+  });
+
+  await context.db
+    .update(users)
+    .set({ stripeId: customer.id })
+    .where(eq(users.id, user.id));
+
   return {
-    publishableKey: STRIPE_PUBLISHABLE_KEY,
+    clientSecret: checkoutSession.client_secret,
+    publishableKey:
+      "pk_test_51RkfNsQD7mChZM2RwZGMWVgPN4bqPTr5UOgdhkwIQ2BatR3oYOBZqRcMn17UGvFC06WjMacACuxjDqYKDvVBTLHT00HtxZxyt4",
   };
 }
 
 export default function CheckoutPage() {
-  const { publishableKey } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
-  const [clientSecret, setClientSecret] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (fetcher.state === "idle" && !fetcher.data && !clientSecret) {
-      fetcher.submit(null, { method: "POST", action: "/api/payment/checkout" });
-    }
-  }, [fetcher, clientSecret]);
-
-  useEffect(() => {
-    if (fetcher.data?.clientSecret) {
-      setClientSecret(fetcher.data.clientSecret);
-    }
-  }, [fetcher.data]);
+  const { publishableKey, clientSecret } = useLoaderData<typeof loader>();
 
   const stripePromise = useMemo(
     () => getStripe(publishableKey),
     [publishableKey],
   );
 
-  const appearance = {
-    theme: "stripe" as const,
-    variables: {
-      colorPrimary: "#000000",
-    },
-  };
-
-  if (!clientSecret) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Card className="w-[400px]">
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex items-center justify-center min-h-screen p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Complete your purchase</CardTitle>
-          <CardDescription>Enter your payment details below</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <CheckoutProvider
-            stripe={stripePromise}
-            options={{
-              fetchClientSecret: async () => clientSecret,
-              elementsOptions: { appearance },
-            }}
-          >
-            <CheckoutForm />
-          </CheckoutProvider>
-        </CardContent>
-      </Card>
+    <div id="checkout">
+      <EmbeddedCheckoutProvider
+        stripe={stripePromise}
+        options={{ clientSecret }}
+      >
+        <EmbeddedCheckout />
+      </EmbeddedCheckoutProvider>
     </div>
   );
 }
