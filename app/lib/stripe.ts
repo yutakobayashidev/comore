@@ -3,7 +3,8 @@ import type { DrizzleD1Database } from "drizzle-orm/d1";
 import schema from "~/database/schema";
 import { uuidv7 } from "uuidv7";
 import { eq } from "drizzle-orm";
-import { users, subscriptions } from "~/database/schema";
+import { users, subscriptions, teamMembers } from "~/database/schema";
+import { updateTeamSubscriptionStatus } from "~/lib/teams";
 
 export function createStripeClient(env: { STRIPE_SECRET_KEY: string }) {
   return new Stripe(env.STRIPE_SECRET_KEY, {
@@ -42,6 +43,8 @@ export async function handleSubscriptionUpsert(
     where: eq(subscriptions.subscriptionId, id),
   });
 
+  let result;
+
   if (existingSubscription) {
     // Update existing subscription
     const batchResult = await db.batch([
@@ -56,7 +59,7 @@ export async function handleSubscriptionUpsert(
         .where(eq(subscriptions.subscriptionId, id))
         .returning(),
     ]);
-    return batchResult[0]?.[0];
+    result = batchResult[0]?.[0];
   } else {
     // Create new subscription
     const batchResult = await db.batch([
@@ -74,6 +77,18 @@ export async function handleSubscriptionUpsert(
         })
         .returning(),
     ]);
-    return batchResult[0]?.[0];
+    result = batchResult[0]?.[0];
   }
+
+  // Update team subscription status for all teams where this user is an admin
+  const userTeams = await db
+    .select({ teamId: teamMembers.teamId })
+    .from(teamMembers)
+    .where(eq(teamMembers.userId, user.id));
+
+  for (const { teamId } of userTeams) {
+    await updateTeamSubscriptionStatus(db, teamId);
+  }
+
+  return result;
 }

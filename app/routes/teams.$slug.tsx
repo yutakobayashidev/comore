@@ -1,4 +1,11 @@
-import { redirect, useLoaderData, Link, Form, data } from "react-router";
+import {
+  redirect,
+  useLoaderData,
+  useActionData,
+  Link,
+  Form,
+  data,
+} from "react-router";
 import type { Route } from "./+types/teams.$slug";
 import { getCurrentSession } from "~/lib/auth/session";
 import {
@@ -18,7 +25,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
-import { format } from "~/utils/date";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -180,7 +186,7 @@ export default function TeamPage() {
         </Card>
       )}
 
-      {actionData?.inviteLink && (
+      {actionData && "inviteLink" in actionData && (
         <Card>
           <CardHeader>
             <CardTitle>Invitation Link</CardTitle>
@@ -264,7 +270,7 @@ export default function TeamPage() {
         </CardContent>
       </Card>
 
-      {actionData?.error && (
+      {actionData && "error" in actionData && (
         <p className="text-sm text-red-600">{actionData.error}</p>
       )}
     </div>

@@ -1,7 +1,6 @@
-import { drizzle } from "drizzle-orm/d1";
 import { and, eq, sql } from "drizzle-orm";
-import type { D1Database } from "@cloudflare/workers-types";
-import { nanoid } from "nanoid";
+import type { DrizzleD1Database } from "drizzle-orm/d1";
+import { uuidv7 } from "uuidv7";
 import schema, {
   teams,
   teamMembers,
@@ -9,7 +8,7 @@ import schema, {
   subscriptions,
 } from "../../../database/schema";
 
-type DB = ReturnType<typeof drizzle<typeof schema>>;
+type DB = DrizzleD1Database<typeof schema>;
 
 export async function createTeam(
   db: DB,
@@ -20,7 +19,7 @@ export async function createTeam(
   },
 ) {
   const now = new Date();
-  const teamId = nanoid();
+  const teamId = uuidv7();
 
   const team = await db
     .insert(teams)
@@ -36,7 +35,7 @@ export async function createTeam(
     .get();
 
   await db.insert(teamMembers).values({
-    id: nanoid(),
+    id: uuidv7(),
     teamId: team.id,
     userId: data.creatorUserId,
     role: "admin",
@@ -128,10 +127,10 @@ export async function createTeamInvitation(
   return await db
     .insert(teamInvitations)
     .values({
-      id: nanoid(),
+      id: uuidv7(),
       teamId: data.teamId,
       invitedByUserId: data.invitedByUserId,
-      token: nanoid(32),
+      token: uuidv7(),
       expiresAt,
       createdAt: now,
     })
@@ -164,23 +163,22 @@ export async function acceptTeamInvitation(
     throw new Error("Invalid or expired invitation");
   }
 
-  await db.transaction(async (tx) => {
-    await tx
+  await db.batch([
+    db
       .update(teamInvitations)
       .set({
         usedAt: now,
         usedByUserId: data.userId,
       })
-      .where(eq(teamInvitations.id, invitation.id));
-
-    await tx.insert(teamMembers).values({
-      id: nanoid(),
+      .where(eq(teamInvitations.id, invitation.id)),
+    db.insert(teamMembers).values({
+      id: uuidv7(),
       teamId: invitation.teamId,
       userId: data.userId,
       role: "member",
       joinedAt: now,
-    });
-  });
+    }),
+  ]);
 
   return invitation;
 }
@@ -262,8 +260,8 @@ export async function transferTeamOwnership(
     toUserId: number;
   },
 ): Promise<void> {
-  await db.transaction(async (tx) => {
-    await tx
+  await db.batch([
+    db
       .update(teamMembers)
       .set({ role: "member" })
       .where(
@@ -271,9 +269,8 @@ export async function transferTeamOwnership(
           eq(teamMembers.teamId, data.teamId),
           eq(teamMembers.userId, data.fromUserId),
         ),
-      );
-
-    await tx
+      ),
+    db
       .update(teamMembers)
       .set({ role: "admin" })
       .where(
@@ -281,8 +278,8 @@ export async function transferTeamOwnership(
           eq(teamMembers.teamId, data.teamId),
           eq(teamMembers.userId, data.toUserId),
         ),
-      );
-  });
+      ),
+  ]);
 }
 
 export async function deleteTeam(db: DB, teamId: string): Promise<void> {
