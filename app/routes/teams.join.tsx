@@ -43,12 +43,12 @@ export async function action({ context, request }: Route.ActionArgs) {
   }
 
   try {
-    const invitation = await acceptTeamInvitation(context.db, {
+    const invitation = await acceptTeamInvitation(context.db)({
       token,
       userId: user.id,
     });
 
-    const team = await getTeamById(context.db, invitation.teamId);
+    const team = await getTeamById(context.db)(invitation.teamId);
 
     if (team) {
       return redirect(`/teams/${team.slug}`);
