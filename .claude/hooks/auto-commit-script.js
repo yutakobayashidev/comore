@@ -5,7 +5,7 @@ import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 
-// 簡単なログ関数
+// Simple logging function
 function log(message) {
     if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
         console.log(`[DEBUG] ${message}`);
@@ -13,7 +13,7 @@ function log(message) {
 }
 
 /**
- * JSONLファイルを解析してClaude Codeセッション情報を抽出
+ * Parse JSONL file and extract Claude Code session information
  */
 function analyzeClaudeCodeSession(lines) {
     log(`Analyzing ${lines.length} lines`);
@@ -24,8 +24,7 @@ function analyzeClaudeCodeSession(lines) {
             const parsed = JSON.parse(lines[i]);
             entries.push(parsed);
         } catch (error) {
-            log(`Failed to parse line ${i + 1}: ${error.message}`);
-            // 無効な行はスキップして続行
+            // Skip invalid lines and continue
             continue;
         }
     }
@@ -34,7 +33,7 @@ function analyzeClaudeCodeSession(lines) {
         throw new Error('No valid entries found in transcript');
     }
     
-    // セッション基本情報
+    // Basic session information
     const firstEntry = entries[0];
     const lastEntry = entries[entries.length - 1];
     
@@ -46,7 +45,7 @@ function analyzeClaudeCodeSession(lines) {
         version: firstEntry.version || 'unknown'
     };
     
-    // エントリータイプ別の統計
+    // Statistics by entry type
     const stats = {
         user: 0,
         assistant: 0,
@@ -59,14 +58,14 @@ function analyzeClaudeCodeSession(lines) {
         }
     });
     
-    // ユーザーの最初のリクエストを取得
+    // Get the first user request
     const firstUserEntry = entries.find(entry => 
         entry.type === 'user' && 
         entry.message?.content && 
         typeof entry.message.content === 'string'
     );
     
-    // 変更されたファイルを抽出
+    // Extract modified files
     const modifiedFiles = new Set();
     let toolCalls = 0;
     
@@ -78,7 +77,7 @@ function analyzeClaudeCodeSession(lines) {
                     if (block.type === 'tool_use') {
                         toolCalls++;
                         
-                        // ファイル操作を検出
+                        // Detect file operations
                         if (block.name === 'Edit' && block.input?.file_path) {
                             const fileName = path.basename(block.input.file_path);
                             modifiedFiles.add(fileName);
@@ -88,7 +87,7 @@ function analyzeClaudeCodeSession(lines) {
             }
         }
         
-        // システムメッセージからファイル変更を検出
+        // Detect file changes from system messages
         if (entry.type === 'system' && entry.content) {
             const content = entry.content;
             if (content.includes('has been updated') || content.includes('completed successfully')) {
@@ -116,12 +115,12 @@ function analyzeClaudeCodeSession(lines) {
 }
 
 /**
- * コミットメッセージを生成
+ * Generate commit message
  */
 function generateCommitMessage(analysis) {
     const { sessionInfo, stats, firstUserRequest, modifiedFiles, toolCalls, duration } = analysis;
     
-    // メインタイトル
+    // Main title
     let title = 'Claude Code: ';
     if (firstUserRequest) {
         if (firstUserRequest.length > 50) {
@@ -133,7 +132,7 @@ function generateCommitMessage(analysis) {
         title += 'Automated code changes';
     }
     
-    // 詳細情報
+    // Detailed information
     const details = [
         '',
         `Claude Code Session: ${sessionInfo.sessionId.substring(0, 8)}`,
@@ -143,7 +142,7 @@ function generateCommitMessage(analysis) {
         'What changed:'
     ];
     
-    // 変更されたファイルを追加
+    // Add modified files
     if (modifiedFiles.length > 0) {
         modifiedFiles.forEach(file => {
             details.push(`• Modified: ${file}`);
@@ -159,7 +158,7 @@ function generateCommitMessage(analysis) {
 }
 
 /**
- * Gitリポジトリかどうかをチェック
+ * Check if it's a Git repository
  */
 function isGitRepository(cwd) {
     try {
@@ -174,7 +173,7 @@ function isGitRepository(cwd) {
 }
 
 /**
- * 変更があるかどうかをチェック
+ * Check if there are changes
  */
 function hasChanges(cwd) {
     try {
@@ -189,19 +188,19 @@ function hasChanges(cwd) {
 }
 
 /**
- * 自動コミットを実行
+ * Perform auto-commit
  */
 function performAutoCommit(cwd, commitMessage) {
     try {
-        // すべての変更をステージング
+        // Stage all changes
         execFileSync('git', ['add', '.'], { cwd });
         
-        // Claude用の設定でコミット実行（pre-commitフックをスキップ）
+        // Execute commit with Claude configuration (skip pre-commit hooks)
         execFileSync('git', [
             'commit', 
             '-m', commitMessage,
             '--author=Claude <noreply@anthropic.com>',
-            '--no-verify'  // pre-commitフックをスキップ
+            '--no-verify'  // Skip pre-commit hooks
         ], { 
             cwd,
             stdio: 'pipe',
@@ -222,11 +221,11 @@ function performAutoCommit(cwd, commitMessage) {
     }
 }
 
-// メイン処理
+// Main process
 try {
     log('Starting main process');
     
-    // 標準入力からデータを読み取り
+    // Read data from standard input
     let input;
     try {
         const inputData = readFileSync(process.stdin.fd, 'utf8');
@@ -247,12 +246,12 @@ try {
     const homeDir = os.homedir();
     let transcriptPath = input.transcript_path;
     
-    // チルダ展開
+    // Tilde expansion
     if (transcriptPath.startsWith('~/')) {
         transcriptPath = path.join(homeDir, transcriptPath.slice(2));
     }
 
-    // セキュリティチェック
+    // Security check
     const allowedBase = path.join(homeDir, '.claude', 'projects');
     const resolvedPath = path.resolve(transcriptPath);
     
@@ -268,7 +267,7 @@ try {
         process.exit(0);
     }
 
-    // トランスクリプトファイルを読み取り
+    // Read transcript file
     const fileContent = readFileSync(resolvedPath, "utf-8");
     const lines = fileContent
         .split("\n")
@@ -280,31 +279,31 @@ try {
         process.exit(0);
     }
 
-    // JSONLファイルを解析
+    // Parse JSONL file
     const analysis = analyzeClaudeCodeSession(lines);
     const workingDirectory = analysis.sessionInfo.workingDirectory;
     
-    // Gitリポジトリチェック
+    // Git repository check
     if (!isGitRepository(workingDirectory)) {
         log('Not a git repository');
         console.log('Not a git repository, skipping auto-commit');
         process.exit(0);
     }
     
-    // 変更があるかチェック
+    // Check for changes
     if (!hasChanges(workingDirectory)) {
         log('No changes detected');
         console.log('No changes detected, skipping auto-commit');
         process.exit(0);
     }
     
-    // コミットメッセージ生成
+    // Generate commit message
     const commitMessage = generateCommitMessage(analysis);
     
-    // 自動コミット実行
+    // Execute auto-commit
     performAutoCommit(workingDirectory, commitMessage);
     
-    // デバッグ情報（必要に応じて）
+    // Debug information (if needed)
     if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
         console.log('\n📊 Session Analysis:');
         console.log(`- Duration: ${analysis.duration} minutes`);
