@@ -109,6 +109,23 @@ The project uses shadcn/ui components with:
 
 7. **Testing**: Write tests for components and utilities using Vitest and React Testing Library. Place test files alongside source files with `.test.{ts,tsx}` extension.
 
+8. **Currying Pattern for Database Functions**: 
+   - All database operation functions in `app/lib/` must follow a currying pattern
+   - First parameter: database connection (`db: DrizzleD1Database<typeof schema>`)
+   - Second parameter: actual function parameters
+   - Pattern:
+     ```typescript
+     export const functionName = (db: DB) => async (params: ParamType) => {
+       // implementation
+     };
+     ```
+   - Usage in routes:
+     ```typescript
+     const result = await functionName(context.db)(params);
+     ```
+   - Pure functions that don't interact with the database should NOT be curried
+   - This pattern enables dependency injection and makes testing easier
+
 ## Testing
 
 The project uses Vitest as the testing framework with React Testing Library for component testing.
