@@ -356,7 +356,18 @@
         ]
       },
       {
-        "matcher": "Write|Edit|MultiEdit|Stop",
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/auto-commit-script.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
         "hooks": [
           {
             "type": "command",
