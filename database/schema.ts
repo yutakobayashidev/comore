@@ -126,5 +126,13 @@ export const teamInvitations = sqliteTable(
   }),
 );
 
-const schema = { users, sessions, feeds, subscriptions, teams, teamMembers, teamInvitations };
+const schema = {
+  users,
+  sessions,
+  feeds,
+  subscriptions,
+  teams,
+  teamMembers,
+  teamInvitations,
+};
 export default schema;
