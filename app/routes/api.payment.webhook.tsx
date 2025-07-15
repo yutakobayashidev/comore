@@ -11,85 +11,82 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     STRIPE_SECRET_KEY: env.STRIPE_SECRET_KEY,
   });
 
-  const signature = request.headers.get("stripe-signature");
-  if (!signature) {
+  const sig = request.headers.get("stripe-signature");
+  if (!sig) {
     return data({ error: "Missing stripe signature" }, { status: 400 });
   }
 
-  const body = await request.text();
+  let rawBody: Buffer;
 
   try {
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      env.STRIPE_WEBHOOK_SECRET,
+    rawBody = Buffer.from(await request.arrayBuffer());
+  } catch (_err) {
+    return data({ error: "Error reading request body" }, { status: 400 });
+  }
+
+  let event: Stripe.Event;
+
+  try {
+    event = stripe.webhooks.constructEvent(
+      rawBody,
+      sig,
+      process.env.STRIPE_WEBHOOK_SECRET,
     );
+  } catch (_err) {
+    return data(
+      { error: "Webhook signature verification failed" },
+      { status: 400 },
+    );
+  }
 
-    // Handle the event
-    switch (event.type) {
-      case "checkout.session.completed":
-        const session = event.data.object;
-        console.log("Payment succeeded:", session.id);
-        // TODO: Handle successful payment (e.g., update database, send email)
-        break;
-      case "checkout.session.expired":
-        console.log("Session expired:", event.data.object.id);
-        break;
+  switch (event.type) {
+    case "customer.subscription.created":
+    case "customer.subscription.deleted":
+    case "customer.subscription.updated": {
+      const subscription = event.data.object as Stripe.Subscription;
 
-      case "customer.subscription.created":
-      case "customer.subscription.deleted":
-      case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-
-        try {
-          await handleSubscriptionUpsert(context.db, subscription);
-        } catch (error) {
-          console.error("Error upserting subscription:", error);
-          return data(
-            { error: "Error upserting subscription" },
-            { status: 500 },
-          );
-        }
-        break;
+      try {
+        await handleSubscriptionUpsert(context.db, subscription);
+      } catch (error) {
+        console.error("Error upserting subscription:", error);
+        return data({ error: "Error upserting subscription" }, { status: 500 });
       }
-
-      case "customer.deleted": {
-        const customer = event.data.object as Stripe.Customer;
-
-        try {
-          // Find user by stripeId first
-          const user = await context.db.query.users.findFirst({
-            where: eq(users.stripeId, customer.id),
-          });
-
-          if (user) {
-            // Use batch to delete subscriptions and update user
-            await context.db.batch([
-              context.db
-                .delete(subscriptions)
-                .where(eq(subscriptions.userId, user.id)),
-              context.db
-                .update(users)
-                .set({ stripeId: null })
-                .where(eq(users.id, user.id)),
-            ]);
-          } else {
-            console.warn(`No user found for customer deletion: ${customer.id}`);
-          }
-        } catch (error) {
-          console.error("Error deleting customer:", error);
-          return data({ error: "Error deleting customer" }, { status: 500 });
-        }
-        break;
-      }
-
-      default:
-        console.log(`Unhandled event type ${event.type}`);
+      break;
     }
 
-    return data({ received: true });
-  } catch (error) {
-    console.error("Webhook error:", error);
-    return data({ error: "Webhook error" }, { status: 400 });
+    case "customer.deleted": {
+      const customer = event.data.object as Stripe.Customer;
+
+      try {
+        // Find user by stripeId first
+        const user = await context.db.query.users.findFirst({
+          where: eq(users.stripeId, customer.id),
+        });
+
+        if (user) {
+          // Use batch to delete subscriptions and update user
+          await context.db.batch([
+            context.db
+              .delete(subscriptions)
+              .where(eq(subscriptions.userId, user.id)),
+            context.db
+              .update(users)
+              .set({ stripeId: null })
+              .where(eq(users.id, user.id)),
+          ]);
+        } else {
+          console.warn(`No user found for customer deletion: ${customer.id}`);
+        }
+      } catch (error) {
+        console.error("Error deleting customer:", error);
+        return data({ error: "Error deleting customer" }, { status: 500 });
+      }
+      break;
+    }
+
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
+
+  return data({ received: true });
 }
