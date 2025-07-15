@@ -71,7 +71,9 @@ export const teams = sqliteTable(
     slug: text("slug").notNull().unique(),
     hasActiveSubscription: integer("has_active_subscription", {
       mode: "boolean",
-    }).notNull().default(true),
+    })
+      .notNull()
+      .default(true),
     createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
     updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
   },
@@ -124,5 +126,5 @@ export const teamInvitations = sqliteTable(
   }),
 );
 
-const schema = { users, sessions, feeds, subscriptions };
+const schema = { users, sessions, feeds, subscriptions, teams, teamMembers, teamInvitations };
 export default schema;
