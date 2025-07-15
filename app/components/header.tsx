@@ -28,7 +28,11 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
-            <DropdownMenu>
+            <>
+              <Link to="/teams" className="text-sm font-medium hover:underline">
+                Teams
+              </Link>
+              <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="ghost"

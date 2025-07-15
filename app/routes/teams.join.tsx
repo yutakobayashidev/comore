@@ -3,7 +3,13 @@ import type { Route } from "./+types/teams.join";
 import { getCurrentSession } from "~/lib/auth/session";
 import { acceptTeamInvitation, getTeamById } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
@@ -43,11 +49,11 @@ export async function action({ context, request }: Route.ActionArgs) {
     });
 
     const team = await getTeamById(context.db, invitation.teamId);
-    
+
     if (team) {
       return redirect(`/teams/${team.slug}`);
     }
-    
+
     return redirect("/teams");
   } catch (error) {
     console.error("Failed to accept invitation:", error);
@@ -64,7 +70,8 @@ export default function JoinTeamPage() {
         <CardHeader>
           <CardTitle>Join Team</CardTitle>
           <CardDescription>
-            You've been invited to join a team. Click below to accept the invitation.
+            You've been invited to join a team. Click below to accept the
+            invitation.
           </CardDescription>
         </CardHeader>
         <CardContent>
