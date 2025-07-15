@@ -2,9 +2,9 @@ const fs = require("fs");
 const path = require("path");
 
 /**
- * `package.json`を検索する
- * @param {string} from - 検索を開始するディレクトリ
- * @returns {string} - package.jsonへのパス
+ * Search for `package.json`
+ * @param {string} from - Directory to start the search from
+ * @returns {string} - Path to package.json
  */
 function findNearestPackageJson(from) {
   from = path.resolve(from);
@@ -21,7 +21,7 @@ function findNearestPackageJson(from) {
 }
 
 /**
- * 最も近い package.json を読み込む
+ * Load the nearest package.json
  * @param {string} cwd
  * @returns
  */

@@ -17,7 +17,7 @@ pre-commit:
         npx prettier --write --experimental-cli {staged_files}
       stage_fixed: true
     cspell:
-      glob: "*.{tsx,ts,mts,mcs,mjs,cjs,js,json,md,yml,yaml}"
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,md,yml}"
       run: npx cspell lint --gitignore --cache {staged_files}
     secretlint:
       glob: "*"

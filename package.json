@@ -9,6 +9,7 @@
     "preview": "pnpm build && vite preview",
     "deploy": "pnpm build && wrangler deploy",
     "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
     "stripe:listen": "stripe listen --forward-to localhost:5173/api/payment/webhook",
     "stripe:seed": "tsx seeds/stripe-plans.ts",
     "stripe:seed:single": "tsx seeds/stripe-create-single-price.ts",
@@ -20,13 +21,12 @@
     "db:migrate-production": "drizzle-kit migrate",
     "db:studio": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
     "db:studio:prod": "drizzle-kit studio",
-    "start": "react-router-serve ./build/server/index.js",
     "cf-typegen": "wrangler types",
     "typecheck": "react-router typegen && tsc --build",
+    "spell-check": "cspell lint --gitignore \"**\"",
     "lint": "oxlint && eslint && knip",
     "fmt": "prettier -w . --experimental-cli",
-    "postinstall": "npm run cf-typegen",
-    "spell-check": "cspell lint --gitignore \"**\""
+    "postinstall": "npm run cf-typegen"
   },
   "dependencies": {
     "@hookform/resolvers": "5.1.1",
