@@ -1,7 +1,12 @@
 import { useRouteLoaderData, Link } from "react-router";
 import type { loader as layoutLoader } from "./layout";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 
 export function meta() {
@@ -61,19 +66,29 @@ export default function Home() {
           {isAuthenticated && user ? (
             <>
               <Link to={`/${user.handle}`}>
-                <Button size="lg" className="hover:scale-105 transition-transform">
+                <Button
+                  size="lg"
+                  className="hover:scale-105 transition-transform"
+                >
                   View Your Profile
                 </Button>
               </Link>
               <Link to="/me/payment">
-                <Button size="lg" variant="outline" className="hover:scale-105 transition-transform">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="hover:scale-105 transition-transform"
+                >
                   Manage Subscription
                 </Button>
               </Link>
             </>
           ) : (
             <Link to="/login/github">
-              <Button size="lg" className="hover:scale-105 hover:shadow-lg transition-all">
+              <Button
+                size="lg"
+                className="hover:scale-105 hover:shadow-lg transition-all"
+              >
                 Get Started →
               </Button>
             </Link>
@@ -83,8 +98,8 @@ export default function Home() {
 
       <section className="grid md:grid-cols-2 gap-6 animate-in fade-in duration-1000 delay-500">
         {features.map((feature, index) => (
-          <Card 
-            key={feature.title} 
+          <Card
+            key={feature.title}
             className="hover:shadow-lg transition-all duration-300 hover:-translate-y-1 animate-in fade-in slide-in-from-bottom"
             style={{ animationDelay: `${600 + index * 100}ms` }}
           >
@@ -105,10 +120,9 @@ export default function Home() {
       <section className="text-center space-y-4 pb-12 animate-in fade-in duration-1000 delay-1000">
         <h2 className="text-2xl font-semibold">Ready to dive in?</h2>
         <p className="text-muted-foreground">
-          {isAuthenticated 
+          {isAuthenticated
             ? "Explore your dashboard and start building"
-            : "Join thousands of developers building on Comore"
-          }
+            : "Join thousands of developers building on Comore"}
         </p>
       </section>
     </div>
