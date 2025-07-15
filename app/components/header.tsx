@@ -23,8 +23,8 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
   return (
     <header className="border-b">
       <div className="flex h-16 items-center px-4 container max-w-5xl mx-auto">
-        <Link to="/" className="flex items-center space-x-2">
-          <h1 className="text-xl font-bold">Comore</h1>
+        <Link to="/" className="flex items-center space-x-2 transition-opacity hover:opacity-80">
+          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Comore</h1>
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
