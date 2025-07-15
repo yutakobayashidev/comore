@@ -16,6 +16,9 @@ pre-commit:
       run: |
         npx prettier --write --experimental-cli {staged_files}
       stage_fixed: true
+    cspell:
+      glob: "*.{tsx,ts,mts,mcs,mjs,cjs,js,json,md,yml,yaml}"
+      run: npx cspell lint --gitignore --cache {staged_files}
     secretlint:
       glob: "*"
       run: |
