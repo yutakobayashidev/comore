@@ -68,8 +68,7 @@ export async function loader({ context, request }: Route.ActionArgs) {
 
   return {
     clientSecret: checkoutSession.client_secret,
-    publishableKey:
-      "pk_test_51RkfNsQD7mChZM2RwZGMWVgPN4bqPTr5UOgdhkwIQ2BatR3oYOBZqRcMn17UGvFC06WjMacACuxjDqYKDvVBTLHT00HtxZxyt4",
+    publishableKey: env.STRIPE_PUBLISHABLE_KEY,
   };
 }
 
