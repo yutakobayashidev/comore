@@ -1,6 +1,6 @@
 import { integer, text, sqliteTable, index } from "drizzle-orm/sqlite-core";
 
-// ユーザー
+// Users
 export const users = sqliteTable(
   "users",
   {
@@ -17,7 +17,7 @@ export const users = sqliteTable(
   }),
 );
 
-// セッション
+// Sessions
 export const sessions = sqliteTable("session", {
   id: text("id").primaryKey(),
   userId: integer("user_id")
@@ -26,7 +26,7 @@ export const sessions = sqliteTable("session", {
   expiresAt: integer("expires_at").notNull(),
 });
 
-// RSSフィード
+// RSS Feeds
 export const feeds = sqliteTable("feeds", {
   id: text("id").primaryKey(),
   url: text("url").notNull().unique(),
@@ -37,7 +37,7 @@ export const feeds = sqliteTable("feeds", {
   createdAt: integer("created_at", { mode: "timestamp" }),
 });
 
-// サブスクリプション
+// Subscriptions
 export const subscriptions = sqliteTable(
   "subscriptions",
   {
