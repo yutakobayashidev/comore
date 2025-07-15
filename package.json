@@ -26,7 +26,8 @@
     "spell-check": "cspell lint --gitignore \"**\"",
     "lint": "oxlint && eslint && knip",
     "fmt": "prettier -w . --experimental-cli",
-    "postinstall": "npm run cf-typegen"
+    "postinstall": "npm run cf-typegen",
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@hookform/resolvers": "5.1.1",
