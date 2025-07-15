@@ -30,7 +30,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     event = stripe.webhooks.constructEvent(
       rawBody,
       sig,
-      process.env.STRIPE_WEBHOOK_SECRET,
+      env.STRIPE_WEBHOOK_SECRET,
     );
   } catch {
     return data(
