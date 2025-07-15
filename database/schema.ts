@@ -1,4 +1,4 @@
-import { integer, text, sqliteTable, index } from "drizzle-orm/sqlite-core";
+import { integer, text, sqliteTable, index, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 // Users
 export const users = sqliteTable(
@@ -99,7 +99,10 @@ export const teamMembers = sqliteTable(
   (table) => ({
     teamIdIndex: index("team_member_team_id_index").on(table.teamId),
     userIdIndex: index("team_member_user_id_index").on(table.userId),
-    uniqueTeamUser: uniqueIndex("unique_team_user").on(table.teamId, table.userId),
+    uniqueTeamUser: uniqueIndex("unique_team_user").on(
+      table.teamId,
+      table.userId,
+    ),
   }),
 );
 
