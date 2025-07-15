@@ -86,7 +86,7 @@ function analyzeClaudeCodeSession(lines) {
         content.includes("has been updated") ||
         content.includes("completed successfully")
       ) {
-        const filePathMatch = content.match(/\/[\w\/.-]+\.[\w]+/g);
+        const filePathMatch = content.match(/\/[\w/.-]+\.[\w]+/g);
         if (filePathMatch) {
           filePathMatch.forEach((filePath) => {
             const fileName = path.basename(filePath);
@@ -140,7 +140,7 @@ function generateCommitMessage(analysis) {
   // Detailed information
   const details = [
     "",
-    `Claude Code Session: ${sessionInfo.sessionId.substring(0, 8)}`,
+    `Claude Code Session: ${sessionInfo.sessionId}`,
     `Timestamp: ${sessionInfo.startTime.toISOString().replace("T", " ").substring(0, 19)}`,
     `Duration: ${duration} minutes`,
     "",
