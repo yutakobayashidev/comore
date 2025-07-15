@@ -10,10 +10,16 @@ import {
   getActiveAdminCount,
 } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { format } from "~/utils/date";
-import { 
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -29,14 +35,14 @@ export async function loader({ context, request, params }: Route.LoaderArgs) {
   }
 
   const team = await getTeamBySlug(context.db, params.slug);
-  
+
   if (!team) {
     throw new Response("Team not found", { status: 404 });
   }
 
   const members = await getTeamMembers(context.db, team.id);
   const isAdmin = await isUserTeamAdmin(context.db, user.id, team.id);
-  const isMember = members.some(m => m.member.userId === user.id);
+  const isMember = members.some((m) => m.member.userId === user.id);
 
   if (!isMember) {
     throw new Response("You are not a member of this team", { status: 403 });
@@ -58,17 +64,17 @@ export async function action({ context, request, params }: Route.ActionArgs) {
   }
 
   const team = await getTeamBySlug(context.db, params.slug);
-  
+
   if (!team) {
     throw new Response("Team not found", { status: 404 });
   }
 
   const isAdmin = await isUserTeamAdmin(context.db, user.id, team.id);
-  
+
   if (!isAdmin) {
     return data(
       { error: "Only team admins can perform this action" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -89,32 +95,28 @@ export async function action({ context, request, params }: Route.ActionArgs) {
         return data({ inviteLink });
       } catch (error) {
         console.error("Failed to create invitation:", error);
-        return data(
-          { error: "Failed to create invitation" },
-          { status: 500 }
-        );
+        return data({ error: "Failed to create invitation" }, { status: 500 });
       }
     }
 
     case "remove-member": {
       const memberId = formData.get("memberId") as string;
-      
+
       if (!memberId) {
-        return data(
-          { error: "Member ID is required" },
-          { status: 400 }
-        );
+        return data({ error: "Member ID is required" }, { status: 400 });
       }
 
       const memberIdNum = parseInt(memberId);
-      
+
       if (memberIdNum === user.id) {
         const activeAdminCount = await getActiveAdminCount(context.db, team.id);
-        
+
         if (activeAdminCount <= 1) {
           return data(
-            { error: "Cannot remove the last admin with an active subscription" },
-            { status: 400 }
+            {
+              error: "Cannot remove the last admin with an active subscription",
+            },
+            { status: 400 },
           );
         }
       }
@@ -128,23 +130,18 @@ export async function action({ context, request, params }: Route.ActionArgs) {
         return redirect(`/teams/${team.slug}`);
       } catch (error) {
         console.error("Failed to remove member:", error);
-        return data(
-          { error: "Failed to remove member" },
-          { status: 500 }
-        );
+        return data({ error: "Failed to remove member" }, { status: 500 });
       }
     }
 
     default:
-      return data(
-        { error: "Invalid action" },
-        { status: 400 }
-      );
+      return data({ error: "Invalid action" }, { status: 400 });
   }
 }
 
 export default function TeamPage() {
-  const { team, members, isAdmin, currentUserId } = useLoaderData<typeof loader>();
+  const { team, members, isAdmin, currentUserId } =
+    useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
 
   return (
@@ -172,9 +169,12 @@ export default function TeamPage() {
       {!team.hasActiveSubscription && (
         <Card className="border-yellow-600 bg-yellow-950/20">
           <CardHeader>
-            <CardTitle className="text-yellow-600">Limited Functionality</CardTitle>
+            <CardTitle className="text-yellow-600">
+              Limited Functionality
+            </CardTitle>
             <CardDescription>
-              This team has no active subscriptions. Some features may be limited.
+              This team has no active subscriptions. Some features may be
+              limited.
             </CardDescription>
           </CardHeader>
         </Card>
@@ -196,7 +196,9 @@ export default function TeamPage() {
               <Button
                 size="icon"
                 variant="outline"
-                onClick={() => navigator.clipboard.writeText(actionData.inviteLink)}
+                onClick={() =>
+                  navigator.clipboard.writeText(actionData.inviteLink)
+                }
               >
                 <Copy className="h-4 w-4" />
               </Button>
@@ -209,19 +211,26 @@ export default function TeamPage() {
         <CardHeader>
           <CardTitle>Team Members</CardTitle>
           <CardDescription>
-            {members.length} member{members.length !== 1 ? 's' : ''}
+            {members.length} member{members.length !== 1 ? "s" : ""}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {members.map(({ member, user }) => (
-              <div key={member.id} className="flex items-center justify-between">
+              <div
+                key={member.id}
+                className="flex items-center justify-between"
+              >
                 <div className="flex items-center gap-4">
                   <div>
                     <p className="font-medium">{user.handle}</p>
-                    <p className="text-sm text-muted-foreground">{user.email}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {user.email}
+                    </p>
                   </div>
-                  <Badge variant={member.role === "admin" ? "default" : "secondary"}>
+                  <Badge
+                    variant={member.role === "admin" ? "default" : "secondary"}
+                  >
                     {member.role}
                   </Badge>
                 </div>
@@ -234,7 +243,11 @@ export default function TeamPage() {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <Form method="post">
-                        <input type="hidden" name="intent" value="remove-member" />
+                        <input
+                          type="hidden"
+                          name="intent"
+                          value="remove-member"
+                        />
                         <input type="hidden" name="memberId" value={user.id} />
                         <DropdownMenuItem asChild>
                           <button type="submit" className="w-full text-left">
