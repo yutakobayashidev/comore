@@ -35,25 +35,25 @@ export async function loader({ context, request, params }: Route.LoaderArgs) {
     return redirect("/login/github");
   }
 
-  const team = await getTeamBySlug(context.db, params.slug);
+  const team = await getTeamBySlug(context.db)(params.slug);
 
   if (!team) {
     throw new Response("Team not found", { status: 404 });
   }
 
-  const isAdmin = await isUserTeamAdmin(context.db, user.id, team.id);
+  const isAdmin = await isUserTeamAdmin(context.db)(user.id, team.id);
 
   if (!isAdmin) {
     return redirect(`/teams/${team.slug}`);
   }
 
-  const members = await getTeamMembers(context.db, team.id);
-  const activeAdminCount = await getActiveAdminCount(context.db, team.id);
+  const members = await getTeamMembers(context.db)(team.id);
+  const activeAdminCount = await getActiveAdminCount(context.db)(team.id);
 
   const eligibleTransferTargets = [];
   for (const { member, user: memberUser } of members) {
     if (member.userId !== user.id) {
-      const canCreate = await canUserCreateTeam(context.db, member.userId);
+      const canCreate = await canUserCreateTeam(context.db)(member.userId);
       if (canCreate) {
         eligibleTransferTargets.push({ member, user: memberUser });
       }
@@ -76,13 +76,13 @@ export async function action({ context, request, params }: Route.ActionArgs) {
     return redirect("/login/github");
   }
 
-  const team = await getTeamBySlug(context.db, params.slug);
+  const team = await getTeamBySlug(context.db)(params.slug);
 
   if (!team) {
     throw new Response("Team not found", { status: 404 });
   }
 
-  const isAdmin = await isUserTeamAdmin(context.db, user.id, team.id);
+  const isAdmin = await isUserTeamAdmin(context.db)(user.id, team.id);
 
   if (!isAdmin) {
     return data(
@@ -97,7 +97,7 @@ export async function action({ context, request, params }: Route.ActionArgs) {
   switch (intent) {
     case "delete": {
       try {
-        await deleteTeam(context.db, team.id);
+        await deleteTeam(context.db)(team.id);
         return redirect("/teams");
       } catch (error) {
         console.error("Failed to delete team:", error);
@@ -113,7 +113,7 @@ export async function action({ context, request, params }: Route.ActionArgs) {
       }
 
       try {
-        await transferTeamOwnership(context.db, {
+        await transferTeamOwnership(context.db)({
           teamId: team.id,
           fromUserId: user.id,
           toUserId: parseInt(targetUserId),
