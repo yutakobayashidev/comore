@@ -95,7 +95,7 @@ The project uses shadcn/ui components with:
 
 ## Development Guidelines
 
-1. **Routing**: 
+1. **Routing**:
    - Create route modules in `app/routes/` directory
    - Export `loader` for data fetching and `action` for mutations
    - **IMPORTANT**: After creating a new route file, you must add it to `app/routes.ts` to register the route
