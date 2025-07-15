@@ -25,7 +25,12 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
     <header className="border-b bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="flex h-16 items-center px-4 container max-w-5xl mx-auto">
         <Link to="/" className="flex items-center space-x-2">
-          <h1 className="text-xl font-bold">Comore</h1>
+          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            Comore
+          </h1>
+          <Badge variant="secondary" className="text-xs">
+            Beta
+          </Badge>
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
