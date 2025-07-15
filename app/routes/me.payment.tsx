@@ -33,8 +33,6 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     )
     .limit(1);
 
-  console.log(subscription);
-
   const subscriptionData = subscription[0];
 
   if (!subscriptionData) {
