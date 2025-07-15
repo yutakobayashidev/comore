@@ -8,10 +8,12 @@ export const users = sqliteTable(
     githubId: integer("github_id").notNull().unique(),
     email: text("email").notNull().unique(),
     handle: text("handle").notNull().unique(),
+    stripeId: text("stripe_id").unique(),
   },
   (table) => ({
     githubIdIndex: index("github_id_index").on(table.githubId),
     handleIndex: index("handle_index").on(table.handle),
+    stripeIdIndex: index("stripe_id_index").on(table.stripeId),
   }),
 );
 
@@ -35,5 +37,30 @@ export const feeds = sqliteTable("feeds", {
   createdAt: integer("created_at", { mode: "timestamp" }),
 });
 
-const schema = { users, sessions, feeds };
+// サブスクリプション
+export const subscriptions = sqliteTable(
+  "subscriptions",
+  {
+    id: text("id").primaryKey(),
+    subscriptionId: text("subscription_id").notNull().unique(),
+    status: text("status").notNull(),
+    currentPeriodEnd: integer("current_period_end", { mode: "timestamp" }),
+    cancelAtPeriodEnd: integer("cancel_at_period_end", {
+      mode: "boolean",
+    }).notNull(),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id),
+  },
+  (table) => ({
+    subscriptionIdIndex: index("subscription_id_index").on(
+      table.subscriptionId,
+    ),
+    userIdIndex: index("user_id_index").on(table.userId),
+  }),
+);
+
+const schema = { users, sessions, feeds, subscriptions };
 export default schema;

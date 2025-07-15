@@ -32,19 +32,18 @@ export const validateSessionToken =
       .where(eq(sessions.id, sessionId))
       .limit(1);
 
-    if (result.length === 0) {
+    const row = result[0];
+
+    if (result.length === 0 || !row) {
       return { session: null, user: null };
     }
 
-    const row = result[0];
-    if (!row) {
-      return { session: null, user: null };
-    }
     const session: Session = {
       id: row.sessionId,
       userId: row.sessionUserId,
       expiresAt: new Date(row.sessionExpiresAt * 1000),
     };
+
     const user: User = {
       id: row.userId,
       githubId: row.userGithubId,
