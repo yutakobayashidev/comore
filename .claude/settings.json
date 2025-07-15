@@ -354,6 +354,26 @@
             "command": "jq -r '.tool_input.file_path' | xargs -r npx secretlint --maskSecrets"
           }
         ]
+      },
+      {
+        "matcher": "Write|Edit|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/auto-commit-script.js"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node .claude/hooks/auto-commit-script.js"
+          }
+        ]
       }
     ]
   },
