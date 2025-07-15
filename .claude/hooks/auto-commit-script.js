@@ -14,7 +14,7 @@ function analyzeClaudeCodeSession(lines) {
     try {
       const parsed = JSON.parse(lines[i]);
       entries.push(parsed);
-    } catch (error) {
+    } catch {
       // Skip invalid lines and continue
       continue;
     }
@@ -174,7 +174,7 @@ function isGitRepository(cwd) {
       stdio: "pipe",
     });
     return true;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -189,7 +189,7 @@ function hasChanges(cwd) {
       encoding: "utf8",
     });
     return result.trim().length > 0;
-  } catch (error) {
+  } catch {
     return false;
   }
 }
@@ -238,7 +238,7 @@ try {
   try {
     const inputData = readFileSync(process.stdin.fd, "utf8");
     input = JSON.parse(inputData);
-  } catch (error) {
+  } catch {
     process.exit(1);
   }
 
@@ -295,6 +295,6 @@ try {
   performAutoCommit(workingDirectory, commitMessage);
 
   // Auto-commit completed
-} catch (error) {
+} catch {
   process.exit(1);
 }
