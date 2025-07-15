@@ -14,6 +14,7 @@ const config: KnipConfig = {
     "app/hooks/use-mobile.ts",
     "app/lib/utils.ts",
     "app/lib/auth/session/index.ts",
+    ".claude/hooks/auto-commit-script.js",
   ],
   "react-router": {
     config: [
