@@ -360,7 +360,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "node auto-commit-script.js"
+            "command": "node .claude/hooks/auto-commit-script.js"
           }
         ]
       }

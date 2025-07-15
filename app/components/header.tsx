@@ -24,7 +24,7 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
     <header className="border-b">
       <div className="flex h-16 items-center px-4 container max-w-5xl mx-auto">
         <Link to="/" className="flex items-center space-x-2">
-          <h1 className="text-xl font-bold">Comore</h1>
+          <h1 className="text-2xl font-bold text-primary">Comore</h1>
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
