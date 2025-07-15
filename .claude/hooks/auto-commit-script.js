@@ -5,19 +5,10 @@ import { readFileSync, existsSync } from "node:fs";
 import path from "node:path";
 import os from "node:os";
 
-// Simple logging function
-function log(message) {
-  if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
-    console.log(`[DEBUG] ${message}`);
-  }
-}
-
 /**
  * Parse JSONL file and extract Claude Code session information
  */
 function analyzeClaudeCodeSession(lines) {
-  log(`Analyzing ${lines.length} lines from transcript`);
-
   const entries = [];
   for (let i = 0; i < lines.length; i++) {
     try {
@@ -232,41 +223,26 @@ function performAutoCommit(cwd, commitMessage) {
       },
     );
 
-    if (!process.env.DEBUG_CLAUDE_CODE_HOOK) {
-      console.log("✅ Auto-commit successful");
-      console.log(commitMessage.split("\n")[0]);
-    } else {
-      log("Auto-commit completed successfully");
-    }
+    console.log("✅ Auto-commit successful");
+    console.log(commitMessage.split("\n")[0]);
   } catch (error) {
-    if (!process.env.DEBUG_CLAUDE_CODE_HOOK) {
-      console.log("❌ Auto-commit failed:", error.message);
-    } else {
-      log(`Auto-commit failed: ${error.message}`);
-    }
+    console.log("❌ Auto-commit failed:", error.message);
     throw error;
   }
 }
 
 // Main process
 try {
-  log("Starting main process");
-
   // Read data from standard input
   let input;
   try {
     const inputData = readFileSync(process.stdin.fd, "utf8");
     input = JSON.parse(inputData);
-    log("Input data parsed successfully");
   } catch (error) {
-    if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
-      console.log(`[DEBUG] Failed to parse input: ${error.message}`);
-    }
     process.exit(1);
   }
 
   if (!input.transcript_path) {
-    log("No transcript path provided");
     process.exit(0);
   }
 
@@ -283,14 +259,10 @@ try {
   const resolvedPath = path.resolve(transcriptPath);
 
   if (!resolvedPath.startsWith(allowedBase)) {
-    if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
-      console.log("[DEBUG] Transcript path not in allowed directory");
-    }
     process.exit(1);
   }
 
   if (!existsSync(resolvedPath)) {
-    log("Transcript file does not exist");
     process.exit(0);
   }
 
@@ -299,7 +271,6 @@ try {
   const lines = fileContent.split("\n").filter((line) => line.trim());
 
   if (lines.length === 0) {
-    log("Transcript file is empty");
     process.exit(0);
   }
 
@@ -309,13 +280,11 @@ try {
 
   // Git repository check
   if (!isGitRepository(workingDirectory)) {
-    log("Not a git repository, skipping auto-commit");
     process.exit(0);
   }
 
   // Check for changes
   if (!hasChanges(workingDirectory)) {
-    log("No changes detected, skipping auto-commit");
     process.exit(0);
   }
 
@@ -325,20 +294,7 @@ try {
   // Execute auto-commit
   performAutoCommit(workingDirectory, commitMessage);
 
-  // Debug information (if needed)
-  if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
-    console.log("\n📊 Session Analysis:");
-    console.log(`- Duration: ${analysis.duration} minutes`);
-    console.log(`- Modified files: ${analysis.modifiedFiles.length}`);
-    console.log(`- Tool calls: ${analysis.toolCalls}`);
-    console.log(`- Working directory: ${workingDirectory}`);
-  }
-
-  log("Main process completed successfully");
+  // Auto-commit completed
 } catch (error) {
-  if (process.env.DEBUG_CLAUDE_CODE_HOOK) {
-    console.log(`[DEBUG] Hook execution failed: ${error.message}`);
-    console.error(error);
-  }
   process.exit(1);
 }

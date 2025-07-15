@@ -21,7 +21,7 @@ type HeaderProps = {
 
 export function Header({ user, isAuthenticated }: HeaderProps) {
   return (
-    <header className="border-b">
+    <header className="border-b bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="flex h-16 items-center px-4 container max-w-5xl mx-auto">
         <Link to="/" className="flex items-center space-x-2">
           <h1 className="text-xl font-bold">Comore</h1>
