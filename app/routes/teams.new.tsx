@@ -5,7 +5,13 @@ import { createTeam, canUserCreateTeam, getTeamBySlug } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
@@ -15,7 +21,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   }
 
   const canCreate = await canUserCreateTeam(context.db, user.id);
-  
+
   if (!canCreate) {
     return redirect("/teams");
   }
@@ -31,11 +37,11 @@ export async function action({ context, request }: Route.ActionArgs) {
   }
 
   const canCreate = await canUserCreateTeam(context.db, user.id);
-  
+
   if (!canCreate) {
     return data(
       { error: "You need an active subscription to create teams" },
-      { status: 403 }
+      { status: 403 },
     );
   }
 
@@ -44,17 +50,16 @@ export async function action({ context, request }: Route.ActionArgs) {
   const slug = formData.get("slug") as string;
 
   if (!name || !slug) {
-    return data(
-      { error: "Team name and slug are required" },
-      { status: 400 }
-    );
+    return data({ error: "Team name and slug are required" }, { status: 400 });
   }
 
   const slugRegex = /^[a-z0-9-]+$/;
   if (!slugRegex.test(slug)) {
     return data(
-      { error: "Slug can only contain lowercase letters, numbers, and hyphens" },
-      { status: 400 }
+      {
+        error: "Slug can only contain lowercase letters, numbers, and hyphens",
+      },
+      { status: 400 },
     );
   }
 
@@ -62,7 +67,7 @@ export async function action({ context, request }: Route.ActionArgs) {
   if (existingTeam) {
     return data(
       { error: "A team with this slug already exists" },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
@@ -76,10 +81,7 @@ export async function action({ context, request }: Route.ActionArgs) {
     return redirect(`/teams/${team.slug}`);
   } catch (error) {
     console.error("Failed to create team:", error);
-    return data(
-      { error: "Failed to create team" },
-      { status: 500 }
-    );
+    return data({ error: "Failed to create team" }, { status: 500 });
   }
 }
 
@@ -92,7 +94,8 @@ export default function NewTeamPage() {
         <CardHeader>
           <CardTitle>Create a New Team</CardTitle>
           <CardDescription>
-            Teams allow you to collaborate with others. As a team admin, you can invite members and manage access.
+            Teams allow you to collaborate with others. As a team admin, you can
+            invite members and manage access.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -119,7 +122,8 @@ export default function NewTeamPage() {
                 placeholder="my-awesome-team"
               />
               <p className="text-sm text-muted-foreground">
-                This will be used in your team's URL. Use lowercase letters, numbers, and hyphens only.
+                This will be used in your team's URL. Use lowercase letters,
+                numbers, and hyphens only.
               </p>
             </div>
 
