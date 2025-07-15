@@ -4,18 +4,21 @@ pre-commit:
     oxlint:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: |
-        npx oxlint {staged_files}
+        npx oxlint --fix {staged_files}
       stage_fixed: true
     eslint:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}"
       run: |
-        npx eslint {staged_files}
+        npx eslint --cache --fix {staged_files}
       stage_fixed: true
     prettier:
       glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,md,yml}"
       run: |
         npx prettier --write --experimental-cli {staged_files}
       stage_fixed: true
+    cspell:
+      glob: "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc,md,yml}"
+      run: npx cspell lint --gitignore --cache {staged_files}
     secretlint:
       glob: "*"
       run: |

@@ -3,6 +3,7 @@ import type { KnipConfig } from "knip";
 const config: KnipConfig = {
   ignoreUnresolved: ["\\+types/.+"],
   paths: {
+    "~/database/*": ["./database/*"],
     "~/*": ["./app/*"],
   },
   ignore: [
@@ -23,6 +24,7 @@ const config: KnipConfig = {
   vitest: {
     entry: ["src/**/*.test.ts", "src/**/*.test.tsx", "tests/**/*.ts"],
   },
+  ignoreBinaries: ["stripe"],
   ignoreDependencies: [
     "tailwindcss",
     "@react-router/node",

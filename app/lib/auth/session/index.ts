@@ -32,16 +32,18 @@ export const validateSessionToken =
       .where(eq(sessions.id, sessionId))
       .limit(1);
 
-    if (result.length === 0) {
+    const row = result[0];
+
+    if (result.length === 0 || !row) {
       return { session: null, user: null };
     }
 
-    const row = result[0];
     const session: Session = {
       id: row.sessionId,
       userId: row.sessionUserId,
       expiresAt: new Date(row.sessionExpiresAt * 1000),
     };
+
     const user: User = {
       id: row.userId,
       githubId: row.userGithubId,
@@ -122,7 +124,7 @@ export const getCurrentSession =
     }
 
     const cookies = parseCookies(cookieHeader);
-    const token = cookies.session || null;
+    const token = cookies["session"] || null;
 
     if (token === null) {
       return { session: null, user: null };
