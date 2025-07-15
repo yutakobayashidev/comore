@@ -356,7 +356,7 @@
         ]
       },
       {
-        "matcher": "Write|Edit|MultiEdit",
+        "matcher": "Write|Edit|MultiEdit|Stop",
         "hooks": [
           {
             "type": "command",
