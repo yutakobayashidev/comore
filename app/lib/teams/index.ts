@@ -96,7 +96,10 @@ export const canUserCreateTeam =
       .select()
       .from(subscriptions)
       .where(
-        and(eq(subscriptions.userId, userId), eq(subscriptions.status, "active")),
+        and(
+          eq(subscriptions.userId, userId),
+          eq(subscriptions.status, "active"),
+        ),
       )
       .get();
 
@@ -130,8 +133,7 @@ export const createTeamInvitation =
   };
 
 export const acceptTeamInvitation =
-  (db: DB) =>
-  async (data: { token: string; userId: number }) => {
+  (db: DB) => async (data: { token: string; userId: number }) => {
     const now = new Date();
 
     const invitation = await db
