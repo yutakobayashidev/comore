@@ -9,7 +9,6 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Badge } from "~/components/ui/badge";
 
 type HeaderProps = {
   user: {
@@ -22,15 +21,10 @@ type HeaderProps = {
 
 export function Header({ user, isAuthenticated }: HeaderProps) {
   return (
-    <header className="border-b bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <header className="border-b">
       <div className="flex h-16 items-center px-4 container max-w-5xl mx-auto">
         <Link to="/" className="flex items-center space-x-2">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-            Comore
-          </h1>
-          <Badge variant="secondary" className="text-xs">
-            Beta
-          </Badge>
+          <h1 className="text-xl font-bold">Comore</h1>
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
