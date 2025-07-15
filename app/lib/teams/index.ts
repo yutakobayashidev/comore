@@ -142,8 +142,8 @@ export const acceptTeamInvitation =
       .where(
         and(
           eq(teamInvitations.token, data.token),
-          sql`${teamInvitations.expiresAt} > ${now.getTime()}`,
-          sql`${teamInvitations.usedAt} IS NULL`,
+          gt(teamInvitations.expiresAt, now),
+          isNull(teamInvitations.usedAt),
         ),
       )
       .get();
