@@ -20,7 +20,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
 
   try {
     rawBody = Buffer.from(await request.arrayBuffer());
-  } catch (_err) {
+  } catch {
     return data({ error: "Error reading request body" }, { status: 400 });
   }
 
@@ -32,7 +32,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
       sig,
       process.env.STRIPE_WEBHOOK_SECRET,
     );
-  } catch (_err) {
+  } catch {
     return data(
       { error: "Webhook signature verification failed" },
       { status: 400 },

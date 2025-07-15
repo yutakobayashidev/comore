@@ -120,6 +120,7 @@ export function PaymentButton({
     return (
       <Button asChild>
         <a href="/payment/checkout">Checkout</a>
+        {String(cancelAtPeriodEnd)}
       </Button>
     );
   }

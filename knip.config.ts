@@ -3,6 +3,7 @@ import type { KnipConfig } from "knip";
 const config: KnipConfig = {
   ignoreUnresolved: ["\\+types/.+"],
   paths: {
+    "~/database/*": ["./database/*"],
     "~/*": ["./app/*"],
   },
   ignore: [
