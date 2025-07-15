@@ -3,7 +3,13 @@ import type { Route } from "./+types/teams";
 import { getCurrentSession } from "~/lib/auth/session";
 import { getUserTeams, canUserCreateTeam } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 import { format } from "~/utils/date";
 
@@ -40,7 +46,9 @@ export default function TeamsPage() {
       {!canCreateTeam && (
         <Card className="border-yellow-600 bg-yellow-950/20">
           <CardHeader>
-            <CardTitle className="text-yellow-600">Subscription Required</CardTitle>
+            <CardTitle className="text-yellow-600">
+              Subscription Required
+            </CardTitle>
             <CardDescription>
               You need an active subscription to create teams.
             </CardDescription>
@@ -72,13 +80,14 @@ export default function TeamsPage() {
                 <div className="flex justify-between items-start">
                   <div>
                     <CardTitle>
-                      <Link to={`/teams/${team.slug}`} className="hover:underline">
+                      <Link
+                        to={`/teams/${team.slug}`}
+                        className="hover:underline"
+                      >
                         {team.name}
                       </Link>
                     </CardTitle>
-                    <CardDescription>
-                      Joined {format(joinedAt)}
-                    </CardDescription>
+                    <CardDescription>Joined {format(joinedAt)}</CardDescription>
                   </div>
                   <Badge variant={role === "admin" ? "default" : "secondary"}>
                     {role}
