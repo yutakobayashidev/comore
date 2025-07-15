@@ -1,6 +1,7 @@
 import { useRouteLoaderData, Link } from "react-router";
 import type { loader as layoutLoader } from "./layout";
 import { Button } from "~/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
 
 export function meta() {
   return [
