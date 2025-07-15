@@ -1,13 +1,22 @@
 import { useRouteLoaderData, Link } from "react-router";
 import type { loader as layoutLoader } from "./layout";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Badge } from "~/components/ui/badge";
 
 export function meta() {
   return [
     { title: "Comore - Collaborative Platform" },
-    { name: "description", content: "Connect, collaborate, and create amazing things together!" },
+    {
+      name: "description",
+      content: "Connect, collaborate, and create amazing things together!",
+    },
   ];
 }
 
@@ -19,7 +28,9 @@ export default function Home() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <section className="text-center space-y-4 py-8">
-        <Badge className="mb-4 animate-in fade-in-0 slide-in-from-bottom-1">New Features Available</Badge>
+        <Badge className="mb-4 animate-in fade-in-0 slide-in-from-bottom-1">
+          New Features Available
+        </Badge>
         <h1 className="text-5xl font-bold mb-4 animate-in fade-in-0 slide-in-from-bottom-2">
           Welcome to Comore
         </h1>
@@ -34,12 +45,17 @@ export default function Home() {
               <Button size="lg">View Your Profile</Button>
             </Link>
             <Link to="/me/payment">
-              <Button variant="outline" size="lg">Manage Subscription</Button>
+              <Button variant="outline" size="lg">
+                Manage Subscription
+              </Button>
             </Link>
           </div>
         ) : (
           <Link to="/login/github">
-            <Button size="lg" className="animate-in fade-in-0 slide-in-from-bottom-4">
+            <Button
+              size="lg"
+              className="animate-in fade-in-0 slide-in-from-bottom-4"
+            >
               Get Started with GitHub
             </Button>
           </Link>
@@ -56,7 +72,8 @@ export default function Home() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              Experience edge computing at its finest with global CDN distribution
+              Experience edge computing at its finest with global CDN
+              distribution
             </p>
           </CardContent>
         </Card>
