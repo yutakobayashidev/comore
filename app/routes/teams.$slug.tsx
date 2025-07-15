@@ -40,14 +40,14 @@ export async function loader({ context, request, params }: Route.LoaderArgs) {
     return redirect("/login/github");
   }
 
-  const team = await getTeamBySlug(context.db, params.slug);
+  const team = await getTeamBySlug(context.db)(params.slug);
 
   if (!team) {
     throw new Response("Team not found", { status: 404 });
   }
 
-  const members = await getTeamMembers(context.db, team.id);
-  const isAdmin = await isUserTeamAdmin(context.db, user.id, team.id);
+  const members = await getTeamMembers(context.db)(team.id);
+  const isAdmin = await isUserTeamAdmin(context.db)(user.id, team.id);
   const isMember = members.some((m) => m.member.userId === user.id);
 
   if (!isMember) {
@@ -69,13 +69,13 @@ export async function action({ context, request, params }: Route.ActionArgs) {
     return redirect("/login/github");
   }
 
-  const team = await getTeamBySlug(context.db, params.slug);
+  const team = await getTeamBySlug(context.db)(params.slug);
 
   if (!team) {
     throw new Response("Team not found", { status: 404 });
   }
 
-  const isAdmin = await isUserTeamAdmin(context.db, user.id, team.id);
+  const isAdmin = await isUserTeamAdmin(context.db)(user.id, team.id);
 
   if (!isAdmin) {
     return data(
@@ -90,7 +90,7 @@ export async function action({ context, request, params }: Route.ActionArgs) {
   switch (intent) {
     case "invite": {
       try {
-        const invitation = await createTeamInvitation(context.db, {
+        const invitation = await createTeamInvitation(context.db)({
           teamId: team.id,
           invitedByUserId: user.id,
         });
@@ -115,7 +115,7 @@ export async function action({ context, request, params }: Route.ActionArgs) {
       const memberIdNum = parseInt(memberId);
 
       if (memberIdNum === user.id) {
-        const activeAdminCount = await getActiveAdminCount(context.db, team.id);
+        const activeAdminCount = await getActiveAdminCount(context.db)(team.id);
 
         if (activeAdminCount <= 1) {
           return data(
@@ -128,7 +128,7 @@ export async function action({ context, request, params }: Route.ActionArgs) {
       }
 
       try {
-        await removeTeamMember(context.db, {
+        await removeTeamMember(context.db)({
           teamId: team.id,
           userId: memberIdNum,
         });
