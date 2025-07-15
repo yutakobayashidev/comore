@@ -105,10 +105,7 @@ export async function canUserCreateTeam(
     .select()
     .from(subscriptions)
     .where(
-      and(
-        eq(subscriptions.userId, userId),
-        eq(subscriptions.status, "active"),
-      ),
+      and(eq(subscriptions.userId, userId), eq(subscriptions.status, "active")),
     )
     .get();
 
