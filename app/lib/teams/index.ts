@@ -10,40 +10,35 @@ import schema, {
 
 type DB = DrizzleD1Database<typeof schema>;
 
-export async function createTeam(
-  db: DB,
-  data: {
-    name: string;
-    slug: string;
-    creatorUserId: number;
-  },
-) {
-  const now = new Date();
-  const teamId = uuidv7();
+export const createTeam =
+  (db: DB) =>
+  async (data: { name: string; slug: string; creatorUserId: number }) => {
+    const now = new Date();
+    const teamId = uuidv7();
 
-  const team = await db
-    .insert(teams)
-    .values({
-      id: teamId,
-      name: data.name,
-      slug: data.slug,
-      hasActiveSubscription: true,
-      createdAt: now,
-      updatedAt: now,
-    })
-    .returning()
-    .get();
+    const team = await db
+      .insert(teams)
+      .values({
+        id: teamId,
+        name: data.name,
+        slug: data.slug,
+        hasActiveSubscription: true,
+        createdAt: now,
+        updatedAt: now,
+      })
+      .returning()
+      .get();
 
-  await db.insert(teamMembers).values({
-    id: uuidv7(),
-    teamId: team.id,
-    userId: data.creatorUserId,
-    role: "admin",
-    joinedAt: now,
-  });
+    await db.insert(teamMembers).values({
+      id: uuidv7(),
+      teamId: team.id,
+      userId: data.creatorUserId,
+      role: "admin",
+      joinedAt: now,
+    });
 
-  return team;
-}
+    return team;
+  };
 
 export async function getUserTeams(db: DB, userId: number) {
   return await db
