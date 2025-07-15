@@ -83,7 +83,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
             .where(eq(teamMembers.userId, user.id));
 
           for (const { teamId } of userTeams) {
-            await updateTeamSubscriptionStatus(context.db, teamId);
+            await updateTeamSubscriptionStatus(context.db)(teamId);
           }
         } else {
           console.warn(`No user found for customer deletion: ${customer.id}`);

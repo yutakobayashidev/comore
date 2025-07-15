@@ -20,7 +20,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     return redirect("/login/github");
   }
 
-  const canCreate = await canUserCreateTeam(context.db, user.id);
+  const canCreate = await canUserCreateTeam(context.db)(user.id);
 
   if (!canCreate) {
     return redirect("/teams");
@@ -36,7 +36,7 @@ export async function action({ context, request }: Route.ActionArgs) {
     return redirect("/login/github");
   }
 
-  const canCreate = await canUserCreateTeam(context.db, user.id);
+  const canCreate = await canUserCreateTeam(context.db)(user.id);
 
   if (!canCreate) {
     return data(
@@ -63,7 +63,7 @@ export async function action({ context, request }: Route.ActionArgs) {
     );
   }
 
-  const existingTeam = await getTeamBySlug(context.db, slug);
+  const existingTeam = await getTeamBySlug(context.db)(slug);
   if (existingTeam) {
     return data(
       { error: "A team with this slug already exists" },
@@ -72,7 +72,7 @@ export async function action({ context, request }: Route.ActionArgs) {
   }
 
   try {
-    const team = await createTeam(context.db, {
+    const team = await createTeam(context.db)({
       name,
       slug,
       creatorUserId: user.id,

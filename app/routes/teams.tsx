@@ -20,8 +20,8 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     return redirect("/login/github");
   }
 
-  const teams = await getUserTeams(context.db, user.id);
-  const canCreateTeam = await canUserCreateTeam(context.db, user.id);
+  const teams = await getUserTeams(context.db)(user.id);
+  const canCreateTeam = await canUserCreateTeam(context.db)(user.id);
 
   return {
     teams,

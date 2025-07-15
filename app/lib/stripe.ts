@@ -87,7 +87,7 @@ export async function handleSubscriptionUpsert(
     .where(eq(teamMembers.userId, user.id));
 
   for (const { teamId } of userTeams) {
-    await updateTeamSubscriptionStatus(db, teamId);
+    await updateTeamSubscriptionStatus(db)(teamId);
   }
 
   return result;
