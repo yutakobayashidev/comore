@@ -16,7 +16,7 @@ export default function Home() {
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-4">Welcome to Comore</h1>
+      <h1 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Welcome to Comore</h1>
       <p className="text-lg text-muted-foreground mb-6">
         {isAuthenticated && user
           ? `Hello, @${user.handle}! You're successfully logged in.`
