@@ -18,7 +18,9 @@ export function formatRelative(date: Date): string {
 
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   if (diffInMinutes < 60) {
-    return diffInMinutes === 1 ? "1 minute ago" : `${diffInMinutes} minutes ago`;
+    return diffInMinutes === 1
+      ? "1 minute ago"
+      : `${diffInMinutes} minutes ago`;
   }
 
   const diffInHours = Math.floor(diffInMinutes / 60);
