@@ -43,7 +43,7 @@ export async function action({ context, request }: Route.ActionArgs) {
   }
 
   const formDataObject = Object.fromEntries(await request.formData());
-  const validationResult = SocialLinksSchema.safeParse(formDataObject);
+  const validationResult = socialLinksSchema.safeParse(formDataObject);
 
   if (!validationResult.success) {
     return data({
