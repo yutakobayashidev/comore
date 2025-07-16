@@ -199,7 +199,11 @@ export default function UserSettingsPage() {
               )}
             </div>
 
-            <Button type="submit">Save Changes</Button>
+            {error && <p className="text-sm text-red-600">{error}</p>}
+
+            <Button type="submit" disabled={submitting}>
+              {submitting ? "Saving..." : "Save Changes"}
+            </Button>
           </Form>
         </CardContent>
       </Card>
