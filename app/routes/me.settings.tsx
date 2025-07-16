@@ -192,6 +192,11 @@ export default function UserSettingsPage() {
               <p className="text-sm text-muted-foreground">
                 Your Mastodon or other ActivityPub address
               </p>
+              {validationMessages?.activityPubAddress && (
+                <p className="text-sm text-red-600">
+                  {validationMessages.activityPubAddress[0]}
+                </p>
+              )}
             </div>
 
             <Button type="submit">Save Changes</Button>
