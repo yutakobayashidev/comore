@@ -14,26 +14,28 @@ export const getUserById = (db: DB) => async (userId: number) => {
   return user;
 };
 
-export const updateUserSocialLinks = (db: DB) => async ({
-  userId,
-  websiteUrl,
-  twitterUsername,
-  blueskyAddress,
-  activityPubAddress,
-}: {
-  userId: number;
-  websiteUrl: string | null;
-  twitterUsername: string | null;
-  blueskyAddress: string | null;
-  activityPubAddress: string | null;
-}) => {
-  await db
-    .update(schema.users)
-    .set({
-      websiteUrl,
-      twitterUsername,
-      blueskyAddress,
-      activityPubAddress,
-    })
-    .where(eq(schema.users.id, userId));
-};
+export const updateUserSocialLinks =
+  (db: DB) =>
+  async ({
+    userId,
+    websiteUrl,
+    twitterUsername,
+    blueskyAddress,
+    activityPubAddress,
+  }: {
+    userId: number;
+    websiteUrl: string | null;
+    twitterUsername: string | null;
+    blueskyAddress: string | null;
+    activityPubAddress: string | null;
+  }) => {
+    await db
+      .update(schema.users)
+      .set({
+        websiteUrl,
+        twitterUsername,
+        blueskyAddress,
+        activityPubAddress,
+      })
+      .where(eq(schema.users.id, userId));
+  };

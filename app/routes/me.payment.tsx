@@ -105,6 +105,11 @@ export default function PaymentPage() {
           Available until {format(limitDate)}
         </p>
       )}
+      <div className="border-t pt-6">
+        <Button variant="outline" asChild>
+          <a href="/me/settings">Account Settings</a>
+        </Button>
+      </div>
     </div>
   );
 }
