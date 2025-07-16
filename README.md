@@ -94,6 +94,13 @@ pnpm db:studio
 - `pnpm test:watch` - Run tests in watch mode
 - `pnpm test:coverage` - Run tests with coverage reporting
 
+### Git Worktree Management
+
+- `wt` - Show worktree list in UI and switch to selected worktree
+- `wt init` - Create hook files if necessary
+- `wt add <branch-name>` - Create new branch, add worktree, and switch to it
+- `wt remove <branch-name>` - Delete branch and remove worktree
+
 ## Project Structure
 
 ```
