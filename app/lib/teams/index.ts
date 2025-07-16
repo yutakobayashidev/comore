@@ -80,17 +80,24 @@ export const getUserTeams =
     return await baseQuery;
   };
 
-export const getTeamById = (db: DB) => async (teamId: string): Promise<Team | undefined> => {
-  return await db.select().from(teams).where(eq(teams.id, teamId)).get();
-};
+export const getTeamById =
+  (db: DB) =>
+  async (teamId: string): Promise<Team | undefined> => {
+    return await db.select().from(teams).where(eq(teams.id, teamId)).get();
+  };
 
-export const getTeamBySlug = (db: DB) => async (slug: string): Promise<Team | undefined> => {
-  return await db.select().from(teams).where(eq(teams.slug, slug)).get();
-};
+export const getTeamBySlug =
+  (db: DB) =>
+  async (slug: string): Promise<Team | undefined> => {
+    return await db.select().from(teams).where(eq(teams.slug, slug)).get();
+  };
 
 export const getTeamMembers =
   (db: DB) =>
-  async (teamId: string, options?: PaginationOptions): Promise<TeamMemberWithUser[]> => {
+  async (
+    teamId: string,
+    options?: PaginationOptions,
+  ): Promise<TeamMemberWithUser[]> => {
     const baseQuery = db
       .select({
         member: teamMembers,
@@ -188,7 +195,8 @@ export const createTeamInvitation =
   };
 
 export const acceptTeamInvitation =
-  (db: DB) => async (data: AcceptTeamInvitationParams): Promise<TeamInvitation> => {
+  (db: DB) =>
+  async (data: AcceptTeamInvitationParams): Promise<TeamInvitation> => {
     const now = new Date();
 
     const invitation = await db
@@ -336,20 +344,22 @@ export const deleteTeam =
     await db.delete(teams).where(eq(teams.id, teamId));
   };
 
-export const getInvitationByToken = (db: DB) => async (token: string): Promise<TeamInvitation | undefined> => {
-  const now = new Date();
-  return await db
-    .select()
-    .from(teamInvitations)
-    .where(
-      and(
-        eq(teamInvitations.token, token),
-        gt(teamInvitations.expiresAt, now),
-        isNull(teamInvitations.usedAt),
-      ),
-    )
-    .get();
-};
+export const getInvitationByToken =
+  (db: DB) =>
+  async (token: string): Promise<TeamInvitation | undefined> => {
+    const now = new Date();
+    return await db
+      .select()
+      .from(teamInvitations)
+      .where(
+        and(
+          eq(teamInvitations.token, token),
+          gt(teamInvitations.expiresAt, now),
+          isNull(teamInvitations.usedAt),
+        ),
+      )
+      .get();
+  };
 
 export const isUserTeamMember =
   (db: DB) =>
