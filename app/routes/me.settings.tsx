@@ -104,6 +104,15 @@ export async function action({ context, request }: Route.ActionArgs) {
 
 export default function UserSettingsPage() {
   const { user } = useLoaderData<typeof loader>();
+  const actionData = useActionData<typeof action>();
+  const validationMessages =
+    actionData && "validationMessages" in actionData
+      ? actionData.validationMessages
+      : undefined;
+  const error =
+    actionData && "error" in actionData ? actionData.error : undefined;
+  const navigation = useNavigation();
+  const submitting = navigation.state === "submitting";
 
   return (
     <div className="container max-w-2xl mx-auto py-8 space-y-6">
