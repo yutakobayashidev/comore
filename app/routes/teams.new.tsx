@@ -98,6 +98,9 @@ export async function action({ context, request }: Route.ActionArgs) {
 
 export default function NewTeamPage() {
   const actionData = useActionData<typeof action>();
+  const validationMessages = actionData?.validationMessages;
+  const navigation = useNavigation();
+  const submitting = navigation.state === "submitting";
 
   return (
     <div className="container max-w-2xl mx-auto py-8">
@@ -117,9 +120,13 @@ export default function NewTeamPage() {
                 id="name"
                 name="name"
                 type="text"
-                required
                 placeholder="My Awesome Team"
               />
+              {validationMessages?.name && (
+                <p className="text-sm text-red-600">
+                  {validationMessages.name[0]}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
@@ -128,14 +135,17 @@ export default function NewTeamPage() {
                 id="slug"
                 name="slug"
                 type="text"
-                required
-                pattern="[a-z0-9-]+"
                 placeholder="my-awesome-team"
               />
               <p className="text-sm text-muted-foreground">
                 This will be used in your team's URL. Use lowercase letters,
                 numbers, and hyphens only.
               </p>
+              {validationMessages?.slug && (
+                <p className="text-sm text-red-600">
+                  {validationMessages.slug[0]}
+                </p>
+              )}
             </div>
 
             {actionData?.error && (
@@ -143,7 +153,9 @@ export default function NewTeamPage() {
             )}
 
             <div className="flex gap-4">
-              <Button type="submit">Create Team</Button>
+              <Button type="submit" disabled={submitting}>
+                {submitting ? "作成中..." : "Create Team"}
+              </Button>
               <Button type="button" variant="outline" asChild>
                 <a href="/teams">Cancel</a>
               </Button>
