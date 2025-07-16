@@ -19,6 +19,10 @@ node_modules/
 /.react-router/
 /build/
 
+# TypeScript
+tsconfig.node.tsbuildinfo
+tsconfig.cloudflare.tsbuildinfo
+
 # env
 .env
 .env.production

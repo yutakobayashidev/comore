@@ -295,6 +295,7 @@ try {
   performAutoCommit(workingDirectory, commitMessage);
 
   // Auto-commit completed
-} catch {
+} catch (err) {
+  console.error("Auto-commit script failed:", err);
   process.exit(1);
 }
