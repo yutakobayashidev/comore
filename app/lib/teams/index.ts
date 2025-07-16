@@ -24,7 +24,7 @@ type DB = DrizzleD1Database<typeof schema>;
 
 export const createTeam =
   (db: DB) =>
-  async (data: { name: string; slug: string; creatorUserId: number }) => {
+  async (data: CreateTeamParams): Promise<Team> => {
     const now = new Date();
     const teamId = uuidv7();
 
