@@ -3,7 +3,7 @@ import { users } from "../../database/schema";
 import { eq } from "drizzle-orm";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
-import { Link2, Twitter, AtSign } from "lucide-react";
+import { Link2, AtSign } from "lucide-react";
 import type { Route } from "./+types/profile.$handle";
 
 export async function loader({ params, context }: Route.LoaderArgs) {
@@ -66,10 +66,15 @@ export default function ProfilePage() {
                 <p className="font-medium">{user.githubId}</p>
               </div>
             </div>
-            
-            {(user.websiteUrl || user.twitterUsername || user.blueskyAddress || user.activityPubAddress) && (
+
+            {(user.websiteUrl ||
+              user.twitterUsername ||
+              user.blueskyAddress ||
+              user.activityPubAddress) && (
               <div className="border-t pt-4 space-y-2">
-                <p className="text-sm text-muted-foreground font-medium">Social Links</p>
+                <p className="text-sm text-muted-foreground font-medium">
+                  Social Links
+                </p>
                 <div className="flex flex-wrap gap-3">
                   {user.websiteUrl && (
                     <a
@@ -89,13 +94,12 @@ export default function ProfilePage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-sm hover:underline"
                     >
-                      <Twitter className="h-4 w-4" />
-                      @{user.twitterUsername}
+                      <Twitter className="h-4 w-4" />@{user.twitterUsername}
                     </a>
                   )}
                   {user.blueskyAddress && (
                     <a
-                      href={`https://bsky.app/profile/${user.blueskyAddress.replace('@', '')}`}
+                      href={`https://bsky.app/profile/${user.blueskyAddress.replace("@", "")}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-sm hover:underline"
