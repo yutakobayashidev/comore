@@ -1,7 +1,7 @@
 import { redirect, useLoaderData, Form } from "react-router";
 import type { Route } from "./+types/teams.join";
 import { getCurrentSession } from "~/lib/auth/session";
-import { acceptTeamInvitation, getTeamById } from "~/lib/teams";
+import { acceptTeamInvitation, getTeamById, getInvitationByToken, isUserTeamMember } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -25,7 +25,16 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     return redirect("/teams");
   }
 
-  return { token };
+  const invitation = await getInvitationByToken(context.db)(token);
+  
+  if (!invitation) {
+    return redirect("/teams");
+  }
+
+  const team = await getTeamById(context.db)(invitation.teamId);
+  const isAlreadyMember = await isUserTeamMember(context.db)(user.id, invitation.teamId);
+
+  return { token, team, isAlreadyMember };
 }
 
 export async function action({ context, request }: Route.ActionArgs) {
