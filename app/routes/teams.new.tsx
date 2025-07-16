@@ -22,7 +22,10 @@ import {
 
 const TeamSchema = z.object({
   name: z.string().min(1),
-  slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
+  slug: z
+    .string()
+    .min(1)
+    .regex(/^[a-z0-9-]+$/),
 });
 
 export async function loader({ context, request }: Route.LoaderArgs) {
