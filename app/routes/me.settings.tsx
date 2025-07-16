@@ -174,6 +174,11 @@ export default function UserSettingsPage() {
                 placeholder="@username.bsky.social"
                 defaultValue={user?.blueskyAddress || ""}
               />
+              {validationMessages?.blueskyAddress && (
+                <p className="text-sm text-red-600">
+                  {validationMessages.blueskyAddress[0]}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
