@@ -25,9 +25,12 @@ const SocialLinksSchema = z.object({
   websiteUrl: z
     .string()
     .optional()
-    .refine((val) => !val || val === "" || z.string().url().safeParse(val).success, {
-      message: "Please enter a valid URL",
-    }),
+    .refine(
+      (val) => !val || val === "" || z.string().url().safeParse(val).success,
+      {
+        message: "Please enter a valid URL",
+      },
+    ),
   twitterUsername: z
     .string()
     .optional()
@@ -38,13 +41,15 @@ const SocialLinksSchema = z.object({
     .string()
     .optional()
     .refine((val) => !val || /^(@[a-zA-Z0-9.-]+)?$/.test(val), {
-      message: "Please enter a valid Bluesky address (e.g., @username.bsky.social)",
+      message:
+        "Please enter a valid Bluesky address (e.g., @username.bsky.social)",
     }),
   activityPubAddress: z
     .string()
     .optional()
     .refine((val) => !val || /^(@[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+)?$/.test(val), {
-      message: "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
+      message:
+        "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
     }),
 });
 
@@ -69,11 +74,17 @@ export async function action({ context, request }: Route.ActionArgs) {
     return redirect("/login/github");
   }
 
-  const formData = await request.formData();
-  const websiteUrl = formData.get("websiteUrl") as string;
-  const twitterUsername = formData.get("twitterUsername") as string;
-  const blueskyAddress = formData.get("blueskyAddress") as string;
-  const activityPubAddress = formData.get("activityPubAddress") as string;
+  const formDataObject = Object.fromEntries(await request.formData());
+  const validationResult = SocialLinksSchema.safeParse(formDataObject);
+
+  if (!validationResult.success) {
+    return data({
+      validationMessages: validationResult.error.flatten().fieldErrors,
+    });
+  }
+
+  const { websiteUrl, twitterUsername, blueskyAddress, activityPubAddress } =
+    validationResult.data;
 
   try {
     await updateUserSocialLinks(context.db)({
