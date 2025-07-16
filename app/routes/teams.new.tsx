@@ -1,4 +1,10 @@
-import { redirect, useActionData, Form, data, useNavigation } from "react-router";
+import {
+  redirect,
+  useActionData,
+  Form,
+  data,
+  useNavigation,
+} from "react-router";
 import type { Route } from "./+types/teams.new";
 import { z } from "zod";
 import { getCurrentSession } from "~/lib/auth/session";
@@ -56,30 +62,24 @@ export async function action({ context, request }: Route.ActionArgs) {
     );
   }
 
-  const formData = await request.formData();
-  const name = formData.get("name") as string;
-  const slug = formData.get("slug") as string;
+  const formDataObject = Object.fromEntries(await request.formData());
+  const validationResult = TeamSchema.safeParse(formDataObject);
 
-  if (!name || !slug) {
-    return data({ error: "Team name and slug are required" }, { status: 400 });
+  if (!validationResult.success) {
+    return data({
+      validationMessages: validationResult.error.flatten().fieldErrors,
+    });
   }
 
-  const slugRegex = /^[a-z0-9-]+$/;
-  if (!slugRegex.test(slug)) {
-    return data(
-      {
-        error: "Slug can only contain lowercase letters, numbers, and hyphens",
-      },
-      { status: 400 },
-    );
-  }
+  const { name, slug } = validationResult.data;
 
   const existingTeam = await getTeamBySlug(context.db)(slug);
   if (existingTeam) {
-    return data(
-      { error: "A team with this slug already exists" },
-      { status: 400 },
-    );
+    return data({
+      validationMessages: {
+        slug: ["このURLスラッグは既に使用されています。"],
+      },
+    });
   }
 
   try {
