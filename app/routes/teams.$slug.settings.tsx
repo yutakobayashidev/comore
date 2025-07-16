@@ -8,7 +8,7 @@ import {
   getActiveAdminCount,
   deleteTeam,
   transferTeamOwnership,
-  canUserCreateTeam,
+  getUsersWithActiveSubscription,
 } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
 import {
@@ -50,15 +50,22 @@ export async function loader({ context, request, params }: Route.LoaderArgs) {
   const members = await getTeamMembers(context.db)(team.id);
   const activeAdminCount = await getActiveAdminCount(context.db)(team.id);
 
-  const eligibleTransferTargets = [];
-  for (const { member, user: memberUser } of members) {
-    if (member.userId !== user.id) {
-      const canCreate = await canUserCreateTeam(context.db)(member.userId);
-      if (canCreate) {
-        eligibleTransferTargets.push({ member, user: memberUser });
-      }
-    }
-  }
+  // Get all member IDs except current user
+  const otherMemberIds = members
+    .filter(({ member }) => member.userId !== user.id)
+    .map(({ member }) => member.userId);
+
+  // Batch check subscription status
+  const usersWithSubscription = await getUsersWithActiveSubscription(
+    context.db,
+  )(otherMemberIds);
+
+  const eligibleTransferTargets = members
+    .filter(
+      ({ member }) =>
+        member.userId !== user.id && usersWithSubscription.has(member.userId),
+    )
+    .map(({ member, user: memberUser }) => ({ member, user: memberUser }));
 
   return {
     team,

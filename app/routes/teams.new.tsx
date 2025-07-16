@@ -1,7 +1,7 @@
 import { redirect, useActionData, Form, data } from "react-router";
 import type { Route } from "./+types/teams.new";
 import { getCurrentSession } from "~/lib/auth/session";
-import { createTeam, canUserCreateTeam, getTeamBySlug } from "~/lib/teams";
+import { createTeam, hasActiveSubscription, getTeamBySlug } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
@@ -20,7 +20,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
     return redirect("/login/github");
   }
 
-  const canCreate = await canUserCreateTeam(context.db)(user.id);
+  const canCreate = await hasActiveSubscription(context.db)(user.id);
 
   if (!canCreate) {
     return redirect("/teams");
@@ -36,7 +36,7 @@ export async function action({ context, request }: Route.ActionArgs) {
     return redirect("/login/github");
   }
 
-  const canCreate = await canUserCreateTeam(context.db)(user.id);
+  const canCreate = await hasActiveSubscription(context.db)(user.id);
 
   if (!canCreate) {
     return data(

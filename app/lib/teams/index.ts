@@ -1,4 +1,4 @@
-import { and, eq, sql, gt, isNull } from "drizzle-orm";
+import { and, eq, sql, gt, isNull, inArray } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { uuidv7 } from "uuidv7";
 import schema, {
@@ -40,17 +40,42 @@ export const createTeam =
     return team;
   };
 
-export const getUserTeams = (db: DB) => async (userId: number) => {
-  return await db
-    .select({
-      team: teams,
-      role: teamMembers.role,
-      joinedAt: teamMembers.joinedAt,
-    })
-    .from(teamMembers)
-    .innerJoin(teams, eq(teamMembers.teamId, teams.id))
-    .where(eq(teamMembers.userId, userId));
-};
+export const getUserTeams =
+  (db: DB) =>
+  async (userId: number, options?: { limit?: number; offset?: number }) => {
+    const baseQuery = db
+      .select({
+        team: teams,
+        role: teamMembers.role,
+        joinedAt: teamMembers.joinedAt,
+      })
+      .from(teamMembers)
+      .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+      .where(eq(teamMembers.userId, userId))
+      .orderBy(teamMembers.joinedAt);
+
+    if (options?.limit && options?.offset !== undefined) {
+      return await baseQuery.limit(options.limit).offset(options.offset);
+    } else if (options?.limit) {
+      return await baseQuery.limit(options.limit);
+    } else if (options?.offset !== undefined) {
+      return await baseQuery.offset(options.offset);
+    }
+
+    return await baseQuery;
+  };
+
+export const getUserTeamCount =
+  (db: DB) =>
+  async (userId: number): Promise<number> => {
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(teamMembers)
+      .where(eq(teamMembers.userId, userId))
+      .get();
+
+    return result?.count ?? 0;
+  };
 
 export const getTeamById = (db: DB) => async (teamId: string) => {
   return await db.select().from(teams).where(eq(teams.id, teamId)).get();
@@ -60,16 +85,41 @@ export const getTeamBySlug = (db: DB) => async (slug: string) => {
   return await db.select().from(teams).where(eq(teams.slug, slug)).get();
 };
 
-export const getTeamMembers = (db: DB) => async (teamId: string) => {
-  return await db
-    .select({
-      member: teamMembers,
-      user: schema.users,
-    })
-    .from(teamMembers)
-    .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
-    .where(eq(teamMembers.teamId, teamId));
-};
+export const getTeamMembers =
+  (db: DB) =>
+  async (teamId: string, options?: { limit?: number; offset?: number }) => {
+    const baseQuery = db
+      .select({
+        member: teamMembers,
+        user: schema.users,
+      })
+      .from(teamMembers)
+      .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
+      .where(eq(teamMembers.teamId, teamId))
+      .orderBy(teamMembers.joinedAt);
+
+    if (options?.limit && options?.offset !== undefined) {
+      return await baseQuery.limit(options.limit).offset(options.offset);
+    } else if (options?.limit) {
+      return await baseQuery.limit(options.limit);
+    } else if (options?.offset !== undefined) {
+      return await baseQuery.offset(options.offset);
+    }
+
+    return await baseQuery;
+  };
+
+export const getTeamMemberCount =
+  (db: DB) =>
+  async (teamId: string): Promise<number> => {
+    const result = await db
+      .select({ count: sql<number>`count(*)` })
+      .from(teamMembers)
+      .where(eq(teamMembers.teamId, teamId))
+      .get();
+
+    return result?.count ?? 0;
+  };
 
 export const isUserTeamAdmin =
   (db: DB) =>
@@ -89,7 +139,7 @@ export const isUserTeamAdmin =
     return !!membership;
   };
 
-export const canUserCreateTeam =
+export const hasActiveSubscription =
   (db: DB) =>
   async (userId: number): Promise<boolean> => {
     const userSubscription = await db
@@ -104,6 +154,24 @@ export const canUserCreateTeam =
       .get();
 
     return !!userSubscription;
+  };
+
+export const getUsersWithActiveSubscription =
+  (db: DB) =>
+  async (userIds: number[]): Promise<Set<number>> => {
+    if (userIds.length === 0) return new Set();
+
+    const activeSubscriptions = await db
+      .select({ userId: subscriptions.userId })
+      .from(subscriptions)
+      .where(
+        and(
+          inArray(subscriptions.userId, userIds),
+          eq(subscriptions.status, "active"),
+        ),
+      );
+
+    return new Set(activeSubscriptions.map((sub) => sub.userId));
   };
 
 export const createTeamInvitation =

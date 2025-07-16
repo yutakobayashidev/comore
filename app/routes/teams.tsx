@@ -1,7 +1,7 @@
 import { redirect, useLoaderData, Link } from "react-router";
 import type { Route } from "./+types/teams";
 import { getCurrentSession } from "~/lib/auth/session";
-import { getUserTeams, canUserCreateTeam } from "~/lib/teams";
+import { getUserTeams, hasActiveSubscription } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -21,7 +21,7 @@ export async function loader({ context, request }: Route.LoaderArgs) {
   }
 
   const teams = await getUserTeams(context.db)(user.id);
-  const canCreateTeam = await canUserCreateTeam(context.db)(user.id);
+  const canCreateTeam = await hasActiveSubscription(context.db)(user.id);
 
   return {
     teams,
