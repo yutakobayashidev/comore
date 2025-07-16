@@ -161,3 +161,23 @@ The project uses Vitest as the testing framework with React Testing Library for 
 - `pnpm test` - Run all tests once
 - `pnpm test:watch` - Run tests in watch mode (re-runs on file changes)
 - `pnpm test:coverage` - Generate and display code coverage report
+
+## Human-in-the-Loop Integration
+
+**IMPORTANT**: When you have questions or need clarification about project-specific decisions, always use the `mcp__human-in-the-loop__ask_human` tool to ask questions.
+
+### When to Use
+
+- When project-specific design decisions are needed
+- When there are multiple implementation approaches and you're unsure which to choose
+- When the intent of existing code is unclear
+- Before making breaking changes or large-scale refactoring
+- Before making changes that could affect production
+- When business logic or user requirements need clarification
+
+### Best Practices
+
+- Ask specific questions with context
+- Prefer questions that request detailed explanations over simple Yes/No questions
+- Ask one question at a time unless multiple questions are closely related
+- Include relevant context about what you're trying to achieve
