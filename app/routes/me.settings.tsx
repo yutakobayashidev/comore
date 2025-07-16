@@ -26,12 +26,9 @@ const SocialLinksSchema = z.object({
     .string()
     .optional()
     .transform((val) => val?.trim() || "")
-    .refine(
-      (val) => !val || val === "" || z.string().url().safeParse(val).success,
-      {
-        message: "Please enter a valid URL",
-      },
-    ),
+    .refine((val) => !val || val === "" || z.url().safeParse(val).success, {
+      message: "Please enter a valid URL",
+    }),
   twitterUsername: z
     .string()
     .optional()
@@ -45,6 +42,7 @@ const SocialLinksSchema = z.object({
     .transform((val) => val?.trim() || "")
     .refine((val) => !val || /^(@[a-zA-Z0-9.-]+)?$/.test(val), {
       message:
+        // cspell:ignore bsky
         "Please enter a valid Bluesky address (e.g., @username.bsky.social)",
     }),
   activityPubAddress: z
