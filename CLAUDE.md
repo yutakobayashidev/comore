@@ -164,10 +164,6 @@ The project uses Vitest as the testing framework with React Testing Library for 
 
 ## Human-in-the-Loop Integration
 
-```bash
-claude --mcp-config=.mcp.local.json
-```
-
 **IMPORTANT**: When you have questions or need clarification about project-specific decisions, always use the `mcp__human-in-the-loop__ask_human` tool to ask questions.
 
 ### When to Use
