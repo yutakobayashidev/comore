@@ -98,7 +98,10 @@ export async function action({ context, request }: Route.ActionArgs) {
 
 export default function NewTeamPage() {
   const actionData = useActionData<typeof action>();
-  const validationMessages = actionData?.validationMessages;
+  const validationMessages = actionData && 'validationMessages' in actionData
+    ? actionData.validationMessages
+    : undefined;
+  const error = actionData && 'error' in actionData ? actionData.error : undefined;
   const navigation = useNavigation();
   const submitting = navigation.state === "submitting";
 
