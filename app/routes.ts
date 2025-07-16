@@ -10,6 +10,7 @@ export default [
     index("routes/home.tsx"),
     route(":handle", "routes/profile.$handle.tsx"),
     route("me/payment", "routes/me.payment.tsx"),
+    route("me/settings", "routes/me.settings.tsx"),
     route("teams", "routes/teams.tsx"),
     route("teams/new", "routes/teams.new.tsx"),
     route("teams/join", "routes/teams.join.tsx"),

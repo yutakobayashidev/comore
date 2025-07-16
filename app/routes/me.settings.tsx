@@ -63,7 +63,9 @@ export default function UserSettingsPage() {
     <div className="container max-w-2xl mx-auto py-8 space-y-6">
       <div>
         <h1 className="font-semibold text-2xl">Account Settings</h1>
-        <p className="text-muted-foreground">Manage your profile and social links</p>
+        <p className="text-muted-foreground">
+          Manage your profile and social links
+        </p>
       </div>
 
       <Card>
