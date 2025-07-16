@@ -173,6 +173,7 @@ export default function UserSettingsPage() {
               <Input
                 id="blueskyAddress"
                 name="blueskyAddress"
+                // cspell:ignore bsky
                 placeholder="@username.bsky.social"
                 defaultValue={user?.blueskyAddress || ""}
               />
