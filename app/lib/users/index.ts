@@ -5,15 +5,17 @@ import type { User, UpdateUserSocialLinksParams } from "./interface";
 
 type DB = DrizzleD1Database<typeof schema>;
 
-export const getUserById = (db: DB) => async (userId: number): Promise<User | undefined> => {
-  const [user] = await db
-    .select()
-    .from(schema.users)
-    .where(eq(schema.users.id, userId))
-    .limit(1);
+export const getUserById =
+  (db: DB) =>
+  async (userId: number): Promise<User | undefined> => {
+    const [user] = await db
+      .select()
+      .from(schema.users)
+      .where(eq(schema.users.id, userId))
+      .limit(1);
 
-  return user;
-};
+    return user;
+  };
 
 export const updateUserSocialLinks =
   (db: DB) =>
