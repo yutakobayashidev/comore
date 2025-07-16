@@ -53,7 +53,7 @@ export async function action({ context, request }: Route.ActionArgs) {
   }
 
   const formDataObject = Object.fromEntries(await request.formData());
-  const validationResult = TeamSchema.safeParse(formDataObject);
+  const validationResult = teamSchema.safeParse(formDataObject);
 
   if (!validationResult.success) {
     return data({
