@@ -25,6 +25,7 @@ const SocialLinksSchema = z.object({
   websiteUrl: z
     .string()
     .optional()
+    .transform((val) => val?.trim() || "")
     .refine(
       (val) => !val || val === "" || z.string().url().safeParse(val).success,
       {
