@@ -7,6 +7,18 @@ import schema, {
   teamInvitations,
   subscriptions,
 } from "../../../database/schema";
+import type {
+  Team,
+  TeamInvitation,
+  CreateTeamParams,
+  CreateTeamInvitationParams,
+  AcceptTeamInvitationParams,
+  RemoveTeamMemberParams,
+  TransferTeamOwnershipParams,
+  UserTeamInfo,
+  TeamMemberWithUser,
+  PaginationOptions,
+} from "./interface";
 
 type DB = DrizzleD1Database<typeof schema>;
 
