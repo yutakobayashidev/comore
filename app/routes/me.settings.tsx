@@ -141,6 +141,11 @@ export default function UserSettingsPage() {
                 placeholder="https://example.com"
                 defaultValue={user?.websiteUrl || ""}
               />
+              {validationMessages?.websiteUrl && (
+                <p className="text-sm text-red-600">
+                  {validationMessages.websiteUrl[0]}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
