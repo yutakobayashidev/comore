@@ -1,5 +1,6 @@
-import { redirect, useActionData, Form, data } from "react-router";
+import { redirect, useActionData, Form, data, useNavigation } from "react-router";
 import type { Route } from "./+types/teams.new";
+import { z } from "zod";
 import { getCurrentSession } from "~/lib/auth/session";
 import { createTeam, hasActiveSubscription, getTeamBySlug } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
@@ -12,6 +13,16 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+
+const TeamSchema = z.object({
+  name: z.string().min(1, { message: "チーム名は必須です。" }),
+  slug: z
+    .string()
+    .min(1, { message: "URLスラッグは必須です。" })
+    .regex(/^[a-z0-9-]+$/, {
+      message: "URLスラッグは小文字、数字、ハイフンのみ使用できます。",
+    }),
+});
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
