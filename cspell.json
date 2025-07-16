@@ -130,9 +130,10 @@
     "popovers",
     "datepicker",
     "timepicker",
-    "colorpicker"
+    "colorpicker",
+    "bsky"
   ],
-  "ignoreWords": [],
+  "ignoreWords": ["knipignore"],
   "ignorePaths": [
     "pnpm-lock.yaml",
     "package-lock.json",

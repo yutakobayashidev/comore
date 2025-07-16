@@ -15,6 +15,10 @@ export const users = sqliteTable(
     email: text("email").notNull().unique(),
     handle: text("handle").notNull().unique(),
     stripeId: text("stripe_id").unique(),
+    websiteUrl: text("website_url"),
+    twitterUsername: text("twitter_username"),
+    blueskyAddress: text("bluesky_address"),
+    activityPubAddress: text("activitypub_address"),
   },
   (table) => ({
     githubIdIndex: index("github_id_index").on(table.githubId),

@@ -6,7 +6,6 @@ import {
   useNavigation,
 } from "react-router";
 import type { Route } from "./+types/teams.new";
-import { z } from "zod";
 import { getCurrentSession } from "~/lib/auth/session";
 import { createTeam, hasActiveSubscription, getTeamBySlug } from "~/lib/teams";
 import { Button } from "~/components/ui/button";
@@ -19,14 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-
-const TeamSchema = z.object({
-  name: z.string().min(1),
-  slug: z
-    .string()
-    .min(1)
-    .regex(/^[a-z0-9-]+$/),
-});
+import { teamSchema } from "~/schemas/teams";
 
 export async function loader({ context, request }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
@@ -61,7 +53,7 @@ export async function action({ context, request }: Route.ActionArgs) {
   }
 
   const formDataObject = Object.fromEntries(await request.formData());
-  const validationResult = TeamSchema.safeParse(formDataObject);
+  const validationResult = teamSchema.safeParse(formDataObject);
 
   if (!validationResult.success) {
     return data({
