@@ -96,7 +96,8 @@ export default function JoinTeamPage() {
           {isAlreadyMember ? (
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                You don't need to accept this invitation since you're already a member.
+                You don't need to accept this invitation since you're already a
+                member.
               </p>
               <div className="flex gap-4">
                 <Button asChild>
