@@ -159,6 +159,11 @@ export default function UserSettingsPage() {
               <p className="text-sm text-muted-foreground">
                 Enter your username without the @ symbol
               </p>
+              {validationMessages?.twitterUsername && (
+                <p className="text-sm text-red-600">
+                  {validationMessages.twitterUsername[0]}
+                </p>
+              )}
             </div>
 
             <div className="space-y-2">
