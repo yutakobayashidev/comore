@@ -36,6 +36,3 @@ export const updateUserSocialLinks =
       })
       .where(eq(schema.users.id, userId));
   };
-
-// Re-export types from interface
-export * from "./interface";
