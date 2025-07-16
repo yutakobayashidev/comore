@@ -127,7 +127,7 @@ export default function NewTeamPage() {
                 type="text"
                 placeholder="My Awesome Team"
               />
-              {validationMessages?.name && (
+              {validationMessages && 'name' in validationMessages && validationMessages.name && (
                 <p className="text-sm text-red-600">
                   {validationMessages.name[0]}
                 </p>
@@ -153,9 +153,7 @@ export default function NewTeamPage() {
               )}
             </div>
 
-            {error && (
-              <p className="text-sm text-red-600">{error}</p>
-            )}
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
             <div className="flex gap-4">
               <Button type="submit" disabled={submitting}>
