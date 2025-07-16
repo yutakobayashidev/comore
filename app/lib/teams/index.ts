@@ -12,58 +12,58 @@ type DB = DrizzleD1Database<typeof schema>;
 
 export const createTeam =
   (db: DB) =>
-  async (data: { name: string; slug: string; creatorUserId: number }) => {
-    const now = new Date();
-    const teamId = uuidv7();
+    async (data: { name: string; slug: string; creatorUserId: number }) => {
+      const now = new Date();
+      const teamId = uuidv7();
 
-    const team = await db
-      .insert(teams)
-      .values({
-        id: teamId,
-        name: data.name,
-        slug: data.slug,
-        hasActiveSubscription: true,
-        createdAt: now,
-        updatedAt: now,
-      })
-      .returning()
-      .get();
+      const team = await db
+        .insert(teams)
+        .values({
+          id: teamId,
+          name: data.name,
+          slug: data.slug,
+          hasActiveSubscription: true,
+          createdAt: now,
+          updatedAt: now,
+        })
+        .returning()
+        .get();
 
-    await db.insert(teamMembers).values({
-      id: uuidv7(),
-      teamId: team.id,
-      userId: data.creatorUserId,
-      role: "admin",
-      joinedAt: now,
-    });
+      await db.insert(teamMembers).values({
+        id: uuidv7(),
+        teamId: team.id,
+        userId: data.creatorUserId,
+        role: "admin",
+        joinedAt: now,
+      });
 
-    return team;
-  };
+      return team;
+    };
 
 export const getUserTeams =
   (db: DB) =>
-  async (userId: number, options?: { limit?: number; offset?: number }) => {
-    const baseQuery = db
-      .select({
-        team: teams,
-        role: teamMembers.role,
-        joinedAt: teamMembers.joinedAt,
-      })
-      .from(teamMembers)
-      .innerJoin(teams, eq(teamMembers.teamId, teams.id))
-      .where(eq(teamMembers.userId, userId))
-      .orderBy(teamMembers.joinedAt);
+    async (userId: number, options?: { limit?: number; offset?: number }) => {
+      const baseQuery = db
+        .select({
+          team: teams,
+          role: teamMembers.role,
+          joinedAt: teamMembers.joinedAt,
+        })
+        .from(teamMembers)
+        .innerJoin(teams, eq(teamMembers.teamId, teams.id))
+        .where(eq(teamMembers.userId, userId))
+        .orderBy(teamMembers.joinedAt);
 
-    if (options?.limit && options?.offset !== undefined) {
-      return await baseQuery.limit(options.limit).offset(options.offset);
-    } else if (options?.limit) {
-      return await baseQuery.limit(options.limit);
-    } else if (options?.offset !== undefined) {
-      return await baseQuery.offset(options.offset);
-    }
+      if (options?.limit && options?.offset !== undefined) {
+        return await baseQuery.limit(options.limit).offset(options.offset);
+      } else if (options?.limit) {
+        return await baseQuery.limit(options.limit);
+      } else if (options?.offset !== undefined) {
+        return await baseQuery.offset(options.offset);
+      }
 
-    return await baseQuery;
-  };
+      return await baseQuery;
+    };
 
 export const getTeamById = (db: DB) => async (teamId: string) => {
   return await db.select().from(teams).where(eq(teams.id, teamId)).get();
@@ -75,106 +75,106 @@ export const getTeamBySlug = (db: DB) => async (slug: string) => {
 
 export const getTeamMembers =
   (db: DB) =>
-  async (teamId: string, options?: { limit?: number; offset?: number }) => {
-    const baseQuery = db
-      .select({
-        member: teamMembers,
-        user: schema.users,
-      })
-      .from(teamMembers)
-      .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
-      .where(eq(teamMembers.teamId, teamId))
-      .orderBy(teamMembers.joinedAt);
+    async (teamId: string, options?: { limit?: number; offset?: number }) => {
+      const baseQuery = db
+        .select({
+          member: teamMembers,
+          user: schema.users,
+        })
+        .from(teamMembers)
+        .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
+        .where(eq(teamMembers.teamId, teamId))
+        .orderBy(teamMembers.joinedAt);
 
-    if (options?.limit && options?.offset !== undefined) {
-      return await baseQuery.limit(options.limit).offset(options.offset);
-    } else if (options?.limit) {
-      return await baseQuery.limit(options.limit);
-    } else if (options?.offset !== undefined) {
-      return await baseQuery.offset(options.offset);
-    }
+      if (options?.limit && options?.offset !== undefined) {
+        return await baseQuery.limit(options.limit).offset(options.offset);
+      } else if (options?.limit) {
+        return await baseQuery.limit(options.limit);
+      } else if (options?.offset !== undefined) {
+        return await baseQuery.offset(options.offset);
+      }
 
-    return await baseQuery;
-  };
+      return await baseQuery;
+    };
 
 export const isUserTeamAdmin =
   (db: DB) =>
-  async (userId: number, teamId: string): Promise<boolean> => {
-    const membership = await db
-      .select()
-      .from(teamMembers)
-      .where(
-        and(
-          eq(teamMembers.userId, userId),
-          eq(teamMembers.teamId, teamId),
-          eq(teamMembers.role, "admin"),
-        ),
-      )
-      .get();
+    async (userId: number, teamId: string): Promise<boolean> => {
+      const membership = await db
+        .select()
+        .from(teamMembers)
+        .where(
+          and(
+            eq(teamMembers.userId, userId),
+            eq(teamMembers.teamId, teamId),
+            eq(teamMembers.role, "admin"),
+          ),
+        )
+        .get();
 
-    return !!membership;
-  };
+      return !!membership;
+    };
 
 export const hasActiveSubscription =
   (db: DB) =>
-  async (userId: number): Promise<boolean> => {
-    const userSubscription = await db
-      .select()
-      .from(subscriptions)
-      .where(
-        and(
-          eq(subscriptions.userId, userId),
-          eq(subscriptions.status, "active"),
-        ),
-      )
-      .get();
+    async (userId: number): Promise<boolean> => {
+      const userSubscription = await db
+        .select()
+        .from(subscriptions)
+        .where(
+          and(
+            eq(subscriptions.userId, userId),
+            inArray(subscriptions.status, ["active", "complete"]),
+          ),
+        )
+        .get();
 
-    return !!userSubscription;
-  };
+      return !!userSubscription;
+    };
 
 export const getUsersWithActiveSubscription =
   (db: DB) =>
-  async (userIds: number[]): Promise<Set<number>> => {
-    if (userIds.length === 0) return new Set();
+    async (userIds: number[]): Promise<Set<number>> => {
+      if (userIds.length === 0) return new Set();
 
-    const activeSubscriptions = await db
-      .select({ userId: subscriptions.userId })
-      .from(subscriptions)
-      .where(
-        and(
-          inArray(subscriptions.userId, userIds),
-          eq(subscriptions.status, "active"),
-        ),
-      );
+      const activeSubscriptions = await db
+        .select({ userId: subscriptions.userId })
+        .from(subscriptions)
+        .where(
+          and(
+            inArray(subscriptions.userId, userIds),
+            inArray(subscriptions.status, ["active", "complete"]),
+          ),
+        );
 
-    return new Set(activeSubscriptions.map((sub) => sub.userId));
-  };
+      return new Set(activeSubscriptions.map((sub) => sub.userId));
+    };
 
 export const createTeamInvitation =
   (db: DB) =>
-  async (data: {
-    teamId: string;
-    invitedByUserId: number;
-    expiresInDays?: number;
-  }) => {
-    const now = new Date();
-    const expiresAt = new Date(
-      now.getTime() + (data.expiresInDays || 7) * 24 * 60 * 60 * 1000,
-    );
+    async (data: {
+      teamId: string;
+      invitedByUserId: number;
+      expiresInDays?: number;
+    }) => {
+      const now = new Date();
+      const expiresAt = new Date(
+        now.getTime() + (data.expiresInDays || 7) * 24 * 60 * 60 * 1000,
+      );
 
-    return await db
-      .insert(teamInvitations)
-      .values({
-        id: uuidv7(),
-        teamId: data.teamId,
-        invitedByUserId: data.invitedByUserId,
-        token: uuidv7(),
-        expiresAt,
-        createdAt: now,
-      })
-      .returning()
-      .get();
-  };
+      return await db
+        .insert(teamInvitations)
+        .values({
+          id: uuidv7(),
+          teamId: data.teamId,
+          invitedByUserId: data.invitedByUserId,
+          token: uuidv7(),
+          expiresAt,
+          createdAt: now,
+        })
+        .returning()
+        .get();
+    };
 
 export const acceptTeamInvitation =
   (db: DB) => async (data: { token: string; userId: number }) => {
@@ -194,6 +194,21 @@ export const acceptTeamInvitation =
 
     if (!invitation) {
       throw new Error("Invalid or expired invitation");
+    }
+
+    const existingMembership = await db
+      .select()
+      .from(teamMembers)
+      .where(
+        and(
+          eq(teamMembers.teamId, invitation.teamId),
+          eq(teamMembers.userId, data.userId),
+        ),
+      )
+      .get();
+
+    if (existingMembership) {
+      throw new Error("Already a member of this team");
     }
 
     await db.batch([
@@ -218,98 +233,98 @@ export const acceptTeamInvitation =
 
 export const updateTeamSubscriptionStatus =
   (db: DB) =>
-  async (teamId: string): Promise<void> => {
-    const adminsWithSubscription = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(teamMembers)
-      .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
-      .innerJoin(subscriptions, eq(schema.users.id, subscriptions.userId))
-      .where(
-        and(
-          eq(teamMembers.teamId, teamId),
-          eq(teamMembers.role, "admin"),
-          eq(subscriptions.status, "active"),
-        ),
-      )
-      .get();
+    async (teamId: string): Promise<void> => {
+      const adminsWithSubscription = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(teamMembers)
+        .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
+        .innerJoin(subscriptions, eq(schema.users.id, subscriptions.userId))
+        .where(
+          and(
+            eq(teamMembers.teamId, teamId),
+            eq(teamMembers.role, "admin"),
+            inArray(subscriptions.status, ["active", "complete"]),
+          ),
+        )
+        .get();
 
-    const hasActiveSubscription = (adminsWithSubscription?.count ?? 0) > 0;
+      const hasActiveSubscription = (adminsWithSubscription?.count ?? 0) > 0;
 
-    await db
-      .update(teams)
-      .set({
-        hasActiveSubscription,
-        updatedAt: new Date(),
-      })
-      .where(eq(teams.id, teamId));
-  };
+      await db
+        .update(teams)
+        .set({
+          hasActiveSubscription,
+          updatedAt: new Date(),
+        })
+        .where(eq(teams.id, teamId));
+    };
 
 export const removeTeamMember =
   (db: DB) =>
-  async (data: { teamId: string; userId: number }): Promise<void> => {
-    await db
-      .delete(teamMembers)
-      .where(
-        and(
-          eq(teamMembers.teamId, data.teamId),
-          eq(teamMembers.userId, data.userId),
-        ),
-      );
+    async (data: { teamId: string; userId: number }): Promise<void> => {
+      await db
+        .delete(teamMembers)
+        .where(
+          and(
+            eq(teamMembers.teamId, data.teamId),
+            eq(teamMembers.userId, data.userId),
+          ),
+        );
 
-    await updateTeamSubscriptionStatus(db)(data.teamId);
-  };
+      await updateTeamSubscriptionStatus(db)(data.teamId);
+    };
 
 export const getActiveAdminCount =
   (db: DB) =>
-  async (teamId: string): Promise<number> => {
-    const result = await db
-      .select({ count: sql<number>`count(*)` })
-      .from(teamMembers)
-      .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
-      .innerJoin(subscriptions, eq(schema.users.id, subscriptions.userId))
-      .where(
-        and(
-          eq(teamMembers.teamId, teamId),
-          eq(teamMembers.role, "admin"),
-          eq(subscriptions.status, "active"),
-        ),
-      )
-      .get();
+    async (teamId: string): Promise<number> => {
+      const result = await db
+        .select({ count: sql<number>`count(*)` })
+        .from(teamMembers)
+        .innerJoin(schema.users, eq(teamMembers.userId, schema.users.id))
+        .innerJoin(subscriptions, eq(schema.users.id, subscriptions.userId))
+        .where(
+          and(
+            eq(teamMembers.teamId, teamId),
+            eq(teamMembers.role, "admin"),
+            inArray(subscriptions.status, ["active", "complete"]),
+          ),
+        )
+        .get();
 
-    return result?.count ?? 0;
-  };
+      return result?.count ?? 0;
+    };
 
 export const transferTeamOwnership =
   (db: DB) =>
-  async (data: {
-    teamId: string;
-    fromUserId: number;
-    toUserId: number;
-  }): Promise<void> => {
-    await db.batch([
-      db
-        .update(teamMembers)
-        .set({ role: "member" })
-        .where(
-          and(
-            eq(teamMembers.teamId, data.teamId),
-            eq(teamMembers.userId, data.fromUserId),
+    async (data: {
+      teamId: string;
+      fromUserId: number;
+      toUserId: number;
+    }): Promise<void> => {
+      await db.batch([
+        db
+          .update(teamMembers)
+          .set({ role: "member" })
+          .where(
+            and(
+              eq(teamMembers.teamId, data.teamId),
+              eq(teamMembers.userId, data.fromUserId),
+            ),
           ),
-        ),
-      db
-        .update(teamMembers)
-        .set({ role: "admin" })
-        .where(
-          and(
-            eq(teamMembers.teamId, data.teamId),
-            eq(teamMembers.userId, data.toUserId),
+        db
+          .update(teamMembers)
+          .set({ role: "admin" })
+          .where(
+            and(
+              eq(teamMembers.teamId, data.teamId),
+              eq(teamMembers.userId, data.toUserId),
+            ),
           ),
-        ),
-    ]);
-  };
+      ]);
+    };
 
 export const deleteTeam =
   (db: DB) =>
-  async (teamId: string): Promise<void> => {
-    await db.delete(teams).where(eq(teams.id, teamId));
-  };
+    async (teamId: string): Promise<void> => {
+      await db.delete(teams).where(eq(teams.id, teamId));
+    };
