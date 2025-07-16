@@ -374,6 +374,3 @@ export const isUserTeamMember =
 
     return !!membership;
   };
-
-// Re-export types from interface
-export * from "./interface";
