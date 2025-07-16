@@ -8,6 +8,69 @@
       "when": 1752264406932,
       "tag": "0000_deep_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1752285882905,
+      "tag": "0001_fixed_corsair",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1752361525074,
+      "tag": "0002_curvy_talos",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1752361917064,
+      "tag": "0003_normal_titanium_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1752475091605,
+      "tag": "0004_nosy_squadron_sinister",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1752475361698,
+      "tag": "0005_awesome_lenny_balinger",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1752540557136,
+      "tag": "0006_small_maginty",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1752614799826,
+      "tag": "0007_unknown_earthquake",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1752618491291,
+      "tag": "0008_last_colonel_america",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1752630235660,
+      "tag": "0009_aspiring_puma",
+      "breakpoints": true
     }
   ]
 }

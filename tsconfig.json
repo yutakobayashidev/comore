@@ -10,8 +10,10 @@
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
-    "paths": {
-      "~/*": ["./src/*"]
-    }
+    "allowUnreachableCode": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true
   }
 }
