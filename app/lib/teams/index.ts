@@ -328,3 +328,37 @@ export const deleteTeam =
   async (teamId: string): Promise<void> => {
     await db.delete(teams).where(eq(teams.id, teamId));
   };
+
+export const getInvitationByToken =
+  (db: DB) =>
+  async (token: string) => {
+    const now = new Date();
+    return await db
+      .select()
+      .from(teamInvitations)
+      .where(
+        and(
+          eq(teamInvitations.token, token),
+          gt(teamInvitations.expiresAt, now),
+          isNull(teamInvitations.usedAt),
+        ),
+      )
+      .get();
+  };
+
+export const isUserTeamMember =
+  (db: DB) =>
+  async (userId: number, teamId: string): Promise<boolean> => {
+    const membership = await db
+      .select()
+      .from(teamMembers)
+      .where(
+        and(
+          eq(teamMembers.userId, userId),
+          eq(teamMembers.teamId, teamId),
+        ),
+      )
+      .get();
+
+    return !!membership;
+  };
