@@ -55,15 +55,64 @@ export default function ProfilePage() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-2">
-            <div>
-              <p className="text-sm text-muted-foreground">Email</p>
-              <p className="font-medium">{user.email}</p>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <div>
+                <p className="text-sm text-muted-foreground">Email</p>
+                <p className="font-medium">{user.email}</p>
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">GitHub ID</p>
+                <p className="font-medium">{user.githubId}</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">GitHub ID</p>
-              <p className="font-medium">{user.githubId}</p>
-            </div>
+            
+            {(user.websiteUrl || user.twitterUsername || user.blueskyAddress || user.activityPubAddress) && (
+              <div className="border-t pt-4 space-y-2">
+                <p className="text-sm text-muted-foreground font-medium">Social Links</p>
+                <div className="flex flex-wrap gap-3">
+                  {user.websiteUrl && (
+                    <a
+                      href={user.websiteUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm hover:underline"
+                    >
+                      <Link2 className="h-4 w-4" />
+                      Website
+                    </a>
+                  )}
+                  {user.twitterUsername && (
+                    <a
+                      href={`https://twitter.com/${user.twitterUsername}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm hover:underline"
+                    >
+                      <Twitter className="h-4 w-4" />
+                      @{user.twitterUsername}
+                    </a>
+                  )}
+                  {user.blueskyAddress && (
+                    <a
+                      href={`https://bsky.app/profile/${user.blueskyAddress.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-sm hover:underline"
+                    >
+                      <AtSign className="h-4 w-4" />
+                      {user.blueskyAddress}
+                    </a>
+                  )}
+                  {user.activityPubAddress && (
+                    <span className="flex items-center gap-1 text-sm">
+                      <AtSign className="h-4 w-4" />
+                      {user.activityPubAddress}
+                    </span>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
