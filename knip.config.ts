@@ -42,7 +42,6 @@ const config: KnipConfig = {
     "recharts",
     "sonner",
     "vaul",
-    "zod",
     "tw-animate-css",
     "@testing-library/dom",
     "@testing-library/react",

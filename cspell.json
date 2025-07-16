@@ -132,7 +132,7 @@
     "timepicker",
     "colorpicker"
   ],
-  "ignoreWords": [],
+  "ignoreWords": ["knipignore"],
   "ignorePaths": [
     "pnpm-lock.yaml",
     "package-lock.json",

@@ -1,4 +1,4 @@
-export interface UserSocialLinks {
+interface UserSocialLinks {
   websiteUrl: string | null;
   twitterUsername: string | null;
   blueskyAddress: string | null;

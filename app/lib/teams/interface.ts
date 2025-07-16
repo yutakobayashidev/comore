@@ -9,6 +9,7 @@ export interface Team {
   updatedAt: Date;
 }
 
+/** @knipignore */
 export interface TeamMember {
   id: string;
   teamId: string;
