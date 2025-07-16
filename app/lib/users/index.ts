@@ -1,10 +1,11 @@
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import { eq } from "drizzle-orm";
 import schema from "~/database/schema";
+import type { User, UpdateUserSocialLinksParams } from "./interface";
 
 type DB = DrizzleD1Database<typeof schema>;
 
-export const getUserById = (db: DB) => async (userId: number) => {
+export const getUserById = (db: DB) => async (userId: number): Promise<User | undefined> => {
   const [user] = await db
     .select()
     .from(schema.users)
@@ -22,13 +23,7 @@ export const updateUserSocialLinks =
     twitterUsername,
     blueskyAddress,
     activityPubAddress,
-  }: {
-    userId: number;
-    websiteUrl: string | null;
-    twitterUsername: string | null;
-    blueskyAddress: string | null;
-    activityPubAddress: string | null;
-  }) => {
+  }: UpdateUserSocialLinksParams): Promise<void> => {
     await db
       .update(schema.users)
       .set({
