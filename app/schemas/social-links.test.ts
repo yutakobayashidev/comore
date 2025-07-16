@@ -55,19 +55,25 @@ describe("schemas/social-links", () => {
           {
             blueskyAddress: "user.bsky.social",
           },
-          ["Please enter a valid Bluesky address (e.g., @username.bsky.social)"],
+          [
+            "Please enter a valid Bluesky address (e.g., @username.bsky.social)",
+          ],
         ],
         [
           {
             activityPubAddress: "@username",
           },
-          ["Please enter a valid ActivityPub address (e.g., @username@mastodon.social)"],
+          [
+            "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
+          ],
         ],
         [
           {
             activityPubAddress: "username@mastodon.social",
           },
-          ["Please enter a valid ActivityPub address (e.g., @username@mastodon.social)"],
+          [
+            "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
+          ],
         ],
       ];
 
