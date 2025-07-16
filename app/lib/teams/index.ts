@@ -54,7 +54,10 @@ export const createTeam =
 
 export const getUserTeams =
   (db: DB) =>
-  async (userId: number, options?: PaginationOptions): Promise<UserTeamInfo[]> => {
+  async (
+    userId: number,
+    options?: PaginationOptions,
+  ): Promise<UserTeamInfo[]> => {
     const baseQuery = db
       .select({
         team: teams,
@@ -77,17 +80,17 @@ export const getUserTeams =
     return await baseQuery;
   };
 
-export const getTeamById = (db: DB) => async (teamId: string) => {
+export const getTeamById = (db: DB) => async (teamId: string): Promise<Team | undefined> => {
   return await db.select().from(teams).where(eq(teams.id, teamId)).get();
 };
 
-export const getTeamBySlug = (db: DB) => async (slug: string) => {
+export const getTeamBySlug = (db: DB) => async (slug: string): Promise<Team | undefined> => {
   return await db.select().from(teams).where(eq(teams.slug, slug)).get();
 };
 
 export const getTeamMembers =
   (db: DB) =>
-  async (teamId: string, options?: { limit?: number; offset?: number }) => {
+  async (teamId: string, options?: PaginationOptions): Promise<TeamMemberWithUser[]> => {
     const baseQuery = db
       .select({
         member: teamMembers,
@@ -164,11 +167,7 @@ export const getUsersWithActiveSubscription =
 
 export const createTeamInvitation =
   (db: DB) =>
-  async (data: {
-    teamId: string;
-    invitedByUserId: number;
-    expiresInDays?: number;
-  }) => {
+  async (data: CreateTeamInvitationParams): Promise<TeamInvitation> => {
     const now = new Date();
     const expiresAt = new Date(
       now.getTime() + (data.expiresInDays || 7) * 24 * 60 * 60 * 1000,
@@ -189,7 +188,7 @@ export const createTeamInvitation =
   };
 
 export const acceptTeamInvitation =
-  (db: DB) => async (data: { token: string; userId: number }) => {
+  (db: DB) => async (data: AcceptTeamInvitationParams): Promise<TeamInvitation> => {
     const now = new Date();
 
     const invitation = await db
@@ -273,7 +272,7 @@ export const updateTeamSubscriptionStatus =
 
 export const removeTeamMember =
   (db: DB) =>
-  async (data: { teamId: string; userId: number }): Promise<void> => {
+  async (data: RemoveTeamMemberParams): Promise<void> => {
     await db
       .delete(teamMembers)
       .where(
@@ -308,11 +307,7 @@ export const getActiveAdminCount =
 
 export const transferTeamOwnership =
   (db: DB) =>
-  async (data: {
-    teamId: string;
-    fromUserId: number;
-    toUserId: number;
-  }): Promise<void> => {
+  async (data: TransferTeamOwnershipParams): Promise<void> => {
     await db.batch([
       db
         .update(teamMembers)
@@ -341,7 +336,7 @@ export const deleteTeam =
     await db.delete(teams).where(eq(teams.id, teamId));
   };
 
-export const getInvitationByToken = (db: DB) => async (token: string) => {
+export const getInvitationByToken = (db: DB) => async (token: string): Promise<TeamInvitation | undefined> => {
   const now = new Date();
   return await db
     .select()
