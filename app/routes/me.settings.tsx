@@ -35,12 +35,14 @@ const SocialLinksSchema = z.object({
   twitterUsername: z
     .string()
     .optional()
+    .transform((val) => val?.trim() || "")
     .refine((val) => !val || /^[a-zA-Z0-9_]*$/.test(val), {
       message: "Username can only contain letters, numbers, and underscores",
     }),
   blueskyAddress: z
     .string()
     .optional()
+    .transform((val) => val?.trim() || "")
     .refine((val) => !val || /^(@[a-zA-Z0-9.-]+)?$/.test(val), {
       message:
         "Please enter a valid Bluesky address (e.g., @username.bsky.social)",
@@ -48,6 +50,7 @@ const SocialLinksSchema = z.object({
   activityPubAddress: z
     .string()
     .optional()
+    .transform((val) => val?.trim() || "")
     .refine((val) => !val || /^(@[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+)?$/.test(val), {
       message:
         "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
