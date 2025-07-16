@@ -9,6 +9,3 @@ export const teamSchema = z.object({
       message: "Slug can only contain lowercase letters, numbers, and hyphens",
     }),
 });
-
-export type TeamInput = z.input<typeof teamSchema>;
-export type Team = z.infer<typeof teamSchema>;
