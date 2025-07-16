@@ -83,7 +83,8 @@ describe("schemas/social-links", () => {
         expect(res.success).toBeFalsy();
 
         if (!res.success) {
-          expect(errors).toEqual(res.error.errors.map((e) => e.message));
+          const errorMessages = res.error.issues.map((issue) => issue.message);
+          expect(errorMessages).toEqual(errors);
         }
       }
     });
