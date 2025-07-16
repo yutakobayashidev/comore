@@ -130,7 +130,8 @@
     "popovers",
     "datepicker",
     "timepicker",
-    "colorpicker"
+    "colorpicker",
+    "bsky"
   ],
   "ignoreWords": ["knipignore"],
   "ignorePaths": [

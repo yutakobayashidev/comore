@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 import { teamSchema } from "./teams";
 
@@ -81,12 +81,8 @@ describe("schemas/teams", () => {
       for (const [fixture, errors] of fixtures) {
         const res = teamSchema.safeParse(fixture);
 
-        expect(res.success).toBeFalsy();
-
-        if (!res.success) {
-          const errorMessages = res.error.issues.map((issue) => issue.message);
-          expect(errorMessages).toEqual(errors);
-        }
+        assert(!res.success);
+        expect(errors).toEqual(res.error.issues.map((issue) => issue.message));
       }
     });
   });

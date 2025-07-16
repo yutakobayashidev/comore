@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { assert, describe, expect, test } from "vitest";
 import { z } from "zod";
 import { socialLinksSchema } from "./social-links";
 
@@ -80,12 +80,9 @@ describe("schemas/social-links", () => {
       for (const [fixture, errors] of fixtures) {
         const res = socialLinksSchema.safeParse(fixture);
 
-        expect(res.success).toBeFalsy();
+        assert(!res.success);
 
-        if (!res.success) {
-          const errorMessages = res.error.issues.map((issue) => issue.message);
-          expect(errorMessages).toEqual(errors);
-        }
+        expect(errors).toEqual(res.error.issues.map((issue) => issue.message));
       }
     });
   });
