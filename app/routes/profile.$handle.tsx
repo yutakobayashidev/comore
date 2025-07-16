@@ -94,7 +94,7 @@ export default function ProfilePage() {
                       rel="noopener noreferrer"
                       className="flex items-center gap-1 text-sm hover:underline"
                     >
-                      <Twitter className="h-4 w-4" />@{user.twitterUsername}
+                      @{user.twitterUsername}
                     </a>
                   )}
                   {user.blueskyAddress && (
