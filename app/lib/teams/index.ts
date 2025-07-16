@@ -54,7 +54,7 @@ export const createTeam =
 
 export const getUserTeams =
   (db: DB) =>
-  async (userId: number, options?: { limit?: number; offset?: number }) => {
+  async (userId: number, options?: PaginationOptions): Promise<UserTeamInfo[]> => {
     const baseQuery = db
       .select({
         team: teams,
