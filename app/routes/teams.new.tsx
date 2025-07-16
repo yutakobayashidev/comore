@@ -21,13 +21,8 @@ import {
 } from "~/components/ui/card";
 
 const TeamSchema = z.object({
-  name: z.string().min(1, { message: "チーム名は必須です。" }),
-  slug: z
-    .string()
-    .min(1, { message: "URLスラッグは必須です。" })
-    .regex(/^[a-z0-9-]+$/, {
-      message: "URLスラッグは小文字、数字、ハイフンのみ使用できます。",
-    }),
+  name: z.string().min(1),
+  slug: z.string().min(1).regex(/^[a-z0-9-]+$/),
 });
 
 export async function loader({ context, request }: Route.LoaderArgs) {
@@ -77,7 +72,7 @@ export async function action({ context, request }: Route.ActionArgs) {
   if (existingTeam) {
     return data({
       validationMessages: {
-        slug: ["このURLスラッグは既に使用されています。"],
+        slug: ["A team with this slug already exists"],
       },
     });
   }
@@ -127,11 +122,13 @@ export default function NewTeamPage() {
                 type="text"
                 placeholder="My Awesome Team"
               />
-              {validationMessages && 'name' in validationMessages && validationMessages.name && (
-                <p className="text-sm text-red-600">
-                  {validationMessages.name[0]}
-                </p>
-              )}
+              {validationMessages &&
+                "name" in validationMessages &&
+                validationMessages.name && (
+                  <p className="text-sm text-red-600">
+                    {validationMessages.name[0]}
+                  </p>
+                )}
             </div>
 
             <div className="space-y-2">
@@ -157,7 +154,7 @@ export default function NewTeamPage() {
 
             <div className="flex gap-4">
               <Button type="submit" disabled={submitting}>
-                {submitting ? "作成中..." : "Create Team"}
+                {submitting ? "Creating..." : "Create Team"}
               </Button>
               <Button type="button" variant="outline" asChild>
                 <a href="/teams">Cancel</a>
