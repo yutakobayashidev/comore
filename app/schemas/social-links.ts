@@ -33,6 +33,3 @@ export const socialLinksSchema = z.object({
         "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
     }),
 });
-
-export type SocialLinksInput = z.input<typeof socialLinksSchema>;
-export type SocialLinks = z.infer<typeof socialLinksSchema>;
