@@ -21,6 +21,33 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { getUserById, updateUserSocialLinks } from "~/lib/users";
 
+const SocialLinksSchema = z.object({
+  websiteUrl: z
+    .string()
+    .optional()
+    .refine((val) => !val || val === "" || z.string().url().safeParse(val).success, {
+      message: "Please enter a valid URL",
+    }),
+  twitterUsername: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^[a-zA-Z0-9_]*$/.test(val), {
+      message: "Username can only contain letters, numbers, and underscores",
+    }),
+  blueskyAddress: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^(@[a-zA-Z0-9.-]+)?$/.test(val), {
+      message: "Please enter a valid Bluesky address (e.g., @username.bsky.social)",
+    }),
+  activityPubAddress: z
+    .string()
+    .optional()
+    .refine((val) => !val || /^(@[a-zA-Z0-9.-]+@[a-zA-Z0-9.-]+)?$/.test(val), {
+      message: "Please enter a valid ActivityPub address (e.g., @username@mastodon.social)",
+    }),
+});
+
 export async function loader({ context, request }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
 
