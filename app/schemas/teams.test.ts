@@ -43,7 +43,7 @@ describe("schemas/teams", () => {
             name: "My Team",
             slug: "",
           },
-          ["Team slug is required"],
+          ["Team slug is required", "Slug can only contain lowercase letters, numbers, and hyphens"],
         ],
         [
           {
