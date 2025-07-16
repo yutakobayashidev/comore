@@ -42,3 +42,5 @@ lerna-debug.log*
 # misc
 .DS_Store
 
+# claude
+.mcp.local.json
