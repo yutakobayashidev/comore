@@ -36,39 +36,6 @@ export const sessions = sqliteTable("session", {
   expiresAt: integer("expires_at").notNull(),
 });
 
-// RSS Feeds
-export const feeds = sqliteTable("feeds", {
-  id: text("id").primaryKey(),
-  url: text("url").notNull().unique(),
-  title: text("title"),
-  description: text("description"),
-  faviconUrl: text("favicon_url"),
-  homepageUrl: text("homepage_url"),
-  createdAt: integer("created_at", { mode: "timestamp" }),
-});
-
-// ユーザーのフィード
-export const userFeeds = sqliteTable(
-  "user_feeds",
-  {
-    id: integer("id").primaryKey(),
-    userId: integer("user_id")
-      .notNull()
-      .references(() => users.id),
-    feedId: text("feed_id")
-      .notNull()
-      .references(() => feeds.id),
-    createdAt: integer("created_at", { mode: "timestamp" })
-      .notNull()
-      .$defaultFn(() => new Date()),
-  },
-  (table) => ({
-    userIdIndex: index("user_id_index").on(table.userId),
-    feedIdIndex: index("feed_id_index").on(table.feedId),
-    uniqueUserFeed: index("unique_user_feed").on(table.userId, table.feedId),
-  }),
-);
-
 // Subscriptions
 export const subscriptions = sqliteTable(
   "subscriptions",
@@ -168,7 +135,5 @@ const schema = {
   teams,
   teamMembers,
   teamInvitations,
-  feeds,
-  userFeeds
 };
 export default schema;

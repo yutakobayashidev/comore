@@ -132,7 +132,8 @@
     "timepicker",
     "colorpicker",
     "anthropics",
-    "bsky"
+    "bsky",
+    "activitypub"
   ],
   "ignoreWords": ["knipignore"],
   "ignorePaths": [
