@@ -24,7 +24,7 @@
     "cf-typegen": "wrangler types",
     "typecheck": "react-router typegen && tsc --build",
     "spell-check": "cspell lint --gitignore \"**\"",
-    "lint": "oxlint && eslint && knip",
+    "lint": "oxlint && eslint && knip --tags=-knipignore",
     "fmt": "prettier -w . --experimental-cli",
     "postinstall": "npm run cf-typegen",
     "prepare": "lefthook install"

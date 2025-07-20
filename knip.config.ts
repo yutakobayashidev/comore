@@ -14,6 +14,7 @@ const config: KnipConfig = {
     "app/hooks/use-mobile.ts",
     "app/lib/utils.ts",
     "app/lib/auth/session/index.ts",
+    ".claude/hooks/auto-commit-script.js",
   ],
   "react-router": {
     config: [
@@ -41,7 +42,6 @@ const config: KnipConfig = {
     "recharts",
     "sonner",
     "vaul",
-    "zod",
     "tw-animate-css",
     "@testing-library/dom",
     "@testing-library/react",

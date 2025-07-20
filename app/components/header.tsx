@@ -32,50 +32,56 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="relative h-9 w-9 rounded-full"
-                >
-                  <Avatar className="h-9 w-9">
-                    <AvatarFallback>
-                      {user.handle.charAt(0).toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">
-                      @{user.handle}
-                    </p>
-                    <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
-                    </p>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem className="text-xs text-muted-foreground">
-                  {t("header.githubId")}: {user.githubId}
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Form method="post">
-                    <input type="hidden" name="intent" value="logout" />
-                    <button type="submit" className="w-full text-left">
-                      {t("common.logout")}
-                    </button>
-                  </Form>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <>
+              <Link to="/teams" className="text-sm font-medium hover:underline">
+                Teams
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="relative h-9 w-9 rounded-full"
+                  >
+                    <Avatar className="h-9 w-9">
+                      <AvatarFallback>
+                        {user.handle.charAt(0).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        @{user.handle}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {user.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-xs text-muted-foreground">
+                    {t("header.githubId")}: {user.githubId}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Form method="post">
+                      <input type="hidden" name="intent" value="logout" />
+                      <button type="submit" className="w-full text-left">
+                        {t("common.logout")}
+                      </button>
+                    </Form>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
           ) : (
             <Link to="/login/github">
               <Button variant="default">{t("common.login")}</Button>
             </Link>
           )}
+
           <LanguageSwitcher />
         </nav>
       </div>

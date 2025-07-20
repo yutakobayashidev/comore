@@ -1,7 +1,8 @@
 import { data } from "react-router";
 import { createStripeClient, handleSubscriptionUpsert } from "~/lib/stripe";
 import { eq } from "drizzle-orm";
-import { users, subscriptions } from "~/database/schema";
+import { users, subscriptions, teamMembers } from "~/database/schema";
+import { updateTeamSubscriptionStatus } from "~/lib/teams";
 import type Stripe from "stripe";
 import type { Route } from "./+types/api.payment.webhook";
 
@@ -74,6 +75,16 @@ export async function loader({ context, request }: Route.LoaderArgs) {
               .set({ stripeId: null })
               .where(eq(users.id, user.id)),
           ]);
+
+          // Update team subscription status for all teams where this user is an admin
+          const userTeams = await context.db
+            .select({ teamId: teamMembers.teamId })
+            .from(teamMembers)
+            .where(eq(teamMembers.userId, user.id));
+
+          for (const { teamId } of userTeams) {
+            await updateTeamSubscriptionStatus(context.db)(teamId);
+          }
         } else {
           console.warn(`No user found for customer deletion: ${customer.id}`);
         }
