@@ -1,7 +1,14 @@
 import { eq, inArray, desc, and, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import type * as schema from "@/database/schema";
-import { articles, feeds, userSubscriptions, teamSubscriptions, teamMembers, users } from "@/database/schema";
+import {
+  articles,
+  feeds,
+  userSubscriptions,
+  teamSubscriptions,
+  teamMembers,
+  users,
+} from "@/database/schema";
 import type {
   Article,
   CreateArticleParams,
@@ -100,7 +107,10 @@ export const getTimelineArticles =
     const subscribedTeamFeeds = await db
       .select({ feedId: feeds.id })
       .from(teamSubscriptions)
-      .innerJoin(teamMembers, eq(teamSubscriptions.targetTeamId, teamMembers.teamId))
+      .innerJoin(
+        teamMembers,
+        eq(teamSubscriptions.targetTeamId, teamMembers.teamId),
+      )
       .innerJoin(users, eq(teamMembers.userId, users.id))
       .innerJoin(feeds, eq(feeds.userId, users.id))
       .where(eq(teamSubscriptions.subscriberId, userId));
@@ -110,7 +120,7 @@ export const getTimelineArticles =
       new Set([
         ...subscribedUserFeeds.map((f) => f.feedId),
         ...subscribedTeamFeeds.map((f) => f.feedId),
-      ])
+      ]),
     );
 
     if (feedIds.length === 0) {
@@ -169,7 +179,10 @@ export const checkArticleExists =
 
 export const getArticlesByUserId =
   (db: DrizzleD1Database<typeof schema>) =>
-  async (userId: number, params: { page?: number; limit?: number }): Promise<ArticlesResponse> => {
+  async (
+    userId: number,
+    params: { page?: number; limit?: number },
+  ): Promise<ArticlesResponse> => {
     const { page = 1, limit = DEFAULT_PAGE_SIZE } = params;
     const offset = (page - 1) * limit;
 
@@ -190,7 +203,10 @@ export const getArticlesByUserId =
 
 export const getArticlesByTeamId =
   (db: DrizzleD1Database<typeof schema>) =>
-  async (teamId: string, params: { page?: number; limit?: number }): Promise<ArticlesResponse> => {
+  async (
+    teamId: string,
+    params: { page?: number; limit?: number },
+  ): Promise<ArticlesResponse> => {
     const { page = 1, limit = DEFAULT_PAGE_SIZE } = params;
     const offset = (page - 1) * limit;
 
