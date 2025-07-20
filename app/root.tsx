@@ -13,9 +13,10 @@ import { useTranslation } from "react-i18next";
 import type { Route } from "./+types/root";
 import "./app.css";
 import { getLocale, i18nextMiddleware } from "./middleware/i18next";
+import { dbMiddleware } from "./middleware/db";
 import { localeCookie } from "./cookies";
 
-export const unstable_middleware = [i18nextMiddleware];
+export const unstable_middleware = [i18nextMiddleware, dbMiddleware];
 
 export async function loader({ request, context }: Route.LoaderArgs) {
   let locale = getLocale(context);

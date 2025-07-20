@@ -1,5 +1,4 @@
 import type {
-  AppLoadContext,
   EntryContext,
   unstable_RouterContextProvider,
 } from "react-router";
@@ -14,14 +13,13 @@ export default async function handleRequest(
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  _loadContext: AppLoadContext,
-  context: unstable_RouterContextProvider,
+  appContext: unstable_RouterContextProvider,
 ) {
   let shellRendered = false;
   const userAgent = request.headers.get("user-agent");
 
   const body = await renderToReadableStream(
-    <I18nextProvider i18n={getInstance(context)}>
+    <I18nextProvider i18n={getInstance(appContext)}>
       <ServerRouter context={routerContext} url={request.url} />
     </I18nextProvider>,
     {
