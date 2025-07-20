@@ -187,6 +187,7 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
 #### ArticleCard
 
 - タイトル、概要、公開日時、著者
+- OpenGraph画像の表示（あれば）
 - 元のサイトへのリンク
 - フィード情報表示
 
