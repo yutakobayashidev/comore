@@ -35,7 +35,11 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { MoreHorizontal, Copy } from "lucide-react";
 import { getArticlesByTeamId } from "@/lib/articles";
-import { isSubscribedToTeam, subscribeToTeam, unsubscribeFromTeam } from "@/lib/subscriptions";
+import {
+  isSubscribedToTeam,
+  subscribeToTeam,
+  unsubscribeFromTeam,
+} from "@/lib/subscriptions";
 import { ArticleList } from "@/components/articles/article-list";
 import { SubscribeButton } from "@/components/subscriptions/subscribe-button";
 
@@ -61,7 +65,10 @@ export async function loader({ context, request, params }: Route.LoaderArgs) {
   const page = Number(url.searchParams.get("page") || "1");
   const limit = 20;
 
-  const articlesData = await getArticlesByTeamId(context.db)(team.id, { page, limit });
+  const articlesData = await getArticlesByTeamId(context.db)(team.id, {
+    page,
+    limit,
+  });
   const isSubscribed = await isSubscribedToTeam(context.db)(user.id, team.id);
 
   return {
@@ -131,7 +138,7 @@ export async function action({ context, request, params }: Route.ActionArgs) {
           { status: 403 },
         );
       }
-      
+
       try {
         const invitation = await createTeamInvitation(context.db)({
           teamId: team.id,
@@ -189,12 +196,21 @@ export async function action({ context, request, params }: Route.ActionArgs) {
 }
 
 export default function TeamPage() {
-  const { team, members, isAdmin, currentUserId, isMember, articles, hasMore, isSubscribed, currentPage } =
-    useLoaderData<typeof loader>();
+  const {
+    team,
+    members,
+    isAdmin,
+    currentUserId,
+    isMember,
+    articles,
+    hasMore,
+    isSubscribed,
+    currentPage,
+  } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigation = useNavigation();
-  
+
   const isLoading = navigation.state === "loading";
 
   const handleLoadMore = () => {
@@ -218,17 +234,17 @@ export default function TeamPage() {
             />
           )}
           {isAdmin && (
-          <div className="space-x-2">
-            <Form method="post" className="inline">
-              <input type="hidden" name="intent" value="invite" />
-              <Button type="submit" variant="outline">
-                Generate Invite Link
+            <div className="space-x-2">
+              <Form method="post" className="inline">
+                <input type="hidden" name="intent" value="invite" />
+                <Button type="submit" variant="outline">
+                  Generate Invite Link
+                </Button>
+              </Form>
+              <Button asChild variant="outline">
+                <Link to={`/teams/${team.slug}/settings`}>Settings</Link>
               </Button>
-            </Form>
-            <Button asChild variant="outline">
-              <Link to={`/teams/${team.slug}/settings`}>Settings</Link>
-            </Button>
-          </div>
+            </div>
           )}
         </div>
       </div>
