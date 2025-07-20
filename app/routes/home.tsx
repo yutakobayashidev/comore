@@ -1,4 +1,10 @@
-import { useRouteLoaderData, useLoaderData, Link, useSearchParams, useNavigation } from "react-router";
+import {
+  useRouteLoaderData,
+  useLoaderData,
+  Link,
+  useSearchParams,
+  useNavigation,
+} from "react-router";
 import type { loader as layoutLoader } from "./layout";
 import type { LoaderFunctionArgs } from "react-router";
 import { data } from "react-router";
@@ -42,7 +48,7 @@ export default function Home() {
   const isAuthenticated = loaderData?.isAuthenticated ?? false;
   const [searchParams, setSearchParams] = useSearchParams();
   const navigation = useNavigation();
-  
+
   const currentPage = Number(searchParams.get("page") || "1");
   const isLoading = navigation.state === "loading";
 
