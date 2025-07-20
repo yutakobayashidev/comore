@@ -190,16 +190,16 @@ graph TD
    ```
    app/components/
    ├── feeds/
-   │   ├── FeedList.tsx
-   │   ├── FeedForm.tsx
-   │   └── FeedEditForm.tsx
+   │   ├── feed-list.tsx
+   │   ├── feed-form.tsx
+   │   └── feed-edit-form.tsx
    ├── subscriptions/
-   │   ├── SubscriptionList.tsx
-   │   └── SubscribeButton.tsx
+   │   ├── subscription-list.tsx
+   │   └── subscribe-button.tsx
    └── articles/
-       ├── ArticleList.tsx
-       ├── ArticleCard.tsx
-       └── ArticlePagination.tsx
+       ├── article-list.tsx
+       ├── article-card.tsx
+       └── article-pagination.tsx
    ```
 2. shadcn/uiコンポーネント活用
 3. レスポンシブデザイン対応
