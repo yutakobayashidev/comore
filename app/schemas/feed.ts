@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const feedSchema = z.object({
-  url: z.string().min(1, "URL is required").url("Please enter a valid URL"),
+  url: z.url("Please enter a valid URL"),
   title: z
     .string()
     .optional()
@@ -14,7 +14,7 @@ export const feedSchema = z.object({
 
 export const updateFeedSchema = z.object({
   title: z.string().min(1, "Title is required"),
-  url: z.string().min(1, "URL is required").url("Please enter a valid URL"),
+  url: z.url("Please enter a valid URL"),
   isActive: z
     .string()
     .optional()
