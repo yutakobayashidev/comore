@@ -1,7 +1,12 @@
 import { eq, and } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import type * as schema from "@/database/schema";
-import { userSubscriptions, teamSubscriptions, users, teams } from "@/database/schema";
+import {
+  userSubscriptions,
+  teamSubscriptions,
+  users,
+  teams,
+} from "@/database/schema";
 import type {
   UserSubscription,
   TeamSubscription,
@@ -12,7 +17,10 @@ import type {
 
 export const subscribeToUser =
   (db: DrizzleD1Database<typeof schema>) =>
-  async (subscriberId: number, targetUserId: number): Promise<UserSubscription> => {
+  async (
+    subscriberId: number,
+    targetUserId: number,
+  ): Promise<UserSubscription> => {
     // Check if already subscribed
     const existing = await db
       .select()
@@ -20,8 +28,8 @@ export const subscribeToUser =
       .where(
         and(
           eq(userSubscriptions.subscriberId, subscriberId),
-          eq(userSubscriptions.targetUserId, targetUserId)
-        )
+          eq(userSubscriptions.targetUserId, targetUserId),
+        ),
       )
       .get();
 
@@ -67,8 +75,8 @@ export const unsubscribeFromUser =
       .where(
         and(
           eq(userSubscriptions.subscriberId, subscriberId),
-          eq(userSubscriptions.targetUserId, targetUserId)
-        )
+          eq(userSubscriptions.targetUserId, targetUserId),
+        ),
       )
       .returning()
       .get();
@@ -80,7 +88,10 @@ export const unsubscribeFromUser =
 
 export const subscribeToTeam =
   (db: DrizzleD1Database<typeof schema>) =>
-  async (subscriberId: number, targetTeamId: string): Promise<TeamSubscription> => {
+  async (
+    subscriberId: number,
+    targetTeamId: string,
+  ): Promise<TeamSubscription> => {
     // Check if already subscribed
     const existing = await db
       .select()
@@ -88,8 +99,8 @@ export const subscribeToTeam =
       .where(
         and(
           eq(teamSubscriptions.subscriberId, subscriberId),
-          eq(teamSubscriptions.targetTeamId, targetTeamId)
-        )
+          eq(teamSubscriptions.targetTeamId, targetTeamId),
+        ),
       )
       .get();
 
@@ -130,8 +141,8 @@ export const unsubscribeFromTeam =
       .where(
         and(
           eq(teamSubscriptions.subscriberId, subscriberId),
-          eq(teamSubscriptions.targetTeamId, targetTeamId)
-        )
+          eq(teamSubscriptions.targetTeamId, targetTeamId),
+        ),
       )
       .returning()
       .get();
@@ -157,12 +168,11 @@ export const getUserSubscriptions =
       .innerJoin(users, eq(userSubscriptions.targetUserId, users.id))
       .where(eq(userSubscriptions.subscriberId, userId));
 
-    const userSubscriptionsWithTarget: UserSubscriptionWithTarget[] = userSubs.map(
-      (row) => ({
+    const userSubscriptionsWithTarget: UserSubscriptionWithTarget[] =
+      userSubs.map((row) => ({
         ...row.subscription,
         targetUser: row.targetUser,
-      })
-    );
+      }));
 
     // Get team subscriptions with target team info
     const teamSubs = await db
@@ -178,12 +188,11 @@ export const getUserSubscriptions =
       .innerJoin(teams, eq(teamSubscriptions.targetTeamId, teams.id))
       .where(eq(teamSubscriptions.subscriberId, userId));
 
-    const teamSubscriptionsWithTarget: TeamSubscriptionWithTarget[] = teamSubs.map(
-      (row) => ({
+    const teamSubscriptionsWithTarget: TeamSubscriptionWithTarget[] =
+      teamSubs.map((row) => ({
         ...row.subscription,
         targetTeam: row.targetTeam,
-      })
-    );
+      }));
 
     return {
       userSubscriptions: userSubscriptionsWithTarget,
@@ -200,8 +209,8 @@ export const isSubscribedToUser =
       .where(
         and(
           eq(userSubscriptions.subscriberId, subscriberId),
-          eq(userSubscriptions.targetUserId, targetUserId)
-        )
+          eq(userSubscriptions.targetUserId, targetUserId),
+        ),
       )
       .get();
 
@@ -217,8 +226,8 @@ export const isSubscribedToTeam =
       .where(
         and(
           eq(teamSubscriptions.subscriberId, subscriberId),
-          eq(teamSubscriptions.targetTeamId, targetTeamId)
-        )
+          eq(teamSubscriptions.targetTeamId, targetTeamId),
+        ),
       )
       .get();
 
