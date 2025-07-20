@@ -205,7 +205,7 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
 1. アクティブなフィードを取得
 2. 各フィードからRSS/Atomデータを取得
 3. 新着記事を抽出（URL重複チェック）
-4. 記事情報をパース
+4. 記事情報をパース（OpenGraph画像URLの取得を含む）
 5. DBに保存
 6. エラー情報を記録
 
