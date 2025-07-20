@@ -11,9 +11,9 @@ spec-driven development は、以下の5つのフェーズからなる開発手�
 ### 1. 事前準備フェーズ
 
 - ユーザーがClaude Codeに対して、実行したいタスクの概要を伝える
-- このフェーズで !`mkdir -p ./.cckiro/specs`  を実行します
+- このフェーズで !`mkdir -p ./.cckiro/specs` を実行します
 - `./.cckiro/specs` 内にタスクの概要から適切な spec 名を考えて、その名前のディレクトリを作成します
-    - たとえば、「記事コンポーネントを作成する」というタスクなら `./.cckiro/specs/create-article-component` という名前のディレクトリを作成します
+  - たとえば、「記事コンポーネントを作成する」というタスクなら `./.cckiro/specs/create-article-component` という名前のディレクトリを作成します
 - 以下ファイルを作成するときはこのディレクトリの中に作成します
 
 ### 2. 要件フェーズ
