@@ -154,15 +154,13 @@ graph TD
    import type { DrizzleD1Database } from "drizzle-orm/d1";
    import type * as schema from "@/database/schema";
 
-   type DB = DrizzleD1Database<typeof schema>;
-
    export const createFeed =
-     (db: DB) =>
+     (db: DrizzleD1Database<typeof schema>) =>
      async (params: { userId: number; url: string; title?: string }) => {
        // 実装
      };
 
-   export const getUserFeeds = (db: DB) => async (userId: number) => {
+   export const getUserFeeds = (db: DrizzleD1Database<typeof schema>) => async (userId: number) => {
      // 実装
    };
 
