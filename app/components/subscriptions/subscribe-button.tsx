@@ -16,7 +16,7 @@ export function SubscribeButton({
   className,
 }: SubscribeButtonProps) {
   const fetcher = useFetcher();
-  
+
   const isLoading = fetcher.state !== "idle";
   const optimisticIsSubscribed = fetcher.formData
     ? fetcher.formData.get("_action") === "subscribe"

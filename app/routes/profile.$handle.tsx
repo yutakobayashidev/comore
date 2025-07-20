@@ -4,6 +4,7 @@ import {
   Form,
   useNavigation,
   useRouteLoaderData,
+  useSearchParams,
 } from "react-router";
 import { users } from "../../database/schema";
 import { eq } from "drizzle-orm";
@@ -28,6 +29,8 @@ import {
 import { getCurrentSession } from "@/lib/sessions";
 import { redirect } from "react-router";
 import type { loader as layoutLoader } from "./layout";
+import { ArticleList } from "@/components/articles/article-list";
+import { SubscribeButton } from "@/components/subscriptions/subscribe-button";
 
 export async function loader({ params, context, request }: Route.LoaderArgs) {
   const handle = params.handle;
@@ -124,21 +127,42 @@ export function meta({ data }: { data: { user: { handle: string } } }) {
 }
 
 export default function ProfilePage() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, articles, hasMore, isSubscribed, isOwnProfile } = useLoaderData<typeof loader>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigation = useNavigation();
+  const layoutData = useRouteLoaderData<typeof layoutLoader>("routes/layout");
+  const isAuthenticated = layoutData?.isAuthenticated ?? false;
+  
+  const currentPage = Number(searchParams.get("page") || "1");
+  const isLoading = navigation.state === "loading";
+
+  const handleLoadMore = () => {
+    const nextPage = currentPage + 1;
+    setSearchParams({ page: nextPage.toString() });
+  };
 
   return (
-    <div className="mx-auto max-w-2xl">
+    <div className="mx-auto max-w-2xl space-y-8">
       <Card>
         <CardHeader>
-          <div className="flex items-center space-x-4">
-            <Avatar className="h-20 w-20">
-              <AvatarFallback className="text-2xl">
-                {user.handle.charAt(0).toUpperCase()}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <CardTitle className="text-2xl">@{user.handle}</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Avatar className="h-20 w-20">
+                <AvatarFallback className="text-2xl">
+                  {user.handle.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div>
+                <CardTitle className="text-2xl">@{user.handle}</CardTitle>
+              </div>
             </div>
+            {isAuthenticated && !isOwnProfile && (
+              <SubscribeButton
+                isSubscribed={isSubscribed}
+                targetType="user"
+                targetId={user.id}
+              />
+            )}
           </div>
         </CardHeader>
         <CardContent>
@@ -207,6 +231,16 @@ export default function ProfilePage() {
           </div>
         </CardContent>
       </Card>
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Recent Articles</h2>
+        <ArticleList
+          articles={articles}
+          hasMore={hasMore && !isLoading}
+          loadMore={handleLoadMore}
+          emptyMessage="This user hasn't published any articles yet."
+        />
+      </div>
     </div>
   );
 }
