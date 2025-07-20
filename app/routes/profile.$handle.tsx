@@ -127,12 +127,13 @@ export function meta({ data }: { data: { user: { handle: string } } }) {
 }
 
 export default function ProfilePage() {
-  const { user, articles, hasMore, isSubscribed, isOwnProfile } = useLoaderData<typeof loader>();
+  const { user, articles, hasMore, isSubscribed, isOwnProfile } =
+    useLoaderData<typeof loader>();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigation = useNavigation();
   const layoutData = useRouteLoaderData<typeof layoutLoader>("routes/layout");
   const isAuthenticated = layoutData?.isAuthenticated ?? false;
-  
+
   const currentPage = Number(searchParams.get("page") || "1");
   const isLoading = navigation.state === "loading";
 
