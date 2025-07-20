@@ -96,6 +96,7 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
 ### 3.1 フィード管理ルート
 
 #### /feeds - フィード管理ページ
+
 - **loader**: ユーザーのフィード一覧を取得
   - Return: `{ feeds: Feed[], hasActiveSubscription: boolean, feedCount: number }`
 - **action**: フィードの新規登録
@@ -103,6 +104,7 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
   - 制限チェック：無料5個、有料50個
 
 #### /feeds/:id/edit - フィード編集ページ
+
 - **loader**: フィード詳細を取得
   - Return: `{ feed: Feed }`
 - **action**: フィードの更新・削除
@@ -111,10 +113,12 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
 ### 3.2 購読管理ルート
 
 #### /subscriptions - 購読管理ページ
+
 - **loader**: 購読一覧を取得
   - Return: `{ userSubscriptions: UserSubscription[], teamSubscriptions: TeamSubscription[] }`
 
 #### /users/:userId - ユーザープロフィールページ
+
 - **loader**: ユーザー情報と記事一覧を取得
   - Query: `?page=1&limit=20`
   - Return: `{ user: User, articles: Article[], hasMore: boolean, isSubscribed: boolean }`
@@ -122,6 +126,7 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
   - FormData: `{ _action: "subscribe" | "unsubscribe" }`
 
 #### /teams/:slug - チームページ
+
 - **loader**: チーム情報と記事一覧を取得
   - Query: `?page=1&limit=20`
   - Return: `{ team: Team, articles: Article[], hasMore: boolean, isSubscribed: boolean }`
@@ -131,11 +136,13 @@ CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscribe
 ### 3.3 記事表示ルート
 
 #### / - トップページ（タイムライン）
+
 - **loader**: 購読したユーザー/チームの記事を取得
   - Query: `?page=1&limit=20`
   - Return: `{ articles: Article[], hasMore: boolean, isAuthenticated: boolean }`
 
 #### /articles - 記事一覧ページ
+
 - **loader**: フィルタリング可能な記事一覧
   - Query: `?userId=1&teamId=2&page=1&limit=20`
   - Return: `{ articles: Article[], hasMore: boolean, filters: FilterOptions }`
