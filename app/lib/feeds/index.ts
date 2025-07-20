@@ -2,7 +2,12 @@ import { eq, and, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
 import type * as schema from "@/database/schema";
 import { feeds } from "@/database/schema";
-import type { Feed, CreateFeedParams, UpdateFeedParams, FeedError } from "./interface";
+import type {
+  Feed,
+  CreateFeedParams,
+  UpdateFeedParams,
+  FeedError,
+} from "./interface";
 import { hasActiveSubscription } from "@/lib/teams";
 
 const FREE_USER_FEED_LIMIT = 5;
@@ -15,12 +20,16 @@ export const createFeed =
 
     // Check if user has active subscription
     const hasSubscription = await hasActiveSubscription(db)(userId);
-    const feedLimit = hasSubscription ? PAID_USER_FEED_LIMIT : FREE_USER_FEED_LIMIT;
+    const feedLimit = hasSubscription
+      ? PAID_USER_FEED_LIMIT
+      : FREE_USER_FEED_LIMIT;
 
     // Check current feed count
     const feedCount = await getFeedCount(db)(userId);
     if (feedCount >= feedLimit) {
-      const error = new Error(`Feed limit exceeded. Maximum ${feedLimit} feeds allowed.`) as FeedError;
+      const error = new Error(
+        `Feed limit exceeded. Maximum ${feedLimit} feeds allowed.`,
+      ) as FeedError;
       error.code = "FEED_LIMIT_EXCEEDED";
       throw error;
     }
@@ -33,7 +42,9 @@ export const createFeed =
       .get();
 
     if (existingFeed) {
-      const error = new Error("Feed URL already exists for this user") as FeedError;
+      const error = new Error(
+        "Feed URL already exists for this user",
+      ) as FeedError;
       error.code = "FEED_ALREADY_EXISTS";
       throw error;
     }
@@ -106,13 +117,15 @@ export const updateFeed =
           and(
             eq(feeds.userId, userId),
             eq(feeds.url, updateData.url),
-            sql`${feeds.id} != ${id}`
-          )
+            sql`${feeds.id} != ${id}`,
+          ),
         )
         .get();
 
       if (existingFeed) {
-        const error = new Error("Feed URL already exists for this user") as FeedError;
+        const error = new Error(
+          "Feed URL already exists for this user",
+        ) as FeedError;
         error.code = "FEED_ALREADY_EXISTS";
         throw error;
       }
@@ -165,18 +178,13 @@ export const getFeedCount =
 export const getFeedById =
   (db: DrizzleD1Database<typeof schema>) =>
   async (id: number): Promise<Feed | undefined> => {
-    const result = await db
-      .select()
-      .from(feeds)
-      .where(eq(feeds.id, id))
-      .get();
+    const result = await db.select().from(feeds).where(eq(feeds.id, id)).get();
 
     return result;
   };
 
 export const getActiveFeeds =
-  (db: DrizzleD1Database<typeof schema>) =>
-  async (): Promise<Feed[]> => {
+  (db: DrizzleD1Database<typeof schema>) => async (): Promise<Feed[]> => {
     const result = await db
       .select()
       .from(feeds)
@@ -189,7 +197,7 @@ export const updateFeedFetchStatus =
   (db: DrizzleD1Database<typeof schema>) =>
   async (id: number, error?: { message: string }): Promise<void> => {
     const now = new Date();
-    
+
     if (error) {
       await db
         .update(feeds)
