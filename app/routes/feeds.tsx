@@ -1,7 +1,18 @@
 import { data, redirect } from "react-router";
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
-import { Form, useActionData, useLoaderData, useNavigation } from "react-router";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -91,7 +102,8 @@ export async function action({ context, request }: ActionFunctionArgs) {
 }
 
 export default function FeedsPage() {
-  const { feeds, hasActiveSubscription, feedCount, feedLimit } = useLoaderData<typeof loader>();
+  const { feeds, hasActiveSubscription, feedCount, feedLimit } =
+    useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
   const navigation = useNavigation();
   const submitting = navigation.state === "submitting";
@@ -122,7 +134,8 @@ export default function FeedsPage() {
               Add a new RSS or Atom feed to your collection.
               {!hasActiveSubscription && (
                 <span className="mt-1 block text-sm">
-                  Free users can add up to {feedLimit} feeds. You have {feedCount} of {feedLimit} feeds.
+                  Free users can add up to {feedLimit} feeds. You have{" "}
+                  {feedCount} of {feedLimit} feeds.
                 </span>
               )}
             </CardDescription>
@@ -237,11 +250,7 @@ export default function FeedsPage() {
                       )}
                     </div>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        asChild
-                      >
+                      <Button variant="ghost" size="icon" asChild>
                         <a href={`/feeds/${feed.id}/edit`}>
                           <Edit className="h-4 w-4" />
                         </a>
