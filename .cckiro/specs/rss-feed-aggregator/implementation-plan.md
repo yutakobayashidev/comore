@@ -160,9 +160,10 @@ graph TD
        // 実装
      };
 
-   export const getUserFeeds = (db: DrizzleD1Database<typeof schema>) => async (userId: number) => {
-     // 実装
-   };
+   export const getUserFeeds =
+     (db: DrizzleD1Database<typeof schema>) => async (userId: number) => {
+       // 実装
+     };
 
    // 使用例（ルート内）:
    // const feeds = await getUserFeeds(context.db)(userId);
