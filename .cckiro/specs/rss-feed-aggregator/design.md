@@ -91,67 +91,54 @@ CREATE INDEX idx_user_subscriptions_subscriberId ON user_subscriptions(subscribe
 CREATE INDEX idx_team_subscriptions_subscriberId ON team_subscriptions(subscriberId);
 ```
 
-## 3. API設計
+## 3. ルート設計（React Router v7）
 
-### 3.1 フィード管理API
+### 3.1 フィード管理ルート
 
-#### GET /api/feeds - ユーザーのフィード一覧取得
+#### /feeds - フィード管理ページ
+- **loader**: ユーザーのフィード一覧を取得
+  - Return: `{ feeds: Feed[], hasActiveSubscription: boolean, feedCount: number }`
+- **action**: フィードの新規登録
+  - FormData: `{ url: string, title?: string }`
+  - 制限チェック：無料5個、有料50個
 
-- Response: `{ feeds: Feed[] }`
+#### /feeds/:id/edit - フィード編集ページ
+- **loader**: フィード詳細を取得
+  - Return: `{ feed: Feed }`
+- **action**: フィードの更新・削除
+  - FormData: `{ _action: "update" | "delete", title?: string, url?: string, isActive?: boolean }`
 
-#### POST /api/feeds - フィード登録
+### 3.2 購読管理ルート
 
-- Request: `{ url: string, title?: string }`
-- Response: `{ feed: Feed }`
-- 制限チェック：無料5個、有料50個
+#### /subscriptions - 購読管理ページ
+- **loader**: 購読一覧を取得
+  - Return: `{ userSubscriptions: UserSubscription[], teamSubscriptions: TeamSubscription[] }`
 
-#### PUT /api/feeds/:id - フィード更新
+#### /users/:userId - ユーザープロフィールページ
+- **loader**: ユーザー情報と記事一覧を取得
+  - Query: `?page=1&limit=20`
+  - Return: `{ user: User, articles: Article[], hasMore: boolean, isSubscribed: boolean }`
+- **action**: ユーザー購読の追加・解除
+  - FormData: `{ _action: "subscribe" | "unsubscribe" }`
 
-- Request: `{ title?: string, url?: string, isActive?: boolean }`
-- Response: `{ feed: Feed }`
+#### /teams/:slug - チームページ
+- **loader**: チーム情報と記事一覧を取得
+  - Query: `?page=1&limit=20`
+  - Return: `{ team: Team, articles: Article[], hasMore: boolean, isSubscribed: boolean }`
+- **action**: チーム購読の追加・解除
+  - FormData: `{ _action: "subscribe" | "unsubscribe" }`
 
-#### DELETE /api/feeds/:id - フィード削除
+### 3.3 記事表示ルート
 
-- Response: `{ success: boolean }`
+#### / - トップページ（タイムライン）
+- **loader**: 購読したユーザー/チームの記事を取得
+  - Query: `?page=1&limit=20`
+  - Return: `{ articles: Article[], hasMore: boolean, isAuthenticated: boolean }`
 
-### 3.2 購読API
-
-#### GET /api/subscriptions - 購読一覧取得
-
-- Response: `{ userSubscriptions: UserSubscription[], teamSubscriptions: TeamSubscription[] }`
-
-#### POST /api/subscriptions/user/:userId - ユーザー購読
-
-- Response: `{ subscription: UserSubscription }`
-
-#### DELETE /api/subscriptions/user/:userId - ユーザー購読解除
-
-- Response: `{ success: boolean }`
-
-#### POST /api/subscriptions/team/:teamId - チーム購読
-
-- Response: `{ subscription: TeamSubscription }`
-
-#### DELETE /api/subscriptions/team/:teamId - チーム購読解除
-
-- Response: `{ success: boolean }`
-
-### 3.3 記事取得API
-
-#### GET /api/articles/timeline - タイムライン取得
-
-- Query: `{ page?: number, limit?: number }`
-- Response: `{ articles: Article[], hasMore: boolean }`
-
-#### GET /api/users/:userId/articles - ユーザー記事一覧
-
-- Query: `{ page?: number, limit?: number }`
-- Response: `{ articles: Article[], hasMore: boolean }`
-
-#### GET /api/teams/:teamId/articles - チーム記事一覧
-
-- Query: `{ page?: number, limit?: number }`
-- Response: `{ articles: Article[], hasMore: boolean }`
+#### /articles - 記事一覧ページ
+- **loader**: フィルタリング可能な記事一覧
+  - Query: `?userId=1&teamId=2&page=1&limit=20`
+  - Return: `{ articles: Article[], hasMore: boolean, filters: FilterOptions }`
 
 ## 4. UIコンポーネント設計
 
