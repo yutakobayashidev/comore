@@ -5,7 +5,13 @@ import { data } from "react-router";
 import { getTimelineArticles } from "@/lib/articles";
 import { getCurrentSession } from "@/lib/sessions";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 
 export function meta() {
@@ -17,7 +23,7 @@ export function meta() {
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const { user } = await getCurrentSession(context.db)(request);
-  
+
   if (!user) {
     return data({ articles: [], hasMore: false });
   }
@@ -49,7 +55,7 @@ export default function Home() {
           ? `Hello, @${user.handle}! You're successfully logged in.`
           : "Please login to access your dashboard."}
       </p>
-      
+
       {isAuthenticated && user && (
         <div className="space-y-6">
           <div className="flex gap-2">
@@ -72,11 +78,14 @@ export default function Home() {
               <Card>
                 <CardContent className="pt-6">
                   <p className="text-muted-foreground text-center">
-                    No articles yet. Subscribe to users or teams to see their articles here.
+                    No articles yet. Subscribe to users or teams to see their
+                    articles here.
                   </p>
                   <div className="flex justify-center gap-2 mt-4">
                     <Link to="/teams">
-                      <Button variant="outline" size="sm">Browse Teams</Button>
+                      <Button variant="outline" size="sm">
+                        Browse Teams
+                      </Button>
                     </Link>
                   </div>
                 </CardContent>
@@ -89,9 +98,9 @@ export default function Home() {
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
                           <CardTitle className="text-lg line-clamp-2">
-                            <a 
-                              href={article.url} 
-                              target="_blank" 
+                            <a
+                              href={article.url}
+                              target="_blank"
                               rel="noopener noreferrer"
                               className="hover:underline"
                             >
@@ -99,11 +108,12 @@ export default function Home() {
                             </a>
                           </CardTitle>
                           <CardDescription>
-                            From {article.feed.title} • {" "}
-                            {article.publishedAt 
-                              ? new Date(article.publishedAt).toLocaleDateString()
-                              : "No date"
-                            }
+                            From {article.feed.title} •{" "}
+                            {article.publishedAt
+                              ? new Date(
+                                  article.publishedAt,
+                                ).toLocaleDateString()
+                              : "No date"}
                             {article.author && ` • By ${article.author}`}
                           </CardDescription>
                         </div>
@@ -112,8 +122,8 @@ export default function Home() {
                     {(article.description || article.ogImageUrl) && (
                       <CardContent>
                         {article.ogImageUrl && (
-                          <img 
-                            src={article.ogImageUrl} 
+                          <img
+                            src={article.ogImageUrl}
                             alt={article.title}
                             className="w-full h-48 object-cover rounded-md mb-3"
                           />
@@ -127,10 +137,12 @@ export default function Home() {
                     )}
                   </Card>
                 ))}
-                
+
                 {hasMore && (
                   <div className="flex justify-center pt-4">
-                    <Link to={`?page=${(Number(new URL(window.location.href).searchParams.get("page")) || 1) + 1}`}>
+                    <Link
+                      to={`?page=${(Number(new URL(window.location.href).searchParams.get("page")) || 1) + 1}`}
+                    >
                       <Button variant="outline">Load More</Button>
                     </Link>
                   </div>
