@@ -39,6 +39,7 @@ CREATE TABLE articles (
   description TEXT,
   content TEXT,
   author TEXT,
+  ogImageUrl TEXT,
   publishedAt TIMESTAMP,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
