@@ -8,6 +8,9 @@ import {
 export default [
   layout("routes/layout.tsx", [
     index("routes/home.tsx"),
+    route("feeds", "routes/feeds.tsx"),
+    route("feeds/:id/edit", "routes/feeds.$id.edit.tsx"),
+    route("subscriptions", "routes/subscriptions.tsx"),
     route(":handle", "routes/profile.$handle.tsx"),
     route("me/payment", "routes/me.payment.tsx"),
     route("me/settings", "routes/me.settings.tsx"),

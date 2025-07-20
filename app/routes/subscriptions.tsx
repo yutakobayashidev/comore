@@ -3,7 +3,13 @@ import { useLoaderData } from "react-router";
 import { data, redirect } from "react-router";
 import { getCurrentSession } from "@/lib/sessions";
 import { getUserSubscriptions } from "@/lib/subscriptions";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
@@ -19,7 +25,8 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 }
 
 export default function SubscriptionsPage() {
-  const { userSubscriptions, teamSubscriptions } = useLoaderData<typeof loader>();
+  const { userSubscriptions, teamSubscriptions } =
+    useLoaderData<typeof loader>();
 
   return (
     <div className="container max-w-4xl py-8">
@@ -53,11 +60,16 @@ export default function SubscriptionsPage() {
                             @{subscription.targetUser.handle}
                           </CardTitle>
                           <CardDescription className="text-sm">
-                            Subscribed since {new Date(subscription.createdAt).toLocaleDateString()}
+                            Subscribed since{" "}
+                            {new Date(
+                              subscription.createdAt,
+                            ).toLocaleDateString()}
                           </CardDescription>
                         </div>
                         <Button variant="outline" size="sm" asChild>
-                          <a href={`/users/${subscription.targetUserId}`}>View Profile</a>
+                          <a href={`/users/${subscription.targetUserId}`}>
+                            View Profile
+                          </a>
                         </Button>
                       </div>
                     </CardHeader>
@@ -88,11 +100,16 @@ export default function SubscriptionsPage() {
                             {subscription.targetTeam.name}
                           </CardTitle>
                           <CardDescription className="text-sm">
-                            Subscribed since {new Date(subscription.createdAt).toLocaleDateString()}
+                            Subscribed since{" "}
+                            {new Date(
+                              subscription.createdAt,
+                            ).toLocaleDateString()}
                           </CardDescription>
                         </div>
                         <Button variant="outline" size="sm" asChild>
-                          <a href={`/teams/${subscription.targetTeam.slug}`}>View Team</a>
+                          <a href={`/teams/${subscription.targetTeam.slug}`}>
+                            View Team
+                          </a>
                         </Button>
                       </div>
                     </CardHeader>
