@@ -66,18 +66,18 @@
 **目的**: ユーザーインターフェースの構築
 
 1. フィード管理コンポーネント
-   - `FeedList` - フィード一覧
-   - `FeedForm` - フィード登録フォーム
-   - `FeedEditForm` - フィード編集フォーム
+   - `feed-list.tsx` - フィード一覧
+   - `feed-form.tsx` - フィード登録フォーム
+   - `feed-edit-form.tsx` - フィード編集フォーム
 
 2. 購読管理コンポーネント
-   - `SubscriptionList` - 購読一覧
-   - `SubscribeButton` - 購読ボタン
+   - `subscription-list.tsx` - 購読一覧
+   - `subscribe-button.tsx` - 購読ボタン
 
 3. 記事表示コンポーネント
-   - `ArticleList` - 記事一覧
-   - `ArticleCard` - 記事カード
-   - `ArticlePagination` - ページネーション
+   - `article-list.tsx` - 記事一覧
+   - `article-card.tsx` - 記事カード
+   - `article-pagination.tsx` - ページネーション
 
 ### Phase 5: フィード取得スクリプト実装
 
