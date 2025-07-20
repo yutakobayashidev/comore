@@ -147,7 +147,25 @@ graph TD
        ├── index.ts
        └── interface.ts
    ```
-2. 各関数にcurryingパターン適用
+2. カリー化パターンの適用:
+   ```typescript
+   // 例: app/lib/feeds/index.ts
+   import type { DrizzleD1Database } from "drizzle-orm/d1";
+   import type * as schema from "@/database/schema";
+   
+   type DB = DrizzleD1Database<typeof schema>;
+   
+   export const createFeed = (db: DB) => async (params: { userId: number; url: string; title?: string }) => {
+     // 実装
+   };
+   
+   export const getUserFeeds = (db: DB) => async (userId: number) => {
+     // 実装
+   };
+   
+   // 使用例（ルート内）:
+   // const feeds = await getUserFeeds(context.db)(userId);
+   ```
 3. エラーハンドリング実装
 4. 型安全性確保
 
