@@ -1,4 +1,10 @@
-import { integer, text, sqliteTable, index } from "drizzle-orm/sqlite-core";
+import {
+  integer,
+  text,
+  sqliteTable,
+  index,
+  uniqueIndex,
+} from "drizzle-orm/sqlite-core";
 
 // Users
 export const users = sqliteTable(
@@ -9,6 +15,10 @@ export const users = sqliteTable(
     email: text("email").notNull().unique(),
     handle: text("handle").notNull().unique(),
     stripeId: text("stripe_id").unique(),
+    websiteUrl: text("website_url"),
+    twitterUsername: text("twitter_username"),
+    blueskyAddress: text("bluesky_address"),
+    activityPubAddress: text("activitypub_address"),
   },
   (table) => ({
     githubIdIndex: index("github_id_index").on(table.githubId),
@@ -84,6 +94,81 @@ export const subscriptions = sqliteTable(
   }),
 );
 
-const schema = { users, sessions, feeds, userFeeds, subscriptions };
+// Teams
+export const teams = sqliteTable(
+  "teams",
+  {
+    id: text("id").primaryKey(),
+    name: text("name").notNull(),
+    slug: text("slug").notNull().unique(),
+    hasActiveSubscription: integer("has_active_subscription", {
+      mode: "boolean",
+    })
+      .notNull()
+      .default(true),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+    updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+  },
+  (table) => ({
+    slugIndex: index("team_slug_index").on(table.slug),
+  }),
+);
 
+// Team Members
+export const teamMembers = sqliteTable(
+  "team_members",
+  {
+    id: text("id").primaryKey(),
+    teamId: text("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    role: text("role", { enum: ["admin", "member"] }).notNull(),
+    joinedAt: integer("joined_at", { mode: "timestamp" }).notNull(),
+  },
+  (table) => ({
+    teamIdIndex: index("team_member_team_id_index").on(table.teamId),
+    userIdIndex: index("team_member_user_id_index").on(table.userId),
+    uniqueTeamUser: uniqueIndex("unique_team_user").on(
+      table.teamId,
+      table.userId,
+    ),
+  }),
+);
+
+// Team Invitations
+export const teamInvitations = sqliteTable(
+  "team_invitations",
+  {
+    id: text("id").primaryKey(),
+    teamId: text("team_id")
+      .notNull()
+      .references(() => teams.id, { onDelete: "cascade" }),
+    invitedByUserId: integer("invited_by_user_id")
+      .notNull()
+      .references(() => users.id),
+    token: text("token").notNull().unique(),
+    expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
+    usedAt: integer("used_at", { mode: "timestamp" }),
+    usedByUserId: integer("used_by_user_id").references(() => users.id),
+    createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  },
+  (table) => ({
+    tokenIndex: index("team_invitation_token_index").on(table.token),
+    teamIdIndex: index("team_invitation_team_id_index").on(table.teamId),
+  }),
+);
+
+const schema = {
+  users,
+  sessions,
+  subscriptions,
+  teams,
+  teamMembers,
+  teamInvitations,
+  feeds,
+  userFeeds
+};
 export default schema;

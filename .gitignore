@@ -19,6 +19,10 @@ node_modules/
 /.react-router/
 /build/
 
+# TypeScript
+tsconfig.node.tsbuildinfo
+tsconfig.cloudflare.tsbuildinfo
+
 # env
 .env
 .env.production
@@ -38,3 +42,5 @@ lerna-debug.log*
 # misc
 .DS_Store
 
+# claude
+.mcp.local.json

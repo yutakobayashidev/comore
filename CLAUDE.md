@@ -95,7 +95,11 @@ The project uses shadcn/ui components with:
 
 ## Development Guidelines
 
-1. **Routing**: Use file-based routing in `app/routes/`. Export `loader` for data fetching and `action` for mutations.
+1. **Routing**:
+   - Create route modules in `app/routes/` directory
+   - Export `loader` for data fetching and `action` for mutations
+   - **IMPORTANT**: After creating a new route file, you must add it to `app/routes.ts` to register the route
+   - Routes are explicitly defined in `app/routes.ts` using React Router v7's route configuration
 
 2. **Database Operations**: Use Drizzle ORM for all database operations. Access D1 database through the Cloudflare Workers context.
 
@@ -108,6 +112,23 @@ The project uses shadcn/ui components with:
 6. **Forms**: Use react-hook-form with zod schemas for validation. Examples can be found in existing route modules.
 
 7. **Testing**: Write tests for components and utilities using Vitest and React Testing Library. Place test files alongside source files with `.test.{ts,tsx}` extension.
+
+8. **Currying Pattern for Database Functions**:
+   - All database operation functions in `app/lib/` must follow a currying pattern
+   - First parameter: database connection (`db: DrizzleD1Database<typeof schema>`)
+   - Second parameter: actual function parameters
+   - Pattern:
+     ```typescript
+     export const functionName = (db: DB) => async (params: ParamType) => {
+       // implementation
+     };
+     ```
+   - Usage in routes:
+     ```typescript
+     const result = await functionName(context.db)(params);
+     ```
+   - Pure functions that don't interact with the database should NOT be curried
+   - This pattern enables dependency injection and makes testing easier
 
 ## Testing
 
@@ -140,3 +161,23 @@ The project uses Vitest as the testing framework with React Testing Library for 
 - `pnpm test` - Run all tests once
 - `pnpm test:watch` - Run tests in watch mode (re-runs on file changes)
 - `pnpm test:coverage` - Generate and display code coverage report
+
+## Human-in-the-Loop Integration
+
+**IMPORTANT**: When you have questions or need clarification about project-specific decisions, always use the `mcp__human-in-the-loop__ask_human` tool to ask questions.
+
+### When to Use
+
+- When project-specific design decisions are needed
+- When there are multiple implementation approaches and you're unsure which to choose
+- When the intent of existing code is unclear
+- Before making breaking changes or large-scale refactoring
+- Before making changes that could affect production
+- When business logic or user requirements need clarification
+
+### Best Practices
+
+- Ask specific questions with context
+- Prefer questions that request detailed explanations over simple Yes/No questions
+- Ask one question at a time unless multiple questions are closely related
+- Include relevant context about what you're trying to achieve
