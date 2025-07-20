@@ -1,29 +1,97 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, useActionData, Form, useNavigation, useRouteLoaderData } from "react-router";
 import { users } from "../../database/schema";
 import { eq } from "drizzle-orm";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "~/components/ui/card";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Link2, AtSign } from "lucide-react";
+import { Button } from "~/components/ui/button";
+import { Separator } from "~/components/ui/separator";
 import type { Route } from "./+types/profile.$handle";
+import { getArticlesByUserId } from "@/lib/articles";
+import { subscribeToUser, unsubscribeFromUser, isSubscribedToUser } from "@/lib/subscriptions";
+import { getCurrentSession } from "@/lib/sessions";
+import { redirect } from "react-router";
+import type { loader as layoutLoader } from "./layout";
 
-export async function loader({ params, context }: Route.LoaderArgs) {
+export async function loader({ params, context, request }: Route.LoaderArgs) {
   const handle = params.handle;
 
   if (!handle) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const user = await context.db
+  const targetUser = await context.db
     .select()
     .from(users)
     .where(eq(users.handle, handle))
     .get();
 
-  if (!user) {
+  if (!targetUser) {
     throw new Response("User not found", { status: 404 });
   }
 
-  return { user };
+  // Get articles
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get("page")) || 1;
+  const limit = 20;
+
+  const articlesResponse = await getArticlesByUserId(context.db)(targetUser.id, {
+    page,
+    limit,
+  });
+
+  // Check subscription status if logged in
+  const { user } = await getCurrentSession(context.db)(request);
+  let isSubscribed = false;
+  
+  if (user && user.id !== targetUser.id) {
+    isSubscribed = await isSubscribedToUser(context.db)(user.id, targetUser.id);
+  }
+
+  return { 
+    user: targetUser, 
+    ...articlesResponse,
+    isSubscribed,
+    isOwnProfile: user?.id === targetUser.id,
+  };
+}
+
+export async function action({ request, context, params }: Route.ActionArgs) {
+  const { user } = await getCurrentSession(context.db)(request);
+
+  if (!user) {
+    return redirect("/login/github");
+  }
+
+  const handle = params.handle;
+  if (!handle) {
+    throw new Response("Not Found", { status: 404 });
+  }
+
+  const targetUser = await context.db
+    .select()
+    .from(users)
+    .where(eq(users.handle, handle))
+    .get();
+
+  if (!targetUser) {
+    throw new Response("User not found", { status: 404 });
+  }
+
+  const formData = await request.formData();
+  const action = formData.get("_action");
+
+  try {
+    if (action === "subscribe") {
+      await subscribeToUser(context.db)(user.id, targetUser.id);
+    } else if (action === "unsubscribe") {
+      await unsubscribeFromUser(context.db)(user.id, targetUser.id);
+    }
+  } catch (error) {
+    console.error("Subscription action failed:", error);
+  }
+
+  return redirect(`/${handle}`);
 }
 
 export function meta({ data }: { data: { user: { handle: string } } }) {
