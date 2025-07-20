@@ -1,5 +1,10 @@
 import type { LoaderFunctionArgs, ActionFunctionArgs } from "react-router";
-import { Form, useLoaderData, useActionData, useNavigation } from "react-router";
+import {
+  Form,
+  useLoaderData,
+  useActionData,
+  useNavigation,
+} from "react-router";
 import { data, redirect } from "react-router";
 import { getCurrentSession } from "@/lib/sessions";
 import { getFeedById, updateFeed, deleteFeed } from "@/lib/feeds";
@@ -8,7 +13,13 @@ import type { FeedError } from "@/lib/feeds/interface";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 
@@ -181,7 +192,12 @@ export default function EditFeedPage() {
               )}
 
               <div className="flex gap-2">
-                <Button type="submit" name="_action" value="update" disabled={submitting}>
+                <Button
+                  type="submit"
+                  name="_action"
+                  value="update"
+                  disabled={submitting}
+                >
                   {submitting ? "Saving..." : "Save Changes"}
                 </Button>
                 <Button
@@ -191,7 +207,11 @@ export default function EditFeedPage() {
                   variant="destructive"
                   disabled={submitting}
                   onClick={(e) => {
-                    if (!confirm("Are you sure you want to delete this feed? This will also delete all associated articles.")) {
+                    if (
+                      !confirm(
+                        "Are you sure you want to delete this feed? This will also delete all associated articles.",
+                      )
+                    ) {
                       e.preventDefault();
                     }
                   }}
