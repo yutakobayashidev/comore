@@ -19,7 +19,7 @@ export default process.env.LOCAL_DB_PATH
       dialect: "sqlite",
       driver: "d1-http",
       dbCredentials: {
-        databaseId: "1cfa312a-e613-43e0-af1a-29236fb340ba",
+        databaseId: process.env.CLOUDFLARE_DATABASE_ID!,
         accountId: process.env.CLOUDFLARE_ACCOUNT_ID!,
         token: process.env.CLOUDFLARE_D1_TOKEN!,
       },
