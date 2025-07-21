@@ -18,7 +18,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { Alert, AlertDescription } from "~/components/ui/alert";
 import { Badge } from "~/components/ui/badge";
-import { getCurrentSession } from "~/lib/sessions";
+import { getCurrentSession } from "~/lib/auth/session";
 import { createFeed, getUserFeeds, getFeedCount } from "~/lib/feeds";
 import { hasActiveSubscription } from "~/lib/teams";
 import { feedSchema } from "~/schemas/feed";
