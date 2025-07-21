@@ -5,6 +5,8 @@ import {
   Link,
   Form,
   data,
+  useSearchParams,
+  useNavigation,
 } from "react-router";
 import type { Route } from "./+types/teams.$slug";
 import { getCurrentSession } from "~/lib/auth/session";
@@ -32,6 +34,14 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { MoreHorizontal, Copy } from "lucide-react";
+import { getArticlesByTeamId } from "~/lib/articles";
+import {
+  isSubscribedToTeam,
+  subscribeToTeam,
+  unsubscribeFromTeam,
+} from "~/lib/subscriptions";
+import { ArticleList } from "~/components/articles/article-list";
+import { SubscribeButton } from "~/components/subscriptions/subscribe-button";
 
 export async function loader({ context, request, params }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
@@ -50,15 +60,28 @@ export async function loader({ context, request, params }: Route.LoaderArgs) {
   const isAdmin = await isUserTeamAdmin(context.db)(user.id, team.id);
   const isMember = members.some((m) => m.member.userId === user.id);
 
-  if (!isMember) {
-    throw new Response("You are not a member of this team", { status: 403 });
-  }
+  // Get articles for public team pages
+  const url = new URL(request.url);
+  const page = Number(url.searchParams.get("page") || "1");
+  const limit = 20;
+
+  const articlesData = await getArticlesByTeamId(context.db)(team.id, {
+    page,
+    limit,
+  });
+  const isSubscribed = await isSubscribedToTeam(context.db)(user.id, team.id);
 
   return {
     team,
     members,
     isAdmin,
     currentUserId: user.id,
+    isMember,
+    articles: articlesData.articles,
+    hasMore: articlesData.hasMore,
+    totalCount: articlesData.totalCount,
+    isSubscribed,
+    currentPage: page,
   };
 }
 
@@ -88,7 +111,34 @@ export async function action({ context, request, params }: Route.ActionArgs) {
   const intent = formData.get("intent") as string;
 
   switch (intent) {
+    case "subscribe": {
+      try {
+        await subscribeToTeam(context.db)(user.id, team.id);
+        return redirect(`/teams/${team.slug}`);
+      } catch (error) {
+        console.error("Failed to subscribe:", error);
+        return data({ error: "Failed to subscribe" }, { status: 500 });
+      }
+    }
+
+    case "unsubscribe": {
+      try {
+        await unsubscribeFromTeam(context.db)(user.id, team.id);
+        return redirect(`/teams/${team.slug}`);
+      } catch (error) {
+        console.error("Failed to unsubscribe:", error);
+        return data({ error: "Failed to unsubscribe" }, { status: 500 });
+      }
+    }
+
     case "invite": {
+      if (!isAdmin) {
+        return data(
+          { error: "Only team admins can create invitations" },
+          { status: 403 },
+        );
+      }
+
       try {
         const invitation = await createTeamInvitation(context.db)({
           teamId: team.id,
@@ -146,30 +196,57 @@ export async function action({ context, request, params }: Route.ActionArgs) {
 }
 
 export default function TeamPage() {
-  const { team, members, isAdmin, currentUserId } =
-    useLoaderData<typeof loader>();
+  const {
+    team,
+    members,
+    isAdmin,
+    currentUserId,
+    isMember,
+    articles,
+    hasMore,
+    isSubscribed,
+    currentPage,
+  } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === "loading";
+
+  const handleLoadMore = () => {
+    const nextPage = currentPage + 1;
+    setSearchParams({ page: nextPage.toString() });
+  };
 
   return (
     <div className="container max-w-4xl mx-auto py-8 space-y-6">
       <div className="flex justify-between items-center">
-        <div>
+        <div className="flex-1">
           <h1 className="font-semibold text-2xl">{team.name}</h1>
           <p className="text-muted-foreground">/{team.slug}</p>
         </div>
-        {isAdmin && (
-          <div className="space-x-2">
-            <Form method="post" className="inline">
-              <input type="hidden" name="intent" value="invite" />
-              <Button type="submit" variant="outline">
-                Generate Invite Link
+        <div className="flex items-center gap-2">
+          {!isMember && (
+            <SubscribeButton
+              isSubscribed={isSubscribed}
+              targetType="team"
+              targetId={team.id}
+            />
+          )}
+          {isAdmin && (
+            <div className="space-x-2">
+              <Form method="post" className="inline">
+                <input type="hidden" name="intent" value="invite" />
+                <Button type="submit" variant="outline">
+                  Generate Invite Link
+                </Button>
+              </Form>
+              <Button asChild variant="outline">
+                <Link to={`/teams/${team.slug}/settings`}>Settings</Link>
               </Button>
-            </Form>
-            <Button asChild variant="outline">
-              <Link to={`/teams/${team.slug}/settings`}>Settings</Link>
-            </Button>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
 
       {!team.hasActiveSubscription && (
@@ -273,6 +350,16 @@ export default function TeamPage() {
       {actionData && "error" in actionData && (
         <p className="text-sm text-red-600">{actionData.error}</p>
       )}
+
+      <div className="space-y-4">
+        <h2 className="text-2xl font-semibold">Recent Articles</h2>
+        <ArticleList
+          articles={articles}
+          hasMore={hasMore && !isLoading}
+          loadMore={handleLoadMore}
+          emptyMessage="No articles published by team members yet."
+        />
+      </div>
     </div>
   );
 }

@@ -8,6 +8,9 @@ import {
 export default [
   layout("routes/layout.tsx", [
     index("routes/home.tsx"),
+    route("feeds", "routes/feeds.tsx"),
+    route("feeds/:id/edit", "routes/feeds.$id.edit.tsx"),
+    route("subscriptions", "routes/subscriptions.tsx"),
     route(":handle", "routes/profile.$handle.tsx"),
     route("me/payment", "routes/me.payment.tsx"),
     route("me/settings", "routes/me.settings.tsx"),
@@ -22,4 +25,5 @@ export default [
   route("payment/checkout", "routes/payment.checkout.tsx"),
   route("payment/complete", "routes/payment.complete.tsx"),
   route("api/payment/webhook", "routes/api.payment.webhook.tsx"),
+  route("api/feeds/fetch", "routes/api.feeds.fetch.tsx"),
 ] satisfies RouteConfig;
