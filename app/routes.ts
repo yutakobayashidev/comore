@@ -25,4 +25,5 @@ export default [
   route("payment/checkout", "routes/payment.checkout.tsx"),
   route("payment/complete", "routes/payment.complete.tsx"),
   route("api/payment/webhook", "routes/api.payment.webhook.tsx"),
+  route("api/feeds/fetch", "routes/api.feeds.fetch.tsx"),
 ] satisfies RouteConfig;
