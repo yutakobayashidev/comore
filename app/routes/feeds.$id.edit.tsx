@@ -6,22 +6,22 @@ import {
   useNavigation,
 } from "react-router";
 import { data, redirect } from "react-router";
-import { getCurrentSession } from "@/lib/sessions";
-import { getFeedById, updateFeed, deleteFeed } from "@/lib/feeds";
-import { updateFeedSchema } from "@/schemas/feed";
-import type { FeedError } from "@/lib/feeds/interface";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { getCurrentSession } from "~/lib/sessions";
+import { getFeedById, updateFeed, deleteFeed } from "~/lib/feeds";
+import { updateFeedSchema } from "~/schemas/feed";
+import type { FeedError } from "~/lib/feeds/interface";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Checkbox } from "@/components/ui/checkbox";
+} from "~/components/ui/card";
+import { Alert, AlertDescription } from "~/components/ui/alert";
+import { Checkbox } from "~/components/ui/checkbox";
 
 export async function loader({ request, context, params }: LoaderFunctionArgs) {
   const { user } = await getCurrentSession(context.db)(request);
