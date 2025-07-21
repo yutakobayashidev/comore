@@ -122,10 +122,7 @@ async function processFeed(db: ReturnType<typeof drizzle>, feed: Feed) {
   }
 }
 
-async function processFeedBatch(
-  db: ReturnType<typeof drizzle>,
-  feeds: Feed[],
-) {
+async function processFeedBatch(db: ReturnType<typeof drizzle>, feeds: Feed[]) {
   const promises = feeds.map((feed) => processFeed(db, feed));
   await Promise.allSettled(promises);
 }
