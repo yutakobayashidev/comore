@@ -3,6 +3,7 @@
 ## Overview
 
 The RSS Feed Aggregator feature allows users to:
+
 - Add RSS/Atom feeds (5 for free users, 50 for paid users)
 - Subscribe to other users and teams
 - View aggregated articles in a timeline
@@ -30,6 +31,7 @@ The RSS Feed Aggregator feature allows users to:
 ### Setting up Cloudflare Environment
 
 Add to your `wrangler.toml`:
+
 ```toml
 [vars]
 FEED_FETCH_API_KEY = "your-api-key-here"
@@ -54,6 +56,7 @@ pnpm db:migrate-production
 ### Local Testing
 
 1. Start the dev server:
+
    ```bash
    pnpm dev
    ```
