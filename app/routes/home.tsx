@@ -9,7 +9,7 @@ import type { loader as layoutLoader } from "./layout";
 import type { LoaderFunctionArgs } from "react-router";
 import { data } from "react-router";
 import { getTimelineArticles } from "~/lib/articles";
-import { getCurrentSession } from "~/lib/sessions";
+import { getCurrentSession } from "~/lib/auth/session";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import { ArticleList } from "~/components/articles/article-list";
