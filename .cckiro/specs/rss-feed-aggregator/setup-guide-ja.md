@@ -3,6 +3,7 @@
 ## 概要
 
 RSSフィードアグリゲーター機能により、ユーザーは以下のことができます：
+
 - RSS/Atomフィードの追加（無料ユーザーは5個、有料ユーザーは50個まで）
 - 他のユーザーやチームの購読
 - タイムラインでの集約記事の閲覧
@@ -30,6 +31,7 @@ RSSフィードアグリゲーター機能により、ユーザーは以下の�
 ### Cloudflare環境の設定
 
 `wrangler.toml`に追加：
+
 ```toml
 [vars]
 FEED_FETCH_API_KEY = "your-api-key-here"
@@ -54,6 +56,7 @@ pnpm db:migrate-production
 ### ローカルテスト
 
 1. 開発サーバーを起動：
+
    ```bash
    pnpm dev
    ```
