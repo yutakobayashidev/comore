@@ -6,12 +6,7 @@ import {
 } from "react-router";
 import { users } from "../../database/schema";
 import { eq } from "drizzle-orm";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Link2, AtSign } from "lucide-react";
 import type { Route } from "./+types/profile.$handle";
