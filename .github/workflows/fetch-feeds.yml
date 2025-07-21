@@ -18,7 +18,7 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Fetch RSS feeds
-        run: pnpm tsx scripts/fetch-feeds.ts
+        run: pnpm feed:fetch
         env:
           API_URL: ${{ vars.PRODUCTION_URL }}
           FEED_FETCH_API_KEY: ${{ secrets.FEED_FETCH_API_KEY }}
