@@ -63,7 +63,7 @@ async function fetchOpenGraphImage(url: string): Promise<string | null> {
 
 async function processFeed(
   context: ActionFunctionArgs["context"],
-  feed: Feed
+  feed: Feed,
 ): Promise<{ processed: number; errors: number }> {
   console.log(`Processing feed: ${feed.title} (${feed.url})`);
   let processed = 0;
@@ -160,7 +160,7 @@ export async function action({ request, context }: ActionFunctionArgs) {
         error: "Feed fetch failed",
         message: error instanceof Error ? error.message : "Unknown error",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
