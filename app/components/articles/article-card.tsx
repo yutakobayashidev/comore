@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader } from "~/components/ui/card";
+import { Badge } from "~/components/ui/badge";
 import { ExternalLink, Calendar, User } from "lucide-react";
-import type { ArticleWithFeed } from "@/lib/articles/interface";
+import type { ArticleWithFeed } from "~/lib/articles/interface";
 
 interface ArticleCardProps {
   article: ArticleWithFeed;
