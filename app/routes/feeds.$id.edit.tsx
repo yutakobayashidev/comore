@@ -6,7 +6,7 @@ import {
   useNavigation,
 } from "react-router";
 import { data, redirect } from "react-router";
-import { getCurrentSession } from "~/lib/sessions";
+import { getCurrentSession } from "~/lib/auth/session";
 import { getFeedById, updateFeed, deleteFeed } from "~/lib/feeds";
 import { updateFeedSchema } from "~/schemas/feed";
 import type { FeedError } from "~/lib/feeds/interface";
