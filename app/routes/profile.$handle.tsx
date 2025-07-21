@@ -1,7 +1,5 @@
 import {
   useLoaderData,
-  useActionData,
-  Form,
   useNavigation,
   useRouteLoaderData,
   useSearchParams,
@@ -13,12 +11,9 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription,
 } from "~/components/ui/card";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Link2, AtSign } from "lucide-react";
-import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
 import type { Route } from "./+types/profile.$handle";
 import { getArticlesByUserId } from "~/lib/articles";
 import {
