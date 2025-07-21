@@ -47,7 +47,7 @@ export const d1HttpDriver = async (
 
   const qResult = data.result[0];
 
-  if (!qResult.success) {
+  if (!qResult || !qResult.success) {
     throw new Error(
       `Error from sqlite proxy server: \n${JSON.stringify(data)}`,
     );
