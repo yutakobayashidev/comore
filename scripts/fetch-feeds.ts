@@ -130,16 +130,13 @@ async function processFeedBatch(db: ReturnType<typeof drizzle>, feeds: Feed[]) {
 async function main() {
   console.log("Starting RSS feed fetch...");
 
-  // Initialize Miniflare for production D1 access
+  // Initialize Miniflare for local D1 access
   const mf = new Miniflare({
     modules: true,
     script: "",
-    d1Databases: [
-      {
-        binding: "DB",
-        id: process.env.D1_DATABASE_ID || "DB",
-      },
-    ],
+    d1Databases: {
+      DB: process.env.D1_DATABASE_ID || "1cfa312a-e613-43e0-af1a-29236fb340ba",
+    },
   });
 
   const env = await mf.getBindings();
