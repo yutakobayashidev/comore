@@ -18,6 +18,16 @@ const d1HttpClient = ky.create({
   },
 });
 
+interface D1QueryResult {
+  success: boolean;
+  errors: any[];
+  result: Array<{
+    success: boolean;
+    results: any[];
+    meta?: any;
+  }>;
+}
+
 export const d1HttpDriver = async (
   sql: string,
   params: unknown[],
@@ -27,7 +37,7 @@ export const d1HttpDriver = async (
     json: { sql, params, method },
   });
 
-  const data = (await res.json()) as Record<string, any>;
+  const data = (await res.json()) as D1QueryResult;
 
   if (data.errors?.length > 0 || !data.success) {
     throw new Error(

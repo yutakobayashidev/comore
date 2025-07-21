@@ -56,6 +56,9 @@ importers:
       isbot:
         specifier: 5.1.27
         version: 5.1.27
+      ky:
+        specifier: 1.8.2
+        version: 1.8.2
       lucide-react:
         specifier: 0.525.0
         version: 0.525.0(react@19.1.0)
@@ -4018,6 +4021,10 @@ packages:
     peerDependencies:
       '@types/node': '>=18'
       typescript: '>=5.0.4'
+
+  ky@1.8.2:
+    resolution: {integrity: sha512-XybQJ3d4Ea1kI27DoelE5ZCT3bSJlibYTtQuMsyzKox3TMyayw1asgQdl54WroAm+fIA3ZCr8zXW2RpR7qWVpA==}
+    engines: {node: '>=18'}
 
   lefthook-darwin-arm64@1.12.2:
     resolution: {integrity: sha512-fTxeI9tEskrHjc3QyEO+AG7impBXY2Ed8V5aiRc3fw9POfYtVh9b5jRx90fjk2+ld5hf+Z1DsyyLq/vOHDFskQ==}
@@ -9192,6 +9199,8 @@ snapshots:
       typescript: 5.8.3
       zod: 3.25.76
       zod-validation-error: 3.5.3(zod@3.25.76)
+
+  ky@1.8.2: {}
 
   lefthook-darwin-arm64@1.12.2:
     optional: true
