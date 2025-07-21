@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { data, redirect } from "react-router";
-import { getCurrentSession } from "~/lib/sessions";
+import { getCurrentSession } from "~/lib/auth/session";
 import { getUserSubscriptions } from "~/lib/subscriptions";
 import {
   Card,
