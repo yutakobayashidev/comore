@@ -34,10 +34,10 @@
     "@oslojs/crypto": "1.0.1",
     "@oslojs/encoding": "1.1.0",
     "@pilcrowjs/object-parser": "0.0.4",
-    "@react-router/node": "7.5.3",
-    "@react-router/serve": "7.5.3",
+    "@react-router/node": "7.7.0",
+    "@react-router/serve": "7.7.0",
     "@stripe/react-stripe-js": "3.7.0",
-    "@stripe/stripe-js": "7.4.0",
+    "@stripe/stripe-js": "7.5.0",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "cmdk": "1.1.1",
@@ -53,7 +53,7 @@
     "react-dom": "19.1.0",
     "react-hook-form": "7.60.0",
     "react-resizable-panels": "3.0.3",
-    "react-router": "7.5.3",
+    "react-router": "7.7.0",
     "recharts": "2.15.4",
     "sonner": "2.0.6",
     "stripe": "18.3.0",
@@ -65,7 +65,7 @@
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.9.6",
     "@libsql/client": "0.15.10",
-    "@react-router/dev": "7.5.3",
+    "@react-router/dev": "7.7.0",
     "@secretlint/secretlint-rule-preset-recommend": "10.2.1",
     "@tailwindcss/vite": "4.1.11",
     "@testing-library/dom": "10.4.0",
@@ -85,7 +85,7 @@
     "jsdom": "26.1.0",
     "knip": "5.61.3",
     "lefthook": "1.12.2",
-    "oxlint": "1.6.0",
+    "oxlint": "1.7.0",
     "prettier": "3.6.2",
     "secretlint": "10.2.1",
     "tailwindcss": "4.1.11",
@@ -95,6 +95,6 @@
     "vite": "6.3.5",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.4",
-    "wrangler": "4.24.3"
+    "wrangler": "4.25.0"
   }
 }
