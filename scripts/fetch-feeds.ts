@@ -1,12 +1,16 @@
 #!/usr/bin/env tsx
 
-import "dotenv/config";
 import Parser from "rss-parser";
 import { parse as parseHtml } from "node-html-parser";
 import db from "../app/lib/d1-http";
 import { getActiveFeeds, updateFeedFetchStatus } from "../app/lib/feeds";
 import { createArticle, checkArticleExists } from "../app/lib/articles";
 import type { Feed } from "../app/lib/feeds/interface";
+import * as dotenv from "dotenv";
+
+dotenv.config({
+  path: ".dev.vars",
+});
 
 // Configuration
 const BATCH_SIZE = 5;
