@@ -1,6 +1,6 @@
 import { eq, inArray, desc, and, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
-import type * as schema from "@/database/schema";
+import type * as schema from "~/database/schema";
 import {
   articles,
   feeds,
@@ -8,7 +8,7 @@ import {
   teamSubscriptions,
   teamMembers,
   users,
-} from "@/database/schema";
+} from "~/database/schema";
 import type {
   Article,
   CreateArticleParams,
