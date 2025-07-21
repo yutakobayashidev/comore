@@ -1,20 +1,27 @@
-import type { AppLoadContext, EntryContext } from "react-router";
+import type {
+  EntryContext,
+  unstable_RouterContextProvider,
+} from "react-router";
 import { ServerRouter } from "react-router";
 import { isbot } from "isbot";
 import { renderToReadableStream } from "react-dom/server";
+import { I18nextProvider } from "react-i18next";
+import { getInstance } from "./middleware/i18next";
 
 export default async function handleRequest(
   request: Request,
   responseStatusCode: number,
   responseHeaders: Headers,
   routerContext: EntryContext,
-  _loadContext: AppLoadContext,
+  appContext: unstable_RouterContextProvider,
 ) {
   let shellRendered = false;
   const userAgent = request.headers.get("user-agent");
 
   const body = await renderToReadableStream(
-    <ServerRouter context={routerContext} url={request.url} />,
+    <I18nextProvider i18n={getInstance(appContext)}>
+      <ServerRouter context={routerContext} url={request.url} />
+    </I18nextProvider>,
     {
       onError(error: unknown) {
         responseStatusCode = 500;

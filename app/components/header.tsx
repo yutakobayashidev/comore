@@ -1,4 +1,5 @@
 import { Link, Form } from "react-router";
+import { useTranslation } from "react-i18next";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -9,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { LanguageSwitcher } from "~/components/language-switcher";
 
 type HeaderProps = {
   user: {
@@ -20,11 +22,13 @@ type HeaderProps = {
 };
 
 export function Header({ user, isAuthenticated }: HeaderProps) {
+  const { t } = useTranslation();
+
   return (
     <header className="border-b">
       <div className="flex h-16 items-center px-4 container max-w-5xl mx-auto">
         <Link to="/" className="flex items-center space-x-2">
-          <h1 className="text-xl font-bold">Comore</h1>
+          <h1 className="text-xl font-bold">{t("common.appName")}</h1>
         </Link>
         <nav className="ml-auto flex items-center space-x-4">
           {isAuthenticated && user ? (
@@ -58,14 +62,14 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem className="text-xs text-muted-foreground">
-                    GitHub ID: {user.githubId}
+                    {t("header.githubId")}: {user.githubId}
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem asChild>
                     <Form method="post">
                       <input type="hidden" name="intent" value="logout" />
                       <button type="submit" className="w-full text-left">
-                        Sign Out
+                        {t("common.logout")}
                       </button>
                     </Form>
                   </DropdownMenuItem>
@@ -74,9 +78,11 @@ export function Header({ user, isAuthenticated }: HeaderProps) {
             </>
           ) : (
             <Link to="/login/github">
-              <Button variant="default">Login</Button>
+              <Button variant="default">{t("common.login")}</Button>
             </Link>
           )}
+
+          <LanguageSwitcher />
         </nav>
       </div>
     </header>
