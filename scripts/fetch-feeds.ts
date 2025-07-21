@@ -122,10 +122,7 @@ async function processFeed(db: ReturnType<typeof drizzle>, feed: Feed) {
   }
 }
 
-async function processFeedBatch(
-  db: ReturnType<typeof drizzle>,
-  feeds: Feed[]
-) {
+async function processFeedBatch(db: ReturnType<typeof drizzle>, feeds: Feed[]) {
   const promises = feeds.map((feed) => processFeed(db, feed));
   await Promise.allSettled(promises);
 }
@@ -136,27 +133,29 @@ async function main() {
   // For GitHub Actions, we'll use wrangler to execute a script
   // that runs within the Cloudflare Workers environment
   const { execSync } = await import("child_process");
-  
+
   try {
     // Use wrangler to execute the fetch operation
-    execSync(`pnpm wrangler d1 execute ${process.env.D1_DATABASE_NAME || "DB"} --command "SELECT 1"`, {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
-        CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
-      }
-    });
-    
+    execSync(
+      `pnpm wrangler d1 execute ${process.env.D1_DATABASE_NAME || "DB"} --command "SELECT 1"`,
+      {
+        stdio: "inherit",
+        env: {
+          ...process.env,
+          CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
+          CLOUDFLARE_ACCOUNT_ID: process.env.CLOUDFLARE_ACCOUNT_ID,
+        },
+      },
+    );
+
     console.log("Connected to D1 database successfully");
-    
+
     // Note: Direct D1 access from external scripts is not straightforward
     // The recommended approach is to create an API endpoint in your Worker
     // that handles the feed fetching, then call it from this script
-    
+
     console.log("Please implement a Worker endpoint for feed fetching");
     console.log("Then call it from this script using fetch()");
-    
   } catch (error) {
     console.error("Failed to connect to D1:", error);
     process.exit(1);

@@ -21,6 +21,7 @@
     "db:migrate-production": "drizzle-kit migrate",
     "db:studio": "LOCAL_DB_PATH=$(find .wrangler/state/v3/d1/miniflare-D1DatabaseObject -type f -name '*.sqlite' -print -quit) drizzle-kit studio",
     "db:studio:prod": "drizzle-kit studio",
+    "feed:fetch": "tsx scripts/fetch-feeds.ts",
     "cf-typegen": "wrangler types",
     "typecheck": "react-router typegen && tsc --build",
     "spell-check": "cspell lint --gitignore \"**\"",
