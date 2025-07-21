@@ -26,7 +26,7 @@ async function main() {
     }
 
     const result = await response.json();
-    
+
     console.log("Feed fetch completed:");
     console.log(`- Total feeds: ${result.feeds}`);
     console.log(`- Articles processed: ${result.processed}`);

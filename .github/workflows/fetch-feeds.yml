@@ -18,11 +18,10 @@ jobs:
         uses: ./.github/actions/setup-node
 
       - name: Fetch RSS feeds
-        run: pnpm feed:fetch
+        run: pnpm tsx scripts/fetch-feeds.ts
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          D1_DATABASE_ID: ${{ secrets.D1_DATABASE_ID }}
+          API_URL: ${{ vars.PRODUCTION_URL }}
+          FEED_FETCH_API_KEY: ${{ secrets.FEED_FETCH_API_KEY }}
 
       - name: Upload logs
         if: failure()
