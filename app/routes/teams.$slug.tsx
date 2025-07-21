@@ -34,14 +34,14 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { MoreHorizontal, Copy } from "lucide-react";
-import { getArticlesByTeamId } from "@/lib/articles";
+import { getArticlesByTeamId } from "~/lib/articles";
 import {
   isSubscribedToTeam,
   subscribeToTeam,
   unsubscribeFromTeam,
-} from "@/lib/subscriptions";
-import { ArticleList } from "@/components/articles/article-list";
-import { SubscribeButton } from "@/components/subscriptions/subscribe-button";
+} from "~/lib/subscriptions";
+import { ArticleList } from "~/components/articles/article-list";
+import { SubscribeButton } from "~/components/subscriptions/subscribe-button";
 
 export async function loader({ context, request, params }: Route.LoaderArgs) {
   const { user } = await getCurrentSession(context.db)(request);
