@@ -38,26 +38,26 @@ async function fetchOpenGraphImage(url: string): Promise<string | null> {
         "User-Agent": "Comore RSS Aggregator/1.0",
       },
     });
-    
+
     if (!response.ok) return null;
-    
+
     const html = await response.text();
     const root = parseHtml(html);
-    
+
     // Try to find og:image
     const ogImage = root.querySelector('meta[property="og:image"]');
     if (ogImage) {
       const content = ogImage.getAttribute("content");
       if (content) return content;
     }
-    
+
     // Try to find twitter:image as fallback
     const twitterImage = root.querySelector('meta[name="twitter:image"]');
     if (twitterImage) {
       const content = twitterImage.getAttribute("content");
       if (content) return content;
     }
-    
+
     return null;
   } catch (error) {
     console.error(`Failed to fetch OpenGraph image for ${url}:`, error);
@@ -67,30 +67,30 @@ async function fetchOpenGraphImage(url: string): Promise<string | null> {
 
 async function processFeed(db: ReturnType<typeof drizzle>, feed: schema.Feed) {
   console.log(`Processing feed: ${feed.title} (${feed.url})`);
-  
+
   try {
     // Parse RSS feed
     const feedData = await parser.parseURL(feed.url);
-    
+
     if (!feedData.items || feedData.items.length === 0) {
       console.log(`No items found in feed: ${feed.title}`);
       await updateFeedFetchStatus(db)(feed.id);
       return;
     }
-    
+
     let newArticles = 0;
-    
+
     // Process each item
     for (const item of feedData.items as ParsedItem[]) {
       if (!item.link) continue;
-      
+
       // Check if article already exists
       const exists = await checkArticleExists(db)(item.link);
       if (exists) continue;
-      
+
       // Fetch OpenGraph image
       const ogImageUrl = await fetchOpenGraphImage(item.link);
-      
+
       // Create article
       try {
         await createArticle(db)({
@@ -108,9 +108,9 @@ async function processFeed(db: ReturnType<typeof drizzle>, feed: schema.Feed) {
         console.error(`Failed to create article: ${item.link}`, error);
       }
     }
-    
+
     console.log(`Added ${newArticles} new articles from ${feed.title}`);
-    
+
     // Update feed fetch status
     await updateFeedFetchStatus(db)(feed.id);
   } catch (error) {
@@ -123,7 +123,7 @@ async function processFeed(db: ReturnType<typeof drizzle>, feed: schema.Feed) {
 
 async function processFeedBatch(
   db: ReturnType<typeof drizzle>,
-  feeds: schema.Feed[]
+  feeds: schema.Feed[],
 ) {
   const promises = feeds.map((feed) => processFeed(db, feed));
   await Promise.allSettled(promises);
@@ -131,7 +131,7 @@ async function processFeedBatch(
 
 async function main() {
   console.log("Starting RSS feed fetch...");
-  
+
   // Initialize Miniflare for local D1 access
   const mf = new Miniflare({
     modules: true,
@@ -139,31 +139,34 @@ async function main() {
     d1Databases: {
       DB: {
         id: "DB",
-        localPath: ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/1cfa312a-e613-43e0-af1a-29236fb340ba.sqlite",
+        localPath:
+          ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/1cfa312a-e613-43e0-af1a-29236fb340ba.sqlite",
       },
     },
   });
-  
+
   const env = await mf.getBindings();
   const db = drizzle(env.DB as any, { schema });
-  
+
   try {
     // Get all active feeds
     const feeds = await getActiveFeeds(db)();
     console.log(`Found ${feeds.length} active feeds`);
-    
+
     if (feeds.length === 0) {
       console.log("No active feeds to process");
       return;
     }
-    
+
     // Process feeds in batches
     for (let i = 0; i < feeds.length; i += BATCH_SIZE) {
       const batch = feeds.slice(i, i + BATCH_SIZE);
-      console.log(`Processing batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(feeds.length / BATCH_SIZE)}`);
+      console.log(
+        `Processing batch ${Math.floor(i / BATCH_SIZE) + 1}/${Math.ceil(feeds.length / BATCH_SIZE)}`,
+      );
       await processFeedBatch(db, batch);
     }
-    
+
     console.log("Feed fetch completed successfully");
   } catch (error) {
     console.error("Feed fetch failed:", error);

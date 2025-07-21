@@ -87,6 +87,7 @@
     "jsdom": "26.1.0",
     "knip": "5.61.3",
     "lefthook": "1.12.2",
+    "miniflare": "4.20250712.0",
     "oxlint": "1.6.0",
     "prettier": "3.6.2",
     "secretlint": "10.2.0",
