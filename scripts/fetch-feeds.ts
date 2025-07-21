@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 async function main() {
-  console.log("Starting RSS feed fetch...");
+  console.log("Starting RSS feed fetch via API...");
 
   const apiUrl = process.env.API_URL || "http://localhost:5173";
   const apiKey = process.env.FEED_FETCH_API_KEY;
@@ -27,11 +27,15 @@ async function main() {
 
     const result = await response.json();
     
-    console.log("Feed fetch completed successfully");
-    console.log(`Processed ${result.processed} articles from ${result.feeds} feeds`);
-    
+    console.log("Feed fetch completed:");
+    console.log(`- Total feeds: ${result.feeds}`);
+    console.log(`- Articles processed: ${result.processed}`);
+    console.log(`- Errors: ${result.errors}`);
+
     if (result.errors > 0) {
-      console.warn(`Encountered ${result.errors} errors during processing`);
+      console.warn("Some feeds had errors during processing");
+      // Exit with non-zero code if there were errors
+      process.exit(1);
     }
   } catch (error) {
     console.error("Feed fetch failed:", error);
