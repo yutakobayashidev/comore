@@ -26,7 +26,7 @@ import {
   unsubscribeFromUser,
   isSubscribedToUser,
 } from "~/lib/subscriptions";
-import { getCurrentSession } from "~/lib/sessions";
+import { getCurrentSession } from "~/lib/auth/session";
 import { redirect } from "react-router";
 import type { loader as layoutLoader } from "./layout";
 import { ArticleList } from "~/components/articles/article-list";
