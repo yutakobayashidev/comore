@@ -1,16 +1,16 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { data, redirect } from "react-router";
-import { getCurrentSession } from "@/lib/sessions";
-import { getUserSubscriptions } from "@/lib/subscriptions";
+import { getCurrentSession } from "~/lib/sessions";
+import { getUserSubscriptions } from "~/lib/subscriptions";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 
 export async function loader({ request, context }: LoaderFunctionArgs) {
   const { user } = await getCurrentSession(context.db)(request);
