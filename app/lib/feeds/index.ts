@@ -1,14 +1,14 @@
 import { eq, and, sql } from "drizzle-orm";
 import type { DrizzleD1Database } from "drizzle-orm/d1";
-import type * as schema from "@/database/schema";
-import { feeds } from "@/database/schema";
+import type * as schema from "~/database/schema";
+import { feeds } from "~/database/schema";
 import type {
   Feed,
   CreateFeedParams,
   UpdateFeedParams,
   FeedError,
 } from "./interface";
-import { hasActiveSubscription } from "@/lib/teams";
+import { hasActiveSubscription } from "~/lib/teams";
 
 const FREE_USER_FEED_LIMIT = 5;
 const PAID_USER_FEED_LIMIT = 50;
