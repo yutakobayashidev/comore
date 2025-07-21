@@ -20,17 +20,17 @@ import { Link2, AtSign } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { Separator } from "~/components/ui/separator";
 import type { Route } from "./+types/profile.$handle";
-import { getArticlesByUserId } from "@/lib/articles";
+import { getArticlesByUserId } from "~/lib/articles";
 import {
   subscribeToUser,
   unsubscribeFromUser,
   isSubscribedToUser,
-} from "@/lib/subscriptions";
-import { getCurrentSession } from "@/lib/sessions";
+} from "~/lib/subscriptions";
+import { getCurrentSession } from "~/lib/sessions";
 import { redirect } from "react-router";
 import type { loader as layoutLoader } from "./layout";
-import { ArticleList } from "@/components/articles/article-list";
-import { SubscribeButton } from "@/components/subscriptions/subscribe-button";
+import { ArticleList } from "~/components/articles/article-list";
+import { SubscribeButton } from "~/components/subscriptions/subscribe-button";
 
 export async function loader({ params, context, request }: Route.LoaderArgs) {
   const handle = params.handle;
