@@ -1,8 +1,8 @@
 import { ArticleCard } from "./article-card";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
 import { Newspaper } from "lucide-react";
-import type { ArticleWithFeed } from "@/lib/articles/interface";
+import type { ArticleWithFeed } from "~/lib/articles/interface";
 
 interface ArticleListProps {
   articles: ArticleWithFeed[];
