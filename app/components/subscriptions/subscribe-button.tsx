@@ -1,5 +1,5 @@
 import { useFetcher } from "react-router";
-import { Button } from "@/components/ui/button";
+import { Button } from "~/components/ui/button";
 import { Bell, BellOff } from "lucide-react";
 
 interface SubscribeButtonProps {
