@@ -6,6 +6,7 @@ import { parse as parseHtml } from "node-html-parser";
 import * as schema from "../database/schema";
 import { getActiveFeeds, updateFeedFetchStatus } from "../app/lib/feeds";
 import { createArticle, checkArticleExists } from "../app/lib/articles";
+import type { Feed } from "../app/lib/feeds/interface";
 
 // Configuration
 const BATCH_SIZE = 5; // Process feeds in batches
@@ -65,7 +66,7 @@ async function fetchOpenGraphImage(url: string): Promise<string | null> {
   }
 }
 
-async function processFeed(db: ReturnType<typeof drizzle>, feed: schema.Feed) {
+async function processFeed(db: ReturnType<typeof drizzle>, feed: Feed) {
   console.log(`Processing feed: ${feed.title} (${feed.url})`);
 
   try {
@@ -100,7 +101,7 @@ async function processFeed(db: ReturnType<typeof drizzle>, feed: schema.Feed) {
           description: item.contentSnippet || item.content?.substring(0, 500),
           content: item.content,
           author: item.creator || item.author,
-          ogImageUrl,
+          ogImageUrl: ogImageUrl || undefined,
           publishedAt: item.pubDate ? new Date(item.pubDate) : undefined,
         });
         newArticles++;
@@ -123,7 +124,7 @@ async function processFeed(db: ReturnType<typeof drizzle>, feed: schema.Feed) {
 
 async function processFeedBatch(
   db: ReturnType<typeof drizzle>,
-  feeds: schema.Feed[],
+  feeds: Feed[],
 ) {
   const promises = feeds.map((feed) => processFeed(db, feed));
   await Promise.allSettled(promises);
@@ -132,17 +133,16 @@ async function processFeedBatch(
 async function main() {
   console.log("Starting RSS feed fetch...");
 
-  // Initialize Miniflare for local D1 access
+  // Initialize Miniflare for production D1 access
   const mf = new Miniflare({
     modules: true,
     script: "",
-    d1Databases: {
-      DB: {
-        id: "DB",
-        localPath:
-          ".wrangler/state/v3/d1/miniflare-D1DatabaseObject/1cfa312a-e613-43e0-af1a-29236fb340ba.sqlite",
+    d1Databases: [
+      {
+        binding: "DB",
+        id: process.env.D1_DATABASE_ID || "DB",
       },
-    },
+    ],
   });
 
   const env = await mf.getBindings();
