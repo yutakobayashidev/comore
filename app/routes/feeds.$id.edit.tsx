@@ -51,7 +51,7 @@ export async function action({ request, context, params }: ActionFunctionArgs) {
     return redirect("/login/github");
   }
 
-  const feedId = Number(params.id);
+  const feedId = Number(params["id"]);
   if (isNaN(feedId)) {
     throw new Response("Not Found", { status: 404 });
   }
