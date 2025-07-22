@@ -1,88 +1,88 @@
-# RSS Feed Aggregator Setup Guide
+# RSSフィードアグリゲーター セットアップガイド
 
-## Overview
+## 概要
 
-The RSS Feed Aggregator feature allows users to:
+RSSフィードアグリゲーター機能により、ユーザーは以下のことができます：
 
-- Add RSS/Atom feeds (5 for free users, 50 for paid users)
-- Subscribe to other users and teams
-- View aggregated articles in a timeline
+- RSS/Atomフィードの追加（無料ユーザーは5個、有料ユーザーは50個まで）
+- 他のユーザーやチームの購読
+- タイムラインでの集約記事の閲覧
 
-## Environment Setup
+## 環境設定
 
-### Required Environment Variables
+### 必要な環境変数
 
-1. **For GitHub Actions**:
-   - `PRODUCTION_URL`: Your production app URL (set as repository variable)
-   - `FEED_FETCH_API_KEY`: Secret API key for feed fetching (set as repository secret)
+1. **GitHub Actions用**：
+   - `PRODUCTION_URL`: 本番アプリのURL（リポジトリ変数として設定）
+   - `FEED_FETCH_API_KEY`: フィード取得用のシークレットAPIキー（リポジトリシークレットとして設定）
 
-2. **For Cloudflare Workers**:
-   - `FEED_FETCH_API_KEY`: Same API key as above (set in wrangler.toml or dashboard)
+2. **Cloudflare Workers用**：
+   - `FEED_FETCH_API_KEY`: 上記と同じAPIキー（wrangler.tomlまたはダッシュボードで設定）
 
-### Setting up GitHub Secrets
+### GitHub Secretsの設定
 
-1. Go to your repository Settings → Secrets and variables → Actions
-2. Add the following:
+1. リポジトリの Settings → Secrets and variables → Actions へ移動
+2. 以下を追加：
    - Repository secrets:
-     - `FEED_FETCH_API_KEY`: Generate a secure random string
+     - `FEED_FETCH_API_KEY`: セキュアなランダム文字列を生成
    - Repository variables:
-     - `PRODUCTION_URL`: Your production URL (e.g., https://your-app.workers.dev)
+     - `PRODUCTION_URL`: 本番URL（例：https://your-app.workers.dev）
 
-### Setting up Cloudflare Environment
+### Cloudflare環境の設定
 
-Add to your `wrangler.toml`:
+`wrangler.toml`に追加：
 
 ```toml
 [vars]
 FEED_FETCH_API_KEY = "your-api-key-here"
 ```
 
-Or set it via the Cloudflare dashboard in your Worker's settings.
+または、CloudflareダッシュボードのWorker設定から設定します。
 
-## Database Setup
+## データベースセットアップ
 
-Run the migrations to create the new tables:
+新しいテーブルを作成するためにマイグレーションを実行：
 
 ```bash
-# Local development
+# ローカル開発環境
 pnpm db:migrate
 
-# Production
+# 本番環境
 pnpm db:migrate-production
 ```
 
-## Testing the Feed Fetcher
+## フィード取得機能のテスト
 
-### Local Testing
+### ローカルテスト
 
-1. Start the dev server:
+1. 開発サーバーを起動：
 
    ```bash
    pnpm dev
    ```
 
-2. Run the feed fetcher:
+2. フィード取得を実行：
    ```bash
    API_URL=http://localhost:5173 FEED_FETCH_API_KEY=your-test-key pnpm feed:fetch
    ```
 
-### Manual Trigger in GitHub
+### GitHubでの手動実行
 
-1. Go to Actions → Fetch RSS Feeds
-2. Click "Run workflow"
-3. Select the branch and run
+1. Actions → Fetch RSS Feeds へ移動
+2. "Run workflow" をクリック
+3. ブランチを選択して実行
 
-## Monitoring
+## モニタリング
 
-- Check GitHub Actions logs for fetch results
-- Monitor the `feeds` table for `lastErrorAt` and `lastErrorMessage`
-- Check the `articles` table for newly added content
+- GitHub Actionsのログで取得結果を確認
+- `feeds`テーブルの`lastErrorAt`と`lastErrorMessage`を監視
+- `articles`テーブルで新規追加コンテンツを確認
 
-## Troubleshooting
+## トラブルシューティング
 
-### Common Issues
+### よくある問題
 
-1. **401 Unauthorized**: Check that `FEED_FETCH_API_KEY` matches in both environments
-2. **Feed parsing errors**: Check feed URLs are valid RSS/Atom feeds
-3. **No articles appearing**: Verify feeds are active and contain recent items
-4. **GitHub Action failing**: Check the uploaded artifacts for detailed logs
+1. **401 Unauthorized**: 両環境で`FEED_FETCH_API_KEY`が一致していることを確認
+2. **フィードパースエラー**: フィードURLが有効なRSS/Atomフィードであることを確認
+3. **記事が表示されない**: フィードがアクティブで最近の記事を含んでいることを確認
+4. **GitHub Actionが失敗する**: アップロードされたアーティファクトで詳細なログを確認
