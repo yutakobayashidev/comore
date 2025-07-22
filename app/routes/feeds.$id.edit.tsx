@@ -57,7 +57,7 @@ export async function action({ request, context, params }: ActionFunctionArgs) {
   }
 
   const formDataObject = Object.fromEntries(await request.formData());
-  const actionType = formDataObject._action;
+  const actionType = formDataObject["_action"];
 
   if (actionType === "delete") {
     try {
