@@ -176,7 +176,7 @@ export default function FeedsPage() {
                     name="title"
                     placeholder="My Favorite Blog"
                   />
-                  {validationMessages?.title && (
+                  {validationMessages && "title" in validationMessages && validationMessages.title && (
                     <p className="text-sm text-red-600">
                       {validationMessages.title[0]}
                     </p>
@@ -190,7 +190,7 @@ export default function FeedsPage() {
                     name="description"
                     placeholder="A brief description of this feed"
                   />
-                  {validationMessages?.description && (
+                  {validationMessages && "description" in validationMessages && validationMessages.description && (
                     <p className="text-sm text-red-600">
                       {validationMessages.description[0]}
                     </p>
