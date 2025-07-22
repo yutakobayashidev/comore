@@ -30,7 +30,7 @@ export async function loader({ request, context, params }: LoaderFunctionArgs) {
     return redirect("/login/github");
   }
 
-  const feedId = Number(params.id);
+  const feedId = Number(params['id']);
   if (isNaN(feedId)) {
     throw new Response("Not Found", { status: 404 });
   }
