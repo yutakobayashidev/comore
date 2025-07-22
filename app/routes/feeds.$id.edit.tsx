@@ -148,7 +148,7 @@ export default function EditFeedPage() {
                   defaultValue={feed.title}
                   required
                 />
-                {validationMessages?.title && (
+                {validationMessages && "title" in validationMessages && validationMessages.title && (
                   <p className="text-sm text-red-600">
                     {validationMessages.title[0]}
                   </p>
