@@ -64,7 +64,7 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "1.9.6",
-    "@libsql/client": "0.15.14",
+    "@libsql/client": "0.15.15",
     "@react-router/dev": "7.7.1",
     "@secretlint/secretlint-rule-preset-recommend": "10.2.2",
     "@tailwindcss/vite": "4.1.13",
