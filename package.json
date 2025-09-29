@@ -82,7 +82,7 @@
     "drizzle-orm": "0.44.5",
     "eslint": "9.36.0",
     "eslint-plugin-oxlint": "1.18.0",
-    "jsdom": "26.1.0",
+    "jsdom": "27.0.0",
     "knip": "5.61.3",
     "lefthook": "1.12.3",
     "oxlint": "1.7.0",
