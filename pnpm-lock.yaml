@@ -157,8 +157,8 @@ importers:
         specifier: 9.36.0
         version: 9.36.0(jiti@2.6.1)
       eslint-plugin-oxlint:
-        specifier: 1.18.0
-        version: 1.18.0
+        specifier: 1.19.0
+        version: 1.19.0
       jsdom:
         specifier: 26.1.0
         version: 26.1.0
@@ -3491,8 +3491,8 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  eslint-plugin-oxlint@1.18.0:
-    resolution: {integrity: sha512-H4H8GYHBTvh4Ozaf6/FABRKh3kensV5tarSn+ox58qmMJWDAWh9eboIho8LJIFEolcxZJ5EsYo1ecinZIJGRGA==}
+  eslint-plugin-oxlint@1.19.0:
+    resolution: {integrity: sha512-lkInWudeZjLW2k78rGl9hAtSlYYo2tEqt7OxWWUtkVdEJO819RM2N9GfQCg3OeBHEpT4nEi+y1eVsLfMyM1ueg==}
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -8512,7 +8512,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-oxlint@1.18.0:
+  eslint-plugin-oxlint@1.19.0:
     dependencies:
       jsonc-parser: 3.3.1
 
