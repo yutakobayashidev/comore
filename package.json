@@ -78,7 +78,7 @@
     "arctic": "3.7.0",
     "cspell": "9.1.5",
     "dotenv": "17.2.3",
-    "drizzle-kit": "0.31.7",
+    "drizzle-kit": "0.31.8",
     "drizzle-orm": "0.44.7",
     "eslint": "9.39.1",
     "eslint-plugin-oxlint": "1.29.0",
