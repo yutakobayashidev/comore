@@ -157,8 +157,8 @@ importers:
         specifier: 9.39.1
         version: 9.39.1(jiti@2.6.1)
       eslint-plugin-oxlint:
-        specifier: 1.29.0
-        version: 1.29.0
+        specifier: 1.32.0
+        version: 1.32.0
       jsdom:
         specifier: 26.1.0
         version: 26.1.0
@@ -172,8 +172,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       prettier:
-        specifier: 3.6.2
-        version: 3.6.2
+        specifier: 3.7.4
+        version: 3.7.4
       secretlint:
         specifier: 10.2.2
         version: 10.2.2
@@ -3483,8 +3483,8 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  eslint-plugin-oxlint@1.29.0:
-    resolution: {integrity: sha512-VmaZ1I0lXJVJokOpnV8F7e339hcFPln5EWY8KGCdTkBnrkRmAeH25GRO6F37lZEDO9e+px5xjqbkq9g3lejBdg==}
+  eslint-plugin-oxlint@1.32.0:
+    resolution: {integrity: sha512-CodKgz/9q3euGbCYrXVRyFxHfnrxn9Q4EywqE4V/VYegry2pJ9/hPQ0OUDTRzbl3/pPbVndkrUUm5tK8NTSgeg==}
 
   eslint-scope@8.4.0:
     resolution: {integrity: sha512-sNXOfKCn74rt8RICKMvJS7XKV/Xk9kA7DyJr8mJik3S7Cwgy3qlkkmyS2uQB3jiJg6VNdZd/pDBJu0nvG2NlTg==}
@@ -4461,8 +4461,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prettier@3.6.2:
-    resolution: {integrity: sha512-I7AIg5boAr5R0FFtJ6rCfD+LFsWHp81dolrFD8S79U9tb8Az2nGrJncnMSnys+bpQJfRUzqs9hnA81OAA3hCuQ==}
+  prettier@3.7.4:
+    resolution: {integrity: sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==}
     engines: {node: '>=14'}
     hasBin: true
 
@@ -7339,7 +7339,7 @@ snapshots:
       lodash: 4.17.21
       pathe: 1.1.2
       picocolors: 1.1.1
-      prettier: 3.6.2
+      prettier: 3.7.4
       react-refresh: 0.14.2
       react-router: 7.7.1(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       semver: 7.7.2
@@ -8491,7 +8491,7 @@ snapshots:
 
   escape-string-regexp@4.0.0: {}
 
-  eslint-plugin-oxlint@1.29.0:
+  eslint-plugin-oxlint@1.32.0:
     dependencies:
       jsonc-parser: 3.3.1
 
@@ -9495,7 +9495,7 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prettier@3.6.2: {}
+  prettier@3.7.4: {}
 
   pretty-format@27.5.1:
     dependencies:
