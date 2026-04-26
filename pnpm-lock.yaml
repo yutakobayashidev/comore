@@ -51,8 +51,8 @@ importers:
         specifier: 1.4.2
         version: 1.4.2(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       isbot:
-        specifier: 5.1.36
-        version: 5.1.36
+        specifier: 5.1.39
+        version: 5.1.39
       lucide-react:
         specifier: 0.525.0
         version: 0.525.0(react@19.1.1)
@@ -4104,8 +4104,8 @@ packages:
   is-potential-custom-element-name@1.0.1:
     resolution: {integrity: sha512-bCYeRA2rVibKZd+s2625gGnGF/t7DSqDs4dP7CrLA1m7jKWz6pps0LpYLJN8Q64HtmPKJ1hrN3nzPNKFEKOUiQ==}
 
-  isbot@5.1.36:
-    resolution: {integrity: sha512-C/ZtXyJqDPZ7G7JPr06ApWyYoHjYexQbS6hPYD4WYCzpv2Qes6Z+CCEfTX4Owzf+1EJ933PoI2p+B9v7wpGZBQ==}
+  isbot@5.1.39:
+    resolution: {integrity: sha512-obH0yYahGXdzNxo+djmHhBYThUKDkz565cxkIlt2L9hXfv1NlaLKoDBHo6KxXsYrIXx2RK3x5vY36CfZcobxEw==}
     engines: {node: '>=18'}
 
   isexe@2.0.0:
@@ -7694,7 +7694,7 @@ snapshots:
       dedent: 1.6.0
       es-module-lexer: 1.7.0
       exit-hook: 2.2.1
-      isbot: 5.1.36
+      isbot: 5.1.39
       jsesc: 3.0.2
       lodash: 4.17.21
       pathe: 1.1.2
@@ -9292,7 +9292,7 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1: {}
 
-  isbot@5.1.36: {}
+  isbot@5.1.39: {}
 
   isexe@2.0.0: {}
 
