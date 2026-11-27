@@ -95,6 +95,6 @@
     "vite": "7.0.6",
     "vite-tsconfig-paths": "5.1.4",
     "vitest": "3.2.7",
-    "wrangler": "4.25.0"
+    "wrangler": "4.59.1"
   }
 }
