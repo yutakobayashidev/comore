@@ -34,7 +34,7 @@
     "@oslojs/crypto": "1.0.1",
     "@oslojs/encoding": "1.1.0",
     "@pilcrowjs/object-parser": "0.0.4",
-    "@react-router/node": "7.7.1",
+    "@react-router/node": "7.9.4",
     "@react-router/serve": "7.7.1",
     "@stripe/react-stripe-js": "3.7.0",
     "@stripe/stripe-js": "7.5.0",
